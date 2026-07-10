@@ -25,7 +25,8 @@ Deliver the smallest working system that validates Project Athlon’s architectu
 | Artifact store | `IArtifactStore`, `FileArtifactStore` |
 | Workflow | Sequential runner; one workflow definition: `RequirementToImplementation` |
 | Agent | `DeveloperAgent` — prompt compose → LLM → validate → publish |
-| LLM | `ILLMProvider`, `OpenRouterProvider` |
+| LLM | `ILLMProvider`, `OpenRouterProvider`, `LlmCompletionResult` (content + usage) |
+| Telemetry | Run summary: tokens, duration, estimated cost — console print + optional `telemetry.json` per workflow |
 | Validation | JSON syntax + JSON Schema for `ImplementationArtifact` |
 | Host | `Athlon.Spike.Console` — stdin/args, structured logging |
 | Human gate (stub) | `--auto-approve` flag or interactive `Approve? [y/N]` |
@@ -155,13 +156,16 @@ Athlon.Spike.Console
 
 | Task | Details |
 |------|---------|
-| `ILLMProvider` | `CompleteAsync(systemPrompt, userPrompt, ct)` |
+| `ILLMProvider` | Returns `LlmCompletionResult` (not bare `string`) |
+| `LlmCompletionResult` | `Content`, `PromptTokens`, `CompletionTokens`, `TotalTokens`, `Model`, `Duration` |
 | `OpenRouterProvider` | POST `https://openrouter.ai/api/v1/chat/completions` |
+| Parse `usage` | Map `prompt_tokens`, `completion_tokens` from response body |
+| Cost | Prefer OpenRouter-reported cost when in response; else estimate from model id + token counts |
 | Config | `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` from environment |
 | Headers | `Authorization`, `HTTP-Referer` / `X-Title` per OpenRouter docs |
 | Error handling | Clear message on 401/429; no silent fallback |
 
-**Exit criteria:** Manual smoke test or integration test with mocked HTTP handler.
+**Exit criteria:** Smoke test logs token counts; `MockLLMProvider` returns fixed usage for tests.
 
 ---
 
@@ -177,6 +181,7 @@ Athlon.Spike.Console
 | `JsonSchemaValidator` | Use `System.Text.Json` + `JsonSchema.Net` (or manual required-field check for spike) |
 | `schemas/implementation-artifact.schema.json` | Define minimum fields (e.g. title, summary, tasks, acceptanceCriteria) |
 | Retry policy | 1 retry on validation failure with “fix your JSON” hint (optional) |
+| Telemetry handoff | Agent returns `LlmCompletionResult` usage via `AgentExecutionResult` for workflow summary |
 
 **Exit criteria:** Given a fixed mock LLM response, agent publishes valid artifact. With real OpenRouter, end-to-end once.
 
@@ -192,6 +197,8 @@ Athlon.Spike.Console
 | `RequirementToImplementationWorkflow` | Steps: (1) save input artifact, (2) run DeveloperAgent, (3) stub approval gate, (4) complete |
 | `WorkflowRunner` | Creates `WorkflowInstance`, tracks status |
 | Events | Log step transitions to console (structured: step, duration, artifact id) |
+| Run summary | Aggregate agent telemetry; print tokens, duration, est. cost at workflow end |
+| Optional persist | `artifacts/{workflowId}/telemetry.json` — same folder as artifacts, gitignored |
 
 **Exit criteria:** Workflow status transitions: `Started` → `AwaitingApproval` → `Completed` (or `Failed`).
 
@@ -205,7 +212,7 @@ Athlon.Spike.Console
 |------|---------|
 | CLI args | `--input <file>`, `--text "..."`, `--load <guid>`, `--auto-approve` |
 | Default interactive | Read multiline requirement until blank line |
-| Output | Print workflow id, input artifact id, output artifact id, file path |
+| Output | Print workflow id, artifact ids, file path, **token usage, duration, est. cost** |
 | Sample input | `examples/meal-allowance-requirement.txt` (optional) |
 
 **Demo script:**
@@ -227,6 +234,14 @@ Athlon.Spike.Console
 
 ```csharp
 // Athlon.Spike.Contracts
+public record LlmCompletionResult(
+    string Content,
+    string Model,
+    int PromptTokens,
+    int CompletionTokens,
+    TimeSpan Duration,
+    decimal? EstimatedCostUsd = null);
+
 public interface IArtifactStore
 {
     Task SaveAsync(Artifact artifact, CancellationToken ct = default);
@@ -235,7 +250,7 @@ public interface IArtifactStore
 
 public interface ILLMProvider
 {
-    Task<string> CompleteAsync(
+    Task<LlmCompletionResult> CompleteAsync(
         string systemPrompt,
         string userPrompt,
         CancellationToken ct = default);

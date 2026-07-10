@@ -33,6 +33,7 @@ This spike deliberately trades production concerns (API, portal, SQL, messaging,
 | Workflow-first execution | Ch. 7, Pattern 1 | Agent runs only inside a workflow instance |
 | Agent runtime lifecycle | Ch. 6 | Input → prompt → LLM → validate → publish |
 | Replaceable LLM provider | Ch. 5 §5.8, ADR-004 | `ILLMProvider` with OpenRouter implementation |
+| Measurable execution | Ch. 6 §6.11, Ch. 5 §5.10 | Token count, duration, estimated cost printed per run |
 | Vertical slice | Ch. 3, Appendix D §D.2 | One path works end-to-end in a console app |
 | Human-in-the-loop (stub) | Ch. 4 | Console prompt or flag before marking workflow complete |
 
@@ -45,7 +46,7 @@ This spike deliberately trades production concerns (API, portal, SQL, messaging,
 - RabbitMQ, LangGraph, Docker Compose
 - Memory, RAG, MCP, Git integration
 - Multiple agents (BA, Architect, Reviewer, …)
-- Full observability stack (structured console logs only)
+- Full observability stack (OpenTelemetry, Grafana — deferred; **run-summary telemetry** on console is in scope)
 
 See [ImplementationPlan.md](./ImplementationPlan.md) for phased delivery and promotion path to PoC Sprint 1.
 
@@ -115,8 +116,25 @@ Expected demo flow:
 2. Workflow starts; input is saved as an artifact.
 3. Developer Agent calls OpenRouter and produces structured output.
 4. Output is validated against JSON Schema.
-5. Implementation artifact is saved; console prints artifact id and file path.
+5. Implementation artifact is saved; console prints artifact id, file path, and **run telemetry** (tokens, duration, estimated cost).
 6. Optional: `--load <guid>` retrieves and displays a stored artifact.
+
+### Run telemetry (console)
+
+Each completed workflow prints a short summary — no infrastructure required:
+
+```text
+Workflow complete
+  Output artifact : a1b2c3d4-...
+  Model           : anthropic/claude-3.5-sonnet
+  Prompt tokens   : 842
+  Completion tokens: 312
+  Total tokens    : 1154
+  Duration        : 4.2s
+  Est. cost (USD) : $0.0038
+```
+
+OpenRouter returns token `usage` in the API response; cost is taken from the response when present, otherwise estimated from OpenRouter’s published per-model rates. This establishes the Ch. 6 habit — *every execution is measurable* — before Grafana exists.
 
 ---
 
@@ -156,6 +174,7 @@ Spike_01 is **done** when:
 - [ ] Both input and output artifacts are persisted and loadable by id
 - [ ] Agent logic has no direct HTTP calls to OpenRouter (goes through `ILLMProvider`)
 - [ ] Invalid LLM output is rejected; workflow does not publish a bad artifact
+- [ ] Each run prints token usage, duration, and estimated cost alongside artifact ids
 - [ ] A 5-minute demo can be run without explaining “it’s just ChatGPT”
 
 ---
