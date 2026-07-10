@@ -190,27 +190,17 @@ Only relevant information should be loaded.
 
 Prompts are assembled dynamically.
 
-```
+```text
 System Prompt
-
 +
-
 Agent Prompt
-
 +
-
 Retrieved Context
-
 +
-
 Current Artifact
-
 +
-
 Expected Output Schema
-
 =
-
 Final Prompt
 ```
 
@@ -268,23 +258,15 @@ Large prompts increase latency, cost, and the probability of hallucinations.
 
 Project Athlon therefore retrieves context selectively.
 
-```
+```text
 Project Knowledge
-
 ↓
-
 Relevant Artifacts
-
 ↓
-
 Relevant Memory
-
 ↓
-
 Relevant Standards
-
 ↓
-
 Prompt Builder
 ```
 
@@ -296,26 +278,19 @@ The Context Provider becomes one of the platform's most valuable services.
 
 Every agent implements the same logical contract.
 
-```yaml
-Name:
-
-Purpose:
-
-Version:
-
-AcceptedArtifacts:
-
-ProducedArtifacts:
-
-RequiredTools:
-
-RequiredMemory:
-
-ValidationRules:
-
-ApprovalRequired:
-
-Telemetry:
+```json
+{
+  "Name": null,
+  "Purpose": null,
+  "Version": null,
+  "AcceptedArtifacts": null,
+  "ProducedArtifacts": null,
+  "RequiredTools": null,
+  "RequiredMemory": null,
+  "ValidationRules": null,
+  "ApprovalRequired": null,
+  "Telemetry": null
+}
 ```
 
 The Workflow Orchestrator depends only on this contract.
@@ -408,23 +383,14 @@ The initial .NET implementation should expose interfaces similar to:
 
 ```text
 IAgent
-
 IArtifact
-
 IContextProvider
-
 ILLMProvider
-
 IMemoryProvider
-
 IToolProvider
-
 IValidator
-
 IArtifactPublisher
-
 IWorkflowStep
-
 IExecutionLogger
 ```
 

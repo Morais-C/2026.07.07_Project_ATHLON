@@ -75,6 +75,37 @@ Open items from the manuscript review, in suggested priority order.
 
 ---
 
+## VisionScope v1 — Pending Issues
+
+**Manuscript version:** Project VisionScope v1  
+**Status:** Structural cleanup complete (see Cleanup Tracker above). **Content and structure** work remains open.
+
+Full tracker: **[ToDo_Content_Structure.md](ToDo_Content_Structure.md)**
+
+### What this covers
+
+Editorial issues that are **not** formatting — duplicated prose, chapter seams, overlapping build guides, and cross-chapter consistency. Distinct from the resolved organizational fixes in the Cleanup Tracker.
+
+### Open work (summary)
+
+| Priority | Area | Examples |
+|----------|------|----------|
+| **1 — Deduplication** | Repeated content across chapters | Error-recovery ladder (Ch. 6 / 7); human-approval gates (Ch. 3, 4, 6, 7); SDLC pipeline diagrams; Ch. 10 duplicate Observability / Best Practices / Anti-Patterns; Appendix A/B overlap; Ch. 12 §12.22+ vs appendices |
+| **2 — Structure** | Chapter assembly & placement | Ch. 5 preview disclaimer; Ch. 11 / 12 two-in-one seams; Ch. 11 placement vs Ch. 6; Ch. 9 duplicate Reference Architecture headings |
+| **3 — Consistency** | Cross-manuscript style | Title punctuation (`---` vs `—`); H1 vs H2 section numbering; bullet spacing |
+| **4 — Review** | **Formatting complete** | 16/17 files done; Ch. 11 frozen; content issues remain in Priorities 1–3 |
+
+### Suggested next pass
+
+1. **Pass 2A** — Canonicalize duplicated lists (error recovery, approval gates); fix Ch. 10 headings; add Ch. 5 preview note.
+2. **Pass 2B** — Resolve Ch. 11/12 seams and consolidate the three “how to build” narratives (Ch. 12 §12.22+, Appendix A, Appendix B).
+
+Mark items resolved in `ToDo_Content_Structure.md` as they are completed.
+
+**Formatting review:** **COMPLETE** — Ch. 1–10, Ch. 12, Appendices A–D (Ch. 11 frozen). Full manuscript audit: no issues. Content/structure work remains in [ToDo_Content_Structure.md](ToDo_Content_Structure.md).
+
+---
+
 ## Reading Paths
 
 - **New to the platform?** Read Part I → Part II in order for the vision and principles before the architecture gets detailed.

@@ -87,17 +87,11 @@ These three capabilities complement one another.
 
 ```text
 Artifacts
-
 ↓
-
 Knowledge
-
 ↓
-
 Decision
-
 ↓
-
 Action
 ```
 
@@ -250,13 +244,9 @@ The architecture therefore separates three distinct concerns.
 
 ```text
 Reasoning
-
 ↓
-
 Planning
-
 ↓
-
 Execution
 ```
 
@@ -276,27 +266,16 @@ The high-level architecture is illustrated below.
 
 ```text
                 AI Model
-
                     │
-
              Agent Runtime
-
                     │
-
          Workflow Orchestrator
-
                     │
-
 ──────────────────────────────────
-
          Artifact Layer
-
          Memory Layer
-
          MCP Layer
-
 ──────────────────────────────────
-
       Enterprise Systems
 ```
 
@@ -312,41 +291,23 @@ A simplified execution flow is shown below.
 
 ```text
 Engineering Request
-
 ↓
-
 Workflow Orchestrator
-
 ↓
-
 Developer Agent
-
 ↓
-
 Memory Retrieval
-
 ↓
-
 Planning
-
 ↓
-
 MCP Client
-
 ↓
-
 MCP Server
-
 ↓
-
 Enterprise Tool
-
 ↓
-
 Execution Result
-
 ↓
-
 Generated Artifact
 ```
 
@@ -374,37 +335,21 @@ Project Athlon defines the following execution loop.
 
 ```text
 Observe
-
 ↓
-
 Retrieve Context
-
 ↓
-
 Reason
-
 ↓
-
 Plan
-
 ↓
-
 Select Tool
-
 ↓
-
 Execute
-
 ↓
-
 Observe Result
-
 ↓
-
 Generate Artifact
-
 ↓
-
 Continue Workflow
 ```
 
@@ -553,25 +498,15 @@ This classification mirrors the Software Development Lifecycle introduced in Cha
 
 ```text
 Business
-
 ↓
-
 Architecture
-
 ↓
-
 Development
-
 ↓
-
 Quality
-
 ↓
-
 Operations
-
 ↓
-
 Platform
 ```
 
@@ -678,17 +613,11 @@ Conceptually, an MCP server acts as an adapter between Project Athlon and enterp
 
 ```text
 Developer Agent
-
 ↓
-
 MCP Client
-
 ↓
-
 Git MCP Server
-
 ↓
-
 Git Repository
 ```
 
@@ -801,25 +730,15 @@ Instead, they discover capabilities dynamically.
 
 ```text
 Workflow
-
 ↓
-
 Capability Request
-
 ↓
-
 MCP Registry
-
 ↓
-
 Available Tools
-
 ↓
-
 Selection
-
 ↓
-
 Execution
 ```
 
@@ -951,21 +870,13 @@ Capabilities abstract engineering execution.
 
 ```text
 Artifact
-
 ↓
-
 Knowledge
-
 ↓
-
 Capability
-
 ↓
-
 Tool
-
 ↓
-
 Enterprise System
 ```
 
@@ -1031,33 +942,19 @@ Every MCP Server should follow a layered architecture.
 
 ```text
                 MCP Protocol
-
                      │
-
              Request Handler
-
                      │
-
             Validation Layer
-
                      │
-
           Authorization Layer
-
                      │
-
           Approval Workflow
-
                      │
-
            Capability Service
-
                      │
-
           Infrastructure Adapter
-
                      │
-
            Enterprise System
 ```
 
@@ -1101,21 +998,13 @@ For example:
 
 ```text
 Deploy Application
-
 ↓
-
 Deployment Capability
-
 ↓
-
 Azure DevOps Adapter
-
 or
-
 GitHub Actions Adapter
-
 or
-
 ArgoCD Adapter
 ```
 
@@ -1127,41 +1016,11 @@ This follows the Dependency Inversion Principle introduced in earlier chapters.
 
 ## Examples
 
-Instead of exposing:
+Instead of exposing `Run Azure Pipeline`, Project Athlon exposes `Execute Build`.
 
-```
-Run Azure Pipeline
-```
+Instead of `GitHub Pull Request`, the capability becomes `Create Code Review`.
 
-Project Athlon exposes:
-
-```
-Execute Build
-```
-
-Instead of:
-
-```
-GitHub Pull Request
-```
-
-the capability becomes:
-
-```
-Create Code Review
-```
-
-Instead of:
-
-```
-kubectl rollout restart
-```
-
-the capability becomes:
-
-```
-Restart Service
-```
+Instead of `kubectl rollout restart`, the capability becomes `Restart Service`.
 
 Engineering workflows remain technology-independent.
 
@@ -1177,21 +1036,13 @@ Instead, servers register capabilities during startup.
 
 ```text
 Server Startup
-
 ↓
-
 Capability Discovery
-
 ↓
-
 Validation
-
 ↓
-
 Registry Update
-
 ↓
-
 Available to Agents
 ```
 
@@ -1250,9 +1101,8 @@ Represents the current engineering workflow.
 
 Example:
 
-```
+```text
 Payroll Release Workflow
-
 Version 3
 ```
 
@@ -1272,21 +1122,13 @@ Execution combines these identities.
 
 ```text
 Human User
-
 ↓
-
 Workflow
-
 ↓
-
 Agent
-
 ↓
-
 Capability
-
 ↓
-
 Enterprise System
 ```
 
@@ -1329,21 +1171,13 @@ Project Athlon treats human expertise as another participant within autonomous w
 
 ```text
 Agent
-
 ↓
-
 Approval Request
-
 ↓
-
 Human Reviewer
-
 ↓
-
 Approved?
-
 ↓
-
 Continue Workflow
 ```
 
@@ -1365,21 +1199,13 @@ Example:
 
 ```text
 Deployment Failed
-
 ↓
-
 Execution Report
-
 ↓
-
 Artifact Repository
-
 ↓
-
 Memory
-
 ↓
-
 Future Retrieval
 ```
 
@@ -1470,25 +1296,15 @@ Project Athlon recommends organizing MCP implementations as independent componen
 
 ```text
 /src
-
 Athlon.Mcp
-
 Athlon.Mcp.Contracts
-
 Athlon.Mcp.Client
-
 Athlon.Mcp.Server
-
 Athlon.Mcp.Registry
-
 Athlon.Mcp.Security
-
 Athlon.Mcp.Approvals
-
 Athlon.Mcp.Telemetry
-
 Athlon.Mcp.Hosting
-
 Athlon.Mcp.Tools
 ```
 
@@ -1665,21 +1481,13 @@ Governance is enforced at multiple levels.
 
 ```text
 Organization Policies
-
 ↓
-
 Workflow Policies
-
 ↓
-
 Capability Policies
-
 ↓
-
 Execution Policies
-
 ↓
-
 Enterprise System
 ```
 
@@ -1721,21 +1529,13 @@ Individual developers may execute MCP Servers locally.
 
 ```text
 Cursor IDE
-
 ↓
-
 Athlon Runtime
-
 ↓
-
 Local MCP Servers
-
 ↓
-
 Local Git
-
 Docker
-
 SQL Server
 ```
 
@@ -1749,19 +1549,12 @@ Development teams typically share centralized services.
 
 ```text
 Developer Agents
-
 ↓
-
 Shared MCP Platform
-
 ↓
-
 Git
-
 CI/CD
-
 Shared Databases
-
 Documentation
 ```
 
@@ -1775,25 +1568,15 @@ Large organizations often require a distributed architecture.
 
 ```text
 Business Unit A
-
 ↓
-
 Regional MCP Cluster
-
 ↓
-
 Enterprise Services
-
 ────────────────────────
-
 Business Unit B
-
 ↓
-
 Regional MCP Cluster
-
 ↓
-
 Enterprise Services
 ```
 
@@ -1809,33 +1592,19 @@ Instead, every action passes through explicitly defined security boundaries.
 
 ```text
 LLM
-
 ↓
-
 Agent Runtime
-
 ↓
-
 Workflow
-
 ↓
-
 MCP Client
-
 ↓
-
 Policy Engine
-
 ↓
-
 Authentication
-
 ↓
-
 Authorization
-
 ↓
-
 Enterprise Tool
 ```
 
@@ -1887,25 +1656,15 @@ Consider a typical feature implementation.
 
 ```text
 Business Analyst
-
 ↓
-
 Architect
-
 ↓
-
 Developer
-
 ↓
-
 Reviewer
-
 ↓
-
 QA
-
 ↓
-
 Release Manager
 ```
 
@@ -1927,13 +1686,9 @@ For example:
 
 ```text
 Developer Agent
-
 ↓
-
 Git Repository
-
 ↑
-
 Reviewer Agent
 ```
 

@@ -139,33 +139,19 @@ Together they form the foundation of the Autonomous SDLC.
 
 ```text
                    Workflow
-
                        │
-
                  Engineering Agents
-
                        │
-
                 Reasoning Engine
-
                        │
-
      ┌──────────┬───────────┬──────────┐
-
      ▼          ▼           ▼
-
  Artifacts    Memory    Capabilities
-
                               │
-
                               ▼
-
                              MCP
-
                               │
-
                               ▼
-
                     Enterprise Systems
 ```
 
@@ -235,25 +221,15 @@ Traditional software engineering can be summarized as follows.
 
 ```text
 Requirements
-
 ↓
-
 Design
-
 ↓
-
 Implementation
-
 ↓
-
 Testing
-
 ↓
-
 Deployment
-
 ↓
-
 Maintenance
 ```
 
@@ -261,29 +237,17 @@ Project Athlon proposes a broader definition.
 
 ```text
 Knowledge
-
 ↓
-
 Reasoning
-
 ↓
-
 Decision
-
 ↓
-
 Execution
-
 ↓
-
 Observation
-
 ↓
-
 Learning
-
 ↓
-
 Knowledge
 ```
 
@@ -341,41 +305,23 @@ The complete learning cycle can now be expressed.
 
 ```text
 Business Goal
-
 ↓
-
 Workflow
-
 ↓
-
 Engineering Agents
-
 ↓
-
 Reasoning
-
 ↓
-
 Execution
-
 ↓
-
 Engineering Artifacts
-
 ↓
-
 Organizational Memory
-
 ↓
-
 Improved Future Reasoning
-
 ↓
-
 Improved Future Execution
-
 ↓
-
 Better Business Outcomes
 ```
 
@@ -533,9 +479,7 @@ Its responsibilities include:
 
 The agent produces a structured artifact.
 
-```
-BusinessRequirementArtifact
-```
+`BusinessRequirementArtifact`
 
 Unlike conversational output, this artifact becomes a permanent engineering asset.
 
@@ -557,39 +501,26 @@ The Architecture Agent receives the Business Requirement Artifact.
 
 Before making recommendations it performs several activities.
 
-Retrieve Organizational Memory.
-
+```text
+Retrieve Organizational Memory
 ↓
-
 Retrieve previous ADRs.
-
 ↓
-
 Consult security policies.
-
 ↓
-
 Consult architectural standards.
-
 ↓
-
 Evaluate existing platform capabilities.
-
 ↓
-
 Apply Architecture Review Strategy.
-
 ↓
-
 Generate alternatives.
-
+```
 Only after these activities does reasoning begin.
 
 The output becomes another engineering artifact.
 
-```
-ArchitectureAssessmentArtifact
-```
+`ArchitectureAssessmentArtifact`
 
 Notice that the agent never communicates directly with developers.
 
@@ -603,31 +534,19 @@ The Planning Agent now transforms architectural intent into executable engineeri
 
 Rather than producing a traditional backlog, it generates a structured implementation graph.
 
-```
+```text
 Epic
-
 ↓
-
 Capabilities
-
 ↓
-
 Features
-
 ↓
-
 Tasks
-
 ↓
-
 Acceptance Criteria
-
 ↓
-
 Dependencies
-
 ↓
-
 Engineering Risks
 ```
 
@@ -649,35 +568,21 @@ Developer Agents receive implementation tasks independently.
 
 For every task they perform the same reasoning cycle introduced in Chapter 11.
 
-```
+```text
 Retrieve Context
-
 ↓
-
 Retrieve Memory
-
 ↓
-
 Compose Prompt Assets
-
 ↓
-
 Apply Reasoning Strategy
-
 ↓
-
 Generate Code
-
 ↓
-
 Reflect
-
 ↓
-
 Verify
-
 ↓
-
 Generate Artifact
 ```
 
@@ -701,23 +606,15 @@ Implementation does not immediately continue toward deployment.
 
 Multiple specialized agents perform independent reviews.
 
-```
+```text
 Security Agent
-
 ↓
-
 Performance Agent
-
 ↓
-
 QA Agent
-
 ↓
-
 Accessibility Agent
-
 ↓
-
 Architecture Agent
 ```
 
@@ -788,9 +685,7 @@ Relevant information includes:
 
 Observation generates new engineering artifacts.
 
-```
-OperationalObservationArtifact
-```
+`OperationalObservationArtifact`
 
 The lifecycle therefore extends beyond deployment.
 
@@ -804,23 +699,15 @@ Every artifact produced during the workflow contributes to Organizational Memory
 
 Examples include:
 
-Business Requirements.
-
-Architecture Decisions.
-
-Implementation Rationale.
-
-Code Reviews.
-
-Security Findings.
-
-Deployment Results.
-
-Production Metrics.
-
-Incident Reports.
-
-Retrospectives.
+- Business Requirements
+- Architecture Decisions
+- Implementation Rationale
+- Code Reviews
+- Security Findings
+- Deployment Results
+- Production Metrics
+- Incident Reports
+- Retrospectives
 
 Future workflows automatically benefit from this accumulated knowledge.
 
@@ -864,59 +751,33 @@ By continuously improving its engineering knowledge.
 
 The complete lifecycle can now be visualized.
 
-```
+```text
 Business Goal
-
 ↓
-
 Workflow
-
 ↓
-
 Business Analysis
-
 ↓
-
 Architecture
-
 ↓
-
 Planning
-
 ↓
-
 Implementation
-
 ↓
-
 Verification
-
 ↓
-
 Governed Execution
-
 ↓
-
 Production
-
 ↓
-
 Observation
-
 ↓
-
 Artifacts
-
 ↓
-
 Memory
-
 ↓
-
 Improved Reasoning
-
 ↓
-
 Improved Future Workflows
 ```
 
@@ -1071,75 +932,50 @@ Each layer depends only upon well-defined contracts.
 
 A possible .NET solution may be organized as follows.
 
-```
+```text
 src/
-
 Athlon.ApiGateway
-
 Athlon.Workflow
-
 Athlon.Agents
-
 Athlon.Reasoning
-
 Athlon.Artifacts
-
 Athlon.Memory
-
 Athlon.Capabilities
-
 Athlon.Mcp
-
 Athlon.Observability
-
 Athlon.Contracts
-
 Athlon.SharedKernel
 ```
 
 Supporting applications include:
 
-```
+```text
 apps/
-
 React Portal
-
 Administration Portal
-
 Operations Dashboard
 ```
 
 Infrastructure:
 
-```
+```text
 infra/
-
 Docker
-
 Kubernetes
-
 Terraform
-
 Helm
-
 GitHub Actions
 ```
 
 Documentation:
 
-```
+```text
 docs/
-
 ADR
-
 Architecture
-
 Playbooks
-
 Prompt Assets
-
 Reasoning Strategies
-
 Runbooks
 ```
 
@@ -1164,23 +1000,15 @@ Examples include:
 
 Each service exposes a consistent contract.
 
-```
+```text
 Receive Artifact
-
 ↓
-
 Retrieve Context
-
 ↓
-
 Reason
-
 ↓
-
 Produce Artifact
-
 ↓
-
 Publish Event
 ```
 
@@ -1205,33 +1033,19 @@ Each engineering workflow becomes a directed graph.
 
 ```text
 Business Requirement
-
 ↓
-
 Architecture
-
 ↓
-
 Planning
-
 ↓
-
 Development
-
 ↓
-
 Review
-
 ↓
-
 Testing
-
 ↓
-
 Deployment
-
 ↓
-
 Observation
 ```
 
@@ -1273,23 +1087,14 @@ Every workflow stage produces structured outputs.
 
 Examples include:
 
-```
-BusinessRequirementArtifact
-
-ArchitectureAssessmentArtifact
-
-ImplementationArtifact
-
-CodeReviewArtifact
-
-ThreatModelArtifact
-
-DeploymentArtifact
-
-IncidentArtifact
-
-RetrospectiveArtifact
-```
+- BusinessRequirementArtifact
+- ArchitectureAssessmentArtifact
+- ImplementationArtifact
+- CodeReviewArtifact
+- ThreatModelArtifact
+- DeploymentArtifact
+- IncidentArtifact
+- RetrospectiveArtifact
 
 Artifacts are immutable once published.
 
@@ -1331,24 +1136,17 @@ Project Athlon introduces **Engineering Observability**.
 
 The platform measures:
 
+```text
 Operational Metrics
-
 ↓
-
 Workflow Metrics
-
 ↓
-
 Reasoning Metrics
-
 ↓
-
 Artifact Metrics
-
 ↓
-
 Business Metrics
-
+```
 Examples include:
 
 - workflow duration
@@ -1369,28 +1167,19 @@ Autonomy must never bypass governance.
 
 Project Athlon applies governance at multiple layers.
 
+```text
 Workflow Governance
-
 ↓
-
 Reasoning Policies
-
 ↓
-
 Capability Authorization
-
 ↓
-
 Human Approval
-
 ↓
-
 Operational Monitoring
-
 ↓
-
 Continuous Audit
-
+```
 Every engineering action becomes traceable.
 
 Every decision remains explainable.
@@ -1622,17 +1411,12 @@ Learning becomes systematic.
 
 Traditional software organizations are typically structured around functional teams.
 
-Business Analysis.
-
-Architecture.
-
-Development.
-
-Quality Assurance.
-
-Security.
-
-Operations.
+- Business Analysis
+- Architecture
+- Development
+- Quality Assurance
+- Security
+- Operations
 
 Each team develops specialized expertise.
 
@@ -1716,57 +1500,31 @@ The complete Project Athlon architecture can now be represented as one continuou
 
 ```text
 Business Vision
-
 ↓
-
 Product Strategy
-
 ↓
-
 Workflow Orchestration
-
 ↓
-
 Engineering Agents
-
 ↓
-
 Reasoning Engine
-
 ↓
-
 Engineering Artifacts
-
 ↓
-
 Organizational Memory
-
 ↓
-
 Governed Execution
-
 ↓
-
 Production Observation
-
 ↓
-
 Organizational Learning
-
 ↓
-
 Improved Future Decisions
-
 ↓
-
 Better Products
-
 ↓
-
 Better Business Outcomes
-
 ↓
-
 Business Vision
 ```
 
@@ -1834,37 +1592,21 @@ Project Athlon can now be summarized using six architectural layers.
 
 ```text
 Business Vision
-
 ↓
-
 Workflow Orchestration
-
 ↓
-
 Engineering Agents
-
 ↓
-
 Reasoning Engine
-
 ↓
-
 Knowledge Platform
-
     • Artifacts
-
     • Organizational Memory
-
 ↓
-
 Capability Platform
-
 ↓
-
 Governed Execution
-
 ↓
-
 Continuous Organizational Learning
 ```
 

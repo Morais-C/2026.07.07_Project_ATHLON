@@ -46,21 +46,13 @@ Traditional AI assistants typically operate as follows:
 
 ```text
 Human
-
 ↓
-
 Prompt
-
 ↓
-
 LLM
-
 ↓
-
 Response
-
 ↓
-
 Human
 ```
 
@@ -72,53 +64,29 @@ Project Athlon introduces a fundamentally different model.
 
 ```text
 Business Request
-
 ↓
-
 Business Analyst Agent
-
 ↓
-
 User Story Artifact
-
 ↓
-
 Architect Agent
-
 ↓
-
 Architecture Artifact
-
 ↓
-
 Developer Agent
-
 ↓
-
 Source Code Artifact
-
 ↓
-
 Reviewer Agent
-
 ↓
-
 Review Artifact
-
 ↓
-
 QA Agent
-
 ↓
-
 Test Artifact
-
 ↓
-
 Documentation Agent
-
 ↓
-
 Documentation Artifact
 ```
 
@@ -190,19 +158,12 @@ Example:
 
 ```text
 User Story
-
 Version 1.0
-
 ↓
-
 Architecture
-
 Version 1.0
-
 ↓
-
 Implementation
-
 Version 1.0
 ```
 
@@ -239,25 +200,15 @@ Example:
 
 ```text
 Business Request
-
 ↓
-
 User Story
-
 ↓
-
 Architecture
-
 ↓
-
 Implementation
-
 ↓
-
 Tests
-
 ↓
-
 Release
 ```
 
@@ -529,27 +480,16 @@ The following simplified example illustrates the concept.
 ```json
 {
   "artifactId": "USR-001",
-
   "artifactType": "UserStory",
-
   "version": "1.0",
-
   "status": "Approved",
-
   "producer": "BusinessAnalystAgent",
-
   "createdAt": "2026-07-07T14:30:00Z",
-
   "workflowId": "WF-2026-001",
-
   "dependsOn": [],
-
   "payload": {
-
     "title": "Support Remote Meal Allowance",
-
     "description": "Employees working remotely may receive meal allowance according to company policy.",
-
     "acceptanceCriteria": [
       "...",
       "..."
@@ -572,33 +512,19 @@ Project Athlon explicitly models these relationships.
 
 ```text
 Business Goal
-
 ↓
-
 Epic
-
 ↓
-
 User Story
-
 ↓
-
 Architecture
-
 ↓
-
 Implementation
-
 ↓
-
 Tests
-
 ↓
-
 Deployment
-
 ↓
-
 Release
 ```
 
@@ -622,37 +548,21 @@ Example:
 
 ```text
 User Story v1
-
 ↓
-
 Architecture v1
-
 ↓
-
 Implementation v1
-
 ↓
-
 Review v1
-
 ↓
-
 Requirement Change
-
 ↓
-
 User Story v2
-
 ↓
-
 Architecture v2
-
 ↓
-
 Implementation v2
-
 ↓
-
 Review v2
 ```
 
@@ -675,29 +585,17 @@ Artifacts progress through a controlled lifecycle.
 
 ```text
 Draft
-
 ↓
-
 Generated
-
 ↓
-
 Validated
-
 ↓
-
 Reviewed
-
 ↓
-
 Approved
-
 ↓
-
 Published
-
 ↓
-
 Archived
 ```
 
@@ -818,29 +716,17 @@ Workflow decisions belong to the Orchestrator.
 
 ```text
                     Artifact Repository
-
                            │
-
         ┌──────────────────┼──────────────────┐
-
         ▼                  ▼                  ▼
-
  Metadata Store      Artifact Store      Index Service
-
         │                  │                  │
-
         └──────────────────┼──────────────────┘
-
                            ▼
-
                     Search API
-
                            ▼
-
                  Workflow Orchestrator
-
                            ▼
-
                          Agents
 ```
 
@@ -921,55 +807,30 @@ Every artifact participates in a dependency graph.
 
 ```text
 Business Goal
-
         │
-
         ▼
-
      Epic
-
         │
-
         ▼
-
    User Story
-
         │
-
         ▼
-
  Architecture
-
    ┌────────────┐
-
    ▼            ▼
-
 API Contract   Database Model
-
    │            │
-
    └──────┬─────┘
-
           ▼
-
    Implementation
-
           │
-
           ▼
-
      Unit Tests
-
           │
-
           ▼
-
  Integration Tests
-
           │
-
           ▼
-
      Deployment
 ```
 
@@ -1009,25 +870,15 @@ Example:
 
 ```text
 Business Request
-
 ↓
-
 User Story
-
 ↓
-
 Architecture
-
 ↓
-
 Implementation
-
 ↓
-
 Review
-
 ↓
-
 Release
 ```
 
@@ -1255,25 +1106,15 @@ For example:
 
 ```text
 Architecture v1
-
 ↓
-
 Security Review v1
-
 ↓
-
 Architecture v2
-
 ↓
-
 Implementation v1
-
 ↓
-
 Review v1
-
 ↓
-
 Implementation v2
 ```
 
@@ -1291,21 +1132,13 @@ Example:
 
 ```text
 Architecture
-
       │
-
       ├───────────────┐
-
       ▼               ▼
-
 API Design      Database Design
-
       │               │
-
       └───────┬───────┘
-
               ▼
-
        Implementation
 ```
 
@@ -1346,41 +1179,23 @@ Example:
 
 ```text
 Business Analyst
-
 ↓
-
 User Story
-
 ↓
-
 Architect
-
 ↓
-
 Architecture
-
 ↓
-
 Developer
-
 ↓
-
 Implementation
-
 ↓
-
 Reviewer
-
 ↓
-
 Review
-
 ↓
-
 QA
-
 ↓
-
 Test Report
 ```
 

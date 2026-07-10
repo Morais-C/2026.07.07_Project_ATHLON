@@ -104,33 +104,20 @@ Although technologies may evolve, the reference implementation uses:
 
 # A.4 Repository Structure
 
-```
+```text
 project-athlon/
-
 docs/
-
 src/
-
 tests/
-
 infra/
-
 scripts/
-
 examples/
-
 playbooks/
-
 prompts/
-
 strategies/
-
 artifacts/
-
 memory/
-
 adr/
-
 .github/
 ```
 
@@ -142,32 +129,22 @@ Architecture precedes implementation.
 
 # A.5 Documentation Structure
 
-```
+```text
 docs/
-
 Vision.md
-
 Architecture.md
-
 ReferenceArchitecture.md
-
 ImplementationGuide.md
-
 Glossary.md
-
 Roadmap.md
-
 ```
 
 Architecture Decision Records:
 
-```
+```text
 docs/adr/
-
 ADR-001.md
-
 ADR-002.md
-
 ...
 ```
 
@@ -175,29 +152,18 @@ ADR-002.md
 
 # A.6 Source Structure
 
-```
+```text
 src/
-
 Athlon.ApiGateway
-
 Athlon.Workflow
-
 Athlon.Reasoning
-
 Athlon.Agents
-
 Athlon.Artifacts
-
 Athlon.Memory
-
 Athlon.Capabilities
-
 Athlon.Mcp
-
 Athlon.Telemetry
-
 Athlon.SharedKernel
-
 Athlon.Contracts
 ```
 
@@ -207,23 +173,15 @@ Athlon.Contracts
 
 Initial engineering agents include:
 
-Business Analyst
-
-Architect
-
-Developer
-
-Reviewer
-
-Security Engineer
-
-QA Engineer
-
-Documentation Engineer
-
-Release Manager
-
-Operations Engineer
+- Business Analyst
+- Architect
+- Developer
+- Reviewer
+- Security Engineer
+- QA Engineer
+- Documentation Engineer
+- Release Manager
+- Operations Engineer
 
 Each agent is implemented as an independent service.
 
@@ -233,21 +191,14 @@ Each agent is implemented as an independent service.
 
 Initial workflows:
 
-Feature Development
-
-Bug Resolution
-
-Architecture Review
-
-Security Assessment
-
-Code Review
-
-Release
-
-Production Incident
-
-Retrospective
+- Feature Development
+- Bug Resolution
+- Architecture Review
+- Security Assessment
+- Code Review
+- Release
+- Production Incident
+- Retrospective
 
 Each workflow becomes a LangGraph graph.
 
@@ -259,21 +210,14 @@ Every engineering activity produces structured artifacts.
 
 Examples:
 
-BusinessRequirementArtifact
-
-ArchitectureAssessmentArtifact
-
-ImplementationArtifact
-
-CodeReviewArtifact
-
-ThreatModelArtifact
-
-DeploymentArtifact
-
-IncidentArtifact
-
-RetrospectiveArtifact
+- BusinessRequirementArtifact
+- ArchitectureAssessmentArtifact
+- ImplementationArtifact
+- CodeReviewArtifact
+- ThreatModelArtifact
+- DeploymentArtifact
+- IncidentArtifact
+- RetrospectiveArtifact
 
 Artifacts are immutable.
 
@@ -285,19 +229,13 @@ Prompt Assets are versioned.
 
 Examples:
 
-ArchitectureReview
-
-CodeReview
-
-ThreatModel
-
-ImplementationPlanning
-
-BugInvestigation
-
-PerformanceAnalysis
-
-DocumentationGeneration
+- ArchitectureReview
+- CodeReview
+- ThreatModel
+- ImplementationPlanning
+- BugInvestigation
+- PerformanceAnalysis
+- DocumentationGeneration
 
 ---
 
@@ -307,21 +245,14 @@ Reasoning Strategies are reusable.
 
 Examples:
 
-Comparative Analysis
-
-Root Cause Analysis
-
-Architecture Assessment
-
-Risk Evaluation
-
-Security Analysis
-
-Performance Optimization
-
-Trade-off Analysis
-
-Decision Validation
+- Comparative Analysis
+- Root Cause Analysis
+- Architecture Assessment
+- Risk Evaluation
+- Security Analysis
+- Performance Optimization
+- Trade-off Analysis
+- Decision Validation
 
 ---
 
@@ -329,23 +260,15 @@ Decision Validation
 
 Organizational Memory stores:
 
-Engineering Artifacts
-
-ADRs
-
-Policies
-
-Coding Standards
-
-Architecture Guidelines
-
-Operational Knowledge
-
-Lessons Learned
-
-Incident Reports
-
-Deployment History
+- Engineering Artifacts
+- ADRs
+- Policies
+- Coding Standards
+- Architecture Guidelines
+- Operational Knowledge
+- Lessons Learned
+- Incident Reports
+- Deployment History
 
 The platform learns through accumulation rather than retraining.
 
@@ -355,37 +278,22 @@ The platform learns through accumulation rather than retraining.
 
 Capabilities exposed through MCP:
 
-Git
-
-GitHub
-
-Azure DevOps
-
-Jira
-
-Azure
-
-AWS
-
-Kubernetes
-
-Docker
-
-SQL Server
-
-Redis
-
-RabbitMQ
-
-Filesystem
-
-Email
-
-Calendar
-
-Secrets
-
-Observability
+- Git
+- GitHub
+- Azure DevOps
+- Jira
+- Azure
+- AWS
+- Kubernetes
+- Docker
+- SQL Server
+- Redis
+- RabbitMQ
+- Filesystem
+- Email
+- Calendar
+- Secrets
+- Observability
 
 ---
 
@@ -451,51 +359,31 @@ Multi-team adoption.
 
 # A.15 Suggested Development Order
 
+```text
 1. Shared Contracts
-
 ↓
-
 2. Artifact Layer
-
 ↓
-
 3. Workflow Engine
-
 ↓
-
 4. Developer Agent
-
 ↓
-
 5. Memory Layer
-
 ↓
-
 6. Prompt Assets
-
 ↓
-
 7. Reasoning Engine
-
 ↓
-
 8. MCP Layer
-
 ↓
-
 9. Additional Agents
-
 ↓
-
 10. Observability
-
 ↓
-
 11. Governance
-
 ↓
-
 12. Production Platform
+```
 
 ---
 
@@ -503,59 +391,38 @@ Multi-team adoption.
 
 Every service follows:
 
-Clean Architecture
-
-DDD
-
-CQRS where appropriate
-
-Dependency Injection
-
-Async-first
-
-Immutable DTOs
-
-Structured logging
-
-OpenTelemetry
-
-Contract-first APIs
-
-Comprehensive testing
+- Clean Architecture
+- DDD
+- CQRS where appropriate
+- Dependency Injection
+- Async-first
+- Immutable DTOs
+- Structured logging
+- OpenTelemetry
+- Contract-first APIs
+- Comprehensive testing
 
 ---
 
 # A.17 Testing Strategy
 
+```text
 Unit Tests
-
 ↓
-
 Component Tests
-
 ↓
-
 Workflow Tests
-
 ↓
-
 Agent Tests
-
 ↓
-
 Reasoning Tests
-
 ↓
-
 Prompt Regression Tests
-
 ↓
-
 Integration Tests
-
 ↓
-
 End-to-End Engineering Workflow Tests
+```
 
 ---
 
@@ -563,59 +430,41 @@ End-to-End Engineering Workflow Tests
 
 Monitor:
 
-Workflow duration
-
-Reasoning latency
-
-Artifact generation
-
-Memory retrieval
-
-Prompt versions
-
-Model usage
-
-Capability execution
-
-Human approvals
-
-Deployment success
-
-Knowledge reuse
+- Workflow duration
+- Reasoning latency
+- Artifact generation
+- Memory retrieval
+- Prompt versions
+- Model usage
+- Capability execution
+- Human approvals
+- Deployment success
+- Knowledge reuse
 
 ---
 
 # A.19 Success Metrics
 
-Engineering Metrics
+**Engineering Metrics**
 
-Deployment Frequency
+- Deployment Frequency
+- Lead Time
+- MTTR
+- Change Failure Rate
 
-Lead Time
+**Reasoning Metrics**
 
-MTTR
+- Confidence
+- Evidence Usage
+- Reflection Rate
+- Artifact Quality
 
-Change Failure Rate
+**Knowledge Metrics**
 
-Reasoning Metrics
-
-Confidence
-
-Evidence Usage
-
-Reflection Rate
-
-Artifact Quality
-
-Knowledge Metrics
-
-Artifact Reuse
-
-ADR Reuse
-
-Memory Retrieval Success
-
-Organizational Learning Rate
+- Artifact Reuse
+- ADR Reuse
+- Memory Retrieval Success
+- Organizational Learning Rate
 
 ---
 
@@ -625,19 +474,13 @@ Each engineering activity should have a playbook.
 
 Examples:
 
-Adding a New Agent
-
-Adding a Workflow
-
-Creating a Prompt Asset
-
-Creating a Reasoning Strategy
-
-Creating an MCP Server
-
-Creating a Capability
-
-Creating an Artifact Schema
+- Adding a New Agent
+- Adding a Workflow
+- Creating a Prompt Asset
+- Creating a Reasoning Strategy
+- Creating an MCP Server
+- Creating a Capability
+- Creating an Artifact Schema
 
 ---
 
@@ -645,19 +488,13 @@ Creating an Artifact Schema
 
 Suggested Cursor configuration:
 
-Dedicated workspace
-
-Architecture documentation indexed
-
-Prompt Assets searchable
-
-ADRs indexed
-
-Memory synchronized
-
-Coding standards always available
-
-Project context automatically injected
+- Dedicated workspace
+- Architecture documentation indexed
+- Prompt Assets searchable
+- ADRs indexed
+- Memory synchronized
+- Coding standards always available
+- Project context automatically injected
 
 Cursor becomes an engineering workstation rather than merely an editor.
 
@@ -669,31 +506,21 @@ A successful Project Athlon demonstration should not showcase code generation.
 
 Instead, demonstrate a complete engineering workflow.
 
+```text
 Business Requirement
-
 ↓
-
 Architecture
-
 ↓
-
 Implementation
-
 ↓
-
 Review
-
 ↓
-
 Deployment
-
 ↓
-
 Observation
-
 ↓
-
 Organizational Learning
+```
 
 This demonstrates the complete platform.
 
@@ -703,23 +530,15 @@ This demonstrates the complete platform.
 
 Potential future capabilities include:
 
-Portfolio Management Agents
-
-Cost Optimization Agents
-
-Compliance Agents
-
-Platform Engineering Agents
-
-Architecture Evolution Agents
-
-AI Engineering Director
-
-Cross-organization Organizational Memory
-
-Predictive Architecture
-
-Self-improving Reasoning Strategies
+- Portfolio Management Agents
+- Cost Optimization Agents
+- Compliance Agents
+- Platform Engineering Agents
+- Architecture Evolution Agents
+- AI Engineering Director
+- Cross-organization Organizational Memory
+- Predictive Architecture
+- Self-improving Reasoning Strategies
 
 ---
 

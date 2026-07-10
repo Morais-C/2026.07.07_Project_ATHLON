@@ -337,21 +337,13 @@ Every completed workflow contributes new knowledge.
 
 ```text
 Workflow
-
 ↓
-
 Artifacts
-
 ↓
-
 Memory Service
-
 ↓
-
 Future Projects
-
 ↓
-
 Improved Decisions
 ```
 
@@ -438,37 +430,21 @@ Every agent execution begins with the construction of an execution context.
 
 ```text
 Engineering Request
-
 ↓
-
 Workflow Context
-
 ↓
-
 Memory Service
-
 ↓
-
 Artifact Repository
-
 ↓
-
 Knowledge Retrieval
-
 ↓
-
 Context Ranking
-
 ↓
-
 Context Compression
-
 ↓
-
 Execution Context
-
 ↓
-
 AI Agent
 ```
 
@@ -511,33 +487,19 @@ A simplified retrieval workflow is shown below.
 
 ```text
 Engineering Task
-
 ↓
-
 Identify Information Needs
-
 ↓
-
 Search Artifact Repository
-
 ↓
-
 Search Knowledge Stores
-
 ↓
-
 Rank Results
-
 ↓
-
 Assemble Context
-
 ↓
-
 Generate Response
-
 ↓
-
 Validate Output
 ```
 
@@ -583,9 +545,7 @@ Example:
 
 Search for:
 
-```
-OAuth Authentication
-```
+`OAuth Authentication`
 
 This strategy performs well when terminology is known.
 
@@ -636,21 +596,13 @@ Typical retrieval sequence:
 
 ```text
 Metadata Filter
-
 ↓
-
 Relationship Filter
-
 ↓
-
 Semantic Search
-
 ↓
-
 Ranking
-
 ↓
-
 Context Builder
 ```
 
@@ -751,37 +703,21 @@ Project Athlon organizes execution context into layers.
 
 ```text
 Layer 1
-
 Current Engineering Task
-
 ↓
-
 Layer 2
-
 Relevant Project Artifacts
-
 ↓
-
 Layer 3
-
 Architecture Decisions
-
 ↓
-
 Layer 4
-
 Organizational Standards
-
 ↓
-
 Layer 5
-
 Domain Knowledge
-
 ↓
-
 Layer 6
-
 General Engineering Knowledge
 ```
 
@@ -922,29 +858,17 @@ Project Athlon defines a lifecycle for engineering knowledge.
 
 ```text
 Created
-
 ↓
-
 Validated
-
 ↓
-
 Indexed
-
 ↓
-
 Referenced
-
 ↓
-
 Reused
-
 ↓
-
 Superseded
-
 ↓
-
 Archived
 ```
 
@@ -1045,21 +969,10 @@ Different agents possess different permissions.
 
 Examples:
 
-Business Analyst
-
-Can retrieve requirements.
-
-Developer
-
-Can retrieve implementation artifacts.
-
-Security Agent
-
-Can retrieve security reviews.
-
-Executive Reporting Agent
-
-May retrieve portfolio metrics but not confidential source code.
+- Business Analyst — Can retrieve requirements.
+- Developer — Can retrieve implementation artifacts.
+- Security Agent — Can retrieve security reviews.
+- Executive Reporting Agent — May retrieve portfolio metrics but not confidential source code.
 
 Governance determines visibility.
 
@@ -1102,21 +1015,10 @@ Knowledge retention varies by artifact type.
 
 Examples:
 
-Architecture Decisions
-
-Retained permanently.
-
-Build Logs
-
-Retained for ninety days.
-
-Production Incidents
-
-Retained for five years.
-
-Compliance evidence
-
-Retained according to legal requirements.
+- Architecture Decisions — Retained permanently.
+- Build Logs — Retained for ninety days.
+- Production Incidents — Retained for five years.
+- Compliance evidence — Retained according to legal requirements.
 
 Retention should be policy-driven rather than hardcoded.
 
@@ -1181,23 +1083,14 @@ The initial .NET implementation should define clear abstractions.
 
 ```text
 IMemoryProvider
-
 IContextBuilder
-
 IKnowledgeRepository
-
 IKnowledgeIndexer
-
 IKnowledgeRetriever
-
 ISemanticSearchProvider
-
 IRelationshipGraph
-
 IMemoryPolicyEngine
-
 IEmbeddingProvider
-
 IKnowledgeEvaluator
 ```
 
@@ -1353,7 +1246,6 @@ A conceptual implementation is illustrated below.
 
 ```text
                    Memory Service
-
  ┌───────────────────────────────────────────────┐
  │                                               │
  │  Retrieval API                               │
@@ -1419,17 +1311,11 @@ For example:
 
 ```text
 IMemoryRepository
-
 ↓
-
 SQL Server
-
 or
-
 PostgreSQL
-
 or
-
 Cloud Storage
 ```
 
@@ -1460,23 +1346,14 @@ This allows multiple Memory Service instances to execute in parallel.
 
 ```text
 Agent Requests
-
 ↓
-
 Load Balancer
-
 ↓
-
 ┌────────────┬────────────┬────────────┐
-
 Memory      Memory      Memory
-
 Service A   Service B   Service C
-
 └────────────┴────────────┴────────────┘
-
 ↓
-
 Shared Knowledge Stores
 ```
 
@@ -1494,21 +1371,13 @@ Example:
 
 ```text
 Tenant
-
 ↓
-
 Projects
-
 ↓
-
 Artifacts
-
 ↓
-
 Knowledge
-
 ↓
-
 Context
 ```
 

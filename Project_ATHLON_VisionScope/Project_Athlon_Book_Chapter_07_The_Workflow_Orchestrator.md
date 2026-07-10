@@ -110,45 +110,25 @@ Every workflow begins with a business request.
 
 ```text
 Business Request
-
 ↓
-
 Business Analyst
-
 ↓
-
 Architect
-
 ↓
-
 Developer
-
 ↓
-
 Reviewer
-
 ↓
-
 QA
-
 ↓
-
 Documentation
-
 ↓
-
 Human Approval
-
 ↓
-
 Git Repository
-
 ↓
-
 CI/CD
-
 ↓
-
 Deployment
 ```
 
@@ -164,29 +144,17 @@ Every workflow instance transitions through a defined lifecycle.
 
 ```text
 Created
-
 ↓
-
 WaitingForContext
-
 ↓
-
 Ready
-
 ↓
-
 Executing
-
 ↓
-
 Validating
-
 ↓
-
 WaitingForApproval
-
 ↓
-
 Completed
 ```
 
@@ -240,20 +208,15 @@ Chooses the next agent according to workflow rules.
 
 Examples:
 
+```text
 Business Request
-
 ↓
-
 Business Analyst Agent
-
 ↓
-
 Architect Agent
-
 ↓
-
 Developer Agent
-
+```
 The orchestrator—not the agents—controls sequencing.
 
 ---
@@ -278,17 +241,12 @@ Major workflow events should be published.
 
 Examples:
 
-WorkflowStarted
-
-ArtifactCreated
-
-ValidationFailed
-
-ApprovalRequested
-
-WorkflowCompleted
-
-WorkflowFailed
+- WorkflowStarted
+- ArtifactCreated
+- ValidationFailed
+- ApprovalRequested
+- WorkflowCompleted
+- WorkflowFailed
 
 This enables integration with monitoring and analytics systems.
 
@@ -322,25 +280,17 @@ Level 1
 
 Retry same agent.
 
----
-
 Level 2
 
 Retry with additional context.
-
----
 
 Level 3
 
 Retry using another model.
 
----
-
 Level 4
 
 Escalate to human.
-
----
 
 Level 5
 
@@ -356,24 +306,17 @@ Many SDLC activities are independent.
 
 Example:
 
+```text
 Developer
-
 ↓
-
 ┌──────────────┬─────────────┐
-
-Reviewer    Security
-
+│  Reviewer    │  Security   │
 └──────────────┴─────────────┘
-
 ↓
-
 QA
-
 ↓
-
 Documentation
-
+```
 Parallel execution reduces overall delivery time.
 
 The orchestrator is responsible for synchronization.
@@ -386,18 +329,21 @@ Workflow definitions should be declarative.
 
 Example:
 
-```yaml
-Workflow:
-  Name: FeatureDelivery
-
-Steps:
-  - BusinessAnalyst
-  - Architect
-  - Developer
-  - Reviewer
-  - QA
-  - Documentation
-  - HumanApproval
+```json
+{
+  "Workflow": {
+    "Name": "FeatureDelivery"
+  },
+  "Steps": [
+    "BusinessAnalyst",
+    "Architect",
+    "Developer",
+    "Reviewer",
+    "QA",
+    "Documentation",
+    "HumanApproval"
+  ]
+}
 ```
 
 Future versions may support dynamic workflows.
@@ -414,29 +360,20 @@ It is **not** the architecture.
 
 Mapping:
 
+```text
 Athlon Workflow
-
 ↓
-
 LangGraph Graph
-
 Athlon Agent
-
 ↓
-
 LangGraph Node
-
 Athlon Artifact
-
 ↓
-
 Graph State
-
 Athlon Transition
-
 ↓
-
 Edge
+```
 
 This abstraction preserves vendor independence.
 
@@ -450,19 +387,13 @@ Instead it delegates through MCP.
 
 Examples:
 
-Filesystem
-
-Git
-
-Docker
-
-SQL Server
-
-Browser
-
-Azure DevOps
-
-GitHub
+- Filesystem
+- Git
+- Docker
+- SQL Server
+- Browser
+- Azure DevOps
+- GitHub
 
 This provides:
 
@@ -478,23 +409,14 @@ Suggested interfaces:
 
 ```text
 IWorkflowEngine
-
 IWorkflowDefinition
-
 IWorkflowInstance
-
 IWorkflowState
-
 IWorkflowExecutor
-
 IAgentRegistry
-
 ITransitionPolicy
-
 IApprovalService
-
 IWorkflowRepository
-
 IEventPublisher
 ```
 
@@ -506,53 +428,29 @@ The orchestrator depends only on abstractions.
 
 ```text
 Business Request
-
 ↓
-
 Workflow Engine
-
 ↓
-
 Business Analyst Agent
-
 ↓
-
 Artifact Store
-
 ↓
-
 Architect Agent
-
 ↓
-
 Artifact Store
-
 ↓
-
 Developer Agent
-
 ↓
-
 Artifact Store
-
 ↓
-
 Reviewer Agent
-
 ↓
-
 QA Agent
-
 ↓
-
 Documentation Agent
-
 ↓
-
 Approval
-
 ↓
-
 Git Repository
 ```
 

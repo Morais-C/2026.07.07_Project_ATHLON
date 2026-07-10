@@ -102,15 +102,13 @@ Every developer can clone the repository and start the platform locally.
 
 Implement the smallest complete engineering workflow.
 
+```text
 Business Requirement
-
 ↓
-
 Developer Agent
-
 ↓
-
 Implementation Artifact
+```
 
 ## Deliverables
 
@@ -283,47 +281,29 @@ Demonstrate the complete Project Athlon vision.
 
 ## End-to-End Scenario
 
+```text
 Business Idea
-
 ↓
-
 Requirements
-
 ↓
-
 Architecture
-
 ↓
-
 Planning
-
 ↓
-
 Implementation
-
 ↓
-
 Review
-
 ↓
-
 Testing
-
 ↓
-
 Deployment
-
 ↓
-
 Production Observation
-
 ↓
-
 Knowledge Capture
-
 ↓
-
 Improved Future Development
+```
 
 ## Demonstration
 

@@ -23,11 +23,11 @@ platform's core contracts.
 -   Extensible
 -   Incrementally adoptable
 
-------------------------------------------------------------------------
+---
 
 ## 5.2 Logical Architecture
 
-``` text
+```text
                  Human User
                      │
                      ▼
@@ -53,23 +53,23 @@ platform's core contracts.
 
 ### Core Components
 
-  Component        Responsibility
-  ---------------- --------------------------------------
-  Portal/API       Receives requests and exposes status
-  Orchestrator     Executes workflows and manages state
-  Agent Runtime    Hosts specialized AI agents
-  Artifact Store   Stores versioned outputs
-  Memory           Supplies reusable context
-  MCP Layer        Access to external tools
-  LLM Provider     Routes requests to AI models
+| Component | Responsibility |
+| --- | --- |
+| Portal/API | Receives requests and exposes status |
+| Orchestrator | Executes workflows and manages state |
+| Agent Runtime | Hosts specialized AI agents |
+| Artifact Store | Stores versioned outputs |
+| Memory | Supplies reusable context |
+| MCP Layer | Access to external tools |
+| LLM Provider | Routes requests to AI models |
 
-------------------------------------------------------------------------
+---
 
 ## 5.3 Agent Runtime
 
 Every agent follows the same lifecycle.
 
-``` text
+```text
 Input
   │
 Context Retrieval
@@ -100,7 +100,7 @@ Each agent exposes:
 -   Validation rules
 -   Confidence score
 
-------------------------------------------------------------------------
+---
 
 ## 5.4 Artifact-Driven Engineering
 
@@ -108,16 +108,16 @@ Agents exchange immutable artifacts rather than conversations.
 
 Example:
 
-``` json
+```json
 {
-  "artifactId":"USR-001",
-  "type":"UserStory",
-  "version":"1.0",
-  "producer":"BusinessAnalyst",
-  "status":"Approved",
-  "payload":{
-    "title":"Support remote meal allowance",
-    "acceptanceCriteria":[]
+  "artifactId": "USR-001",
+  "type": "UserStory",
+  "version": "1.0",
+  "producer": "BusinessAnalyst",
+  "status": "Approved",
+  "payload": {
+    "title": "Support remote meal allowance",
+    "acceptanceCriteria": []
   }
 }
 ```
@@ -130,7 +130,7 @@ Example:
 -   Model independence
 -   Traceability
 
-------------------------------------------------------------------------
+---
 
 ## 5.5 Workflow Orchestrator
 
@@ -146,7 +146,7 @@ Responsibilities:
 The orchestrator never contains business knowledge; it coordinates
 execution.
 
-------------------------------------------------------------------------
+---
 
 ## 5.6 Memory Architecture
 
@@ -160,7 +160,7 @@ Four logical layers:
 Initially these may be Markdown files and structured JSON. Vector search
 can be introduced later without changing agent contracts.
 
-------------------------------------------------------------------------
+---
 
 ## 5.7 MCP Integration
 
@@ -180,13 +180,13 @@ Typical servers:
 
 This keeps agents portable and secure.
 
-------------------------------------------------------------------------
+---
 
 ## 5.8 LLM Provider Abstraction
 
 Define an interface such as:
 
-``` text
+```text
 ILLMProvider
  ├─ OpenAIProvider
  ├─ AnthropicProvider
@@ -196,7 +196,7 @@ ILLMProvider
 
 Routing strategies may consider quality, latency and cost.
 
-------------------------------------------------------------------------
+---
 
 ## 5.9 Security
 
@@ -208,7 +208,7 @@ Security principles include:
 -   Secret isolation
 -   Immutable audit trail
 
-------------------------------------------------------------------------
+---
 
 ## 5.10 Observability
 
@@ -225,7 +225,7 @@ Capture for every execution:
 
 These metrics enable continuous evaluation.
 
-------------------------------------------------------------------------
+---
 
 ## 5.11 Extensibility
 
@@ -240,7 +240,7 @@ Examples:
 
 No orchestrator changes should be required.
 
-------------------------------------------------------------------------
+---
 
 ## 5.12 Initial ADRs
 
@@ -255,7 +255,7 @@ informally in Chapter 3)*.
 
 **ADR-005** --- Integrate external capabilities through MCP.
 
-------------------------------------------------------------------------
+---
 
 ## Chapter Summary
 

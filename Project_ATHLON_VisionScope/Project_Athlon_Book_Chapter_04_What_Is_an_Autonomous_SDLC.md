@@ -16,13 +16,13 @@ validate work while humans provide intent, governance, and approval.
 
 Traditional SDLC:
 
-``` text
+```text
 Requirements → Design → Development → Testing → Deployment → Maintenance
 ```
 
 Autonomous SDLC:
 
-``` text
+```text
 Business Request
       │
       ▼
@@ -40,9 +40,9 @@ Reviewer Agent   Security Agent
              ▼
           QA Agent
              ▼
- Documentation Agent
+      Documentation Agent
              ▼
- Human Approval
+        Human Approval
              ▼
    Source Control / CI-CD
 ```
@@ -70,14 +70,14 @@ Reviewer Agent   Security Agent
 
 Every phase produces a versioned artifact:
 
-  Phase           Artifact
-  --------------- ----------------------------------
-  Requirements    User Story, Acceptance Criteria
-  Architecture    ADRs, API Contracts, Diagrams
-  Development     Source Code
-  Review          Findings and Recommendations
-  QA              Test Suite and Results
-  Documentation   Updated Guides and Release Notes
+| Phase | Artifact |
+| --- | --- |
+| Requirements | User Story, Acceptance Criteria |
+| Architecture | ADRs, API Contracts, Diagrams |
+| Development | Source Code |
+| Review | Findings and Recommendations |
+| QA | Test Suite and Results |
+| Documentation | Updated Guides and Release Notes |
 
 Artifacts---not conversations---become the interface between agents.
 

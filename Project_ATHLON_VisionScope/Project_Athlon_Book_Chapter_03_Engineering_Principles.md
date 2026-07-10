@@ -11,17 +11,20 @@ Project Athlon is intentionally designed around principles that remain
 valid regardless of the chosen LLM, orchestration framework, IDE, or
 cloud provider.
 
-------------------------------------------------------------------------
+---
 
 ## Principle 1 --- Human-in-the-Loop
 
 AI accelerates engineering, but accountability remains with people.
 
-Human approval gates should exist before: - Architecture changes -
-Database schema changes - Production deployments - Security-sensitive
-modifications
+Human approval gates should exist before:
 
-------------------------------------------------------------------------
+- Architecture changes
+- Database schema changes
+- Production deployments
+- Security-sensitive modifications
+
+---
 
 ## Principle 2 --- Vertical Slice Delivery
 
@@ -30,37 +33,47 @@ Deliver complete, demonstrable increments.
 Instead of implementing every agent partially, complete one end-to-end
 workflow before expanding the platform.
 
-------------------------------------------------------------------------
+---
 
 ## Principle 3 --- Contract-First Collaboration
 
 Agents communicate through versioned contracts rather than
 conversational text.
 
-Benefits: - Predictable integrations - Easier testing - Auditable
-outputs - Model independence
+Benefits:
+
+- Predictable integrations
+- Easier testing
+- Auditable outputs
+- Model independence
 
 Example artifact:
 
-``` json
+```json
 {
-  "artifactType":"UserStory",
-  "version":"1.0",
-  "producer":"BusinessAnalyst",
-  "payload":{}
+  "artifactType": "UserStory",
+  "version": "1.0",
+  "producer": "BusinessAnalyst",
+  "payload": {}
 }
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Principle 4 --- Explainability
 
 Every recommendation should be traceable.
 
-Each artifact records: - Producer - Timestamp - Inputs - Prompt
-version - Model version - Confidence score
+Each artifact records:
 
-------------------------------------------------------------------------
+- Producer
+- Timestamp
+- Inputs
+- Prompt version
+- Model version
+- Confidence score
+
+---
 
 ## Principle 5 --- Replaceable Components
 
@@ -68,34 +81,46 @@ No component should depend on a specific AI model.
 
 The orchestrator interacts through abstractions:
 
--   LLM Provider
--   Memory Provider
--   Tool Provider
--   Artifact Store
+- LLM Provider
+- Memory Provider
+- Tool Provider
+- Artifact Store
 
 This allows GPT, Claude, Gemini or local models to be substituted with
 minimal changes.
 
-------------------------------------------------------------------------
+---
 
 ## Principle 6 --- Engineering Before Prompting
 
 Prompts are only one part of the system.
 
-A production-grade agent also requires: - Contracts - Validation - Retry
-strategy - Tool access - Evaluation - Logging - Observability
+A production-grade agent also requires:
 
-------------------------------------------------------------------------
+- Contracts
+- Validation
+- Retry strategy
+- Tool access
+- Evaluation
+- Logging
+- Observability
+
+---
 
 ## Principle 7 --- Quality by Default
 
 Every artifact should be evaluated before it becomes input to another
 agent.
 
-Quality gates include: - Schema validation - Business-rule validation -
-Static analysis - Test execution - Human review where appropriate
+Quality gates include:
 
-------------------------------------------------------------------------
+- Schema validation
+- Business-rule validation
+- Static analysis
+- Test execution
+- Human review where appropriate
+
+---
 
 ## Principle 8 --- Incremental Evolution
 
@@ -109,7 +134,7 @@ Phase 3: Parallel agents
 
 Phase 4: Enterprise governance
 
-------------------------------------------------------------------------
+---
 
 ## Architecture Decision
 
@@ -123,7 +148,7 @@ This decision is formalized as **ADR-001** in Chapter 5 ("Start with
 sequential orchestration"), where the complete Architecture Decision
 Record ledger for Project Athlon begins.
 
-------------------------------------------------------------------------
+---
 
 ## Chapter Summary
 

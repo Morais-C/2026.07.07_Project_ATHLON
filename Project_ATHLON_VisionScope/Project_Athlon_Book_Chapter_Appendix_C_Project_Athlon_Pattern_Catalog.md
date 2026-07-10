@@ -357,39 +357,23 @@ Future workflows automatically benefit.
 
 The patterns are intentionally interconnected.
 
-```
+```text
 Workflow First
-
 ↓
-
 Artifact-Driven Collaboration
-
 ↓
-
 Organizational Memory
-
 ↓
-
 Memory-First Reasoning
-
 ↓
-
 Reasoning Strategy
-
 ↓
-
 Reflection Before Action
-
 ↓
-
 Governed Capability Execution
-
 ↓
-
 Engineering Observability
-
 ↓
-
 Continuous Organizational Learning
 ```
 

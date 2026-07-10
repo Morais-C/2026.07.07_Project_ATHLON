@@ -213,45 +213,25 @@ Project Athlon models engineering reasoning through the **Agent Reasoning Stack*
 
 ```text
 Business Objective
-
 ↓
-
 Workflow
-
 ↓
-
 Agent Role
-
 ↓
-
 Memory
-
 ↓
-
 Artifacts
-
 ↓
-
 Capabilities (MCP)
-
 ↓
-
 Reasoning Strategy
-
 ↓
-
 Prompt Composition
-
 ↓
-
 Large Language Model
-
 ↓
-
 Structured Output
-
 ↓
-
 Engineering Artifact
 ```
 
@@ -374,33 +354,19 @@ The relationships are summarized below.
 
 ```text
 Workflow
-
 ↓
-
 Artifacts
-
 ↓
-
 Memory
-
 ↓
-
 Capabilities
-
 ↓
-
 Reasoning
-
 ↓
-
 Engineering Decision
-
 ↓
-
 Execution
-
 ↓
-
 New Artifact
 ```
 
@@ -566,18 +532,15 @@ Review this code for performance issues.
 
 Project Athlon stores a Prompt Asset:
 
-```yaml
-Id: PerformanceReview
-
-Version: 2.1
-
-Agent: ReviewerAgent
-
-Strategy: PerformanceAnalysis
-
-Output: PerformanceReviewArtifact
-
-Owner: Architecture Team
+```json
+{
+  "Id": "PerformanceReview",
+  "Version": 2.1,
+  "Agent": "ReviewerAgent",
+  "Strategy": "PerformanceAnalysis",
+  "Output": "PerformanceReviewArtifact",
+  "Owner": "Architecture Team"
+}
 ```
 
 The textual instruction becomes only one element of the asset.
@@ -606,41 +569,23 @@ Project Athlon constructs prompts from multiple architectural layers.
 
 ```text
 System Layer
-
 ↓
-
 Platform Policies
-
 ↓
-
 Workflow Context
-
 ↓
-
 Agent Definition
-
 ↓
-
 Reasoning Strategy
-
 ↓
-
 Memory
-
 ↓
-
 Artifacts
-
 ↓
-
 Capability Context
-
 ↓
-
 Task
-
 ↓
-
 User Input
 ```
 
@@ -826,20 +771,16 @@ Instead of returning:
 
 An Architecture Agent might generate:
 
-```yaml
-Observation:
-
-Evidence:
-
-Risk:
-
-Impact:
-
-Recommendation:
-
-Confidence:
-
-References:
+```json
+{
+  "Observation": null,
+  "Evidence": null,
+  "Risk": null,
+  "Impact": null,
+  "Recommendation": null,
+  "Confidence": null,
+  "References": null
+}
 ```
 
 This output can be:
@@ -925,15 +866,10 @@ Examples:
 
 ```text
 ArchitectureReview
-
 v1.0
-
 ↓
-
 v1.1
-
 ↓
-
 v2.0
 ```
 
@@ -951,33 +887,19 @@ Prompt Assets follow a lifecycle similar to source code.
 
 ```text
 Draft
-
 ↓
-
 Review
-
 ↓
-
 Approval
-
 ↓
-
 Publication
-
 ↓
-
 Usage
-
 ↓
-
 Monitoring
-
 ↓
-
 Improvement
-
 ↓
-
 Next Version
 ```
 
@@ -1064,41 +986,23 @@ Project Athlon models reasoning as a continuous cycle rather than a single infer
 
 ```text
 Observe
-
 ↓
-
 Collect Evidence
-
 ↓
-
 Retrieve Memory
-
 ↓
-
 Understand Context
-
 ↓
-
 Generate Alternatives
-
 ↓
-
 Evaluate
-
 ↓
-
 Select Decision
-
 ↓
-
 Estimate Confidence
-
 ↓
-
 Generate Artifact
-
 ↓
-
 Continue Workflow
 ```
 
@@ -1119,36 +1023,23 @@ Autonomous software engineering should avoid making large irreversible decisions
 Instead, Project Athlon encourages incremental reasoning.
 
 For example:
-
+```text
 Architecture Agent
-
 ↓
-
 Architecture Assessment
-
 ↓
-
 Developer Agent
-
 ↓
-
 Implementation Plan
-
 ↓
-
 Reviewer Agent
-
 ↓
-
 Quality Assessment
-
 ↓
-
 Deployment Agent
-
 ↓
-
 Release Decision
+```
 
 Each decision builds upon previous artifacts.
 
@@ -1173,33 +1064,21 @@ Planning becomes an explicit reasoning strategy.
 Large engineering objectives are decomposed into manageable tasks.
 
 Example:
-
+```text
 Implement Payroll Feature
-
 ↓
-
 Domain Analysis
-
 ↓
-
 Architecture
-
 ↓
-
 Implementation
-
 ↓
-
 Testing
-
 ↓
-
 Deployment
-
 ↓
-
 Documentation
-
+```
 Each task becomes an independent workflow artifact.
 
 ---
@@ -1228,17 +1107,11 @@ Planning therefore remains iterative.
 
 ```text
 Plan
-
 ↓
-
 Execute
-
 ↓
-
 Observe
-
 ↓
-
 Adjust Plan
 ```
 
@@ -1265,21 +1138,13 @@ Project Athlon encourages the same behavior.
 
 ```text
 Initial Reasoning
-
 ↓
-
 Evaluate
-
 ↓
-
 Identify Weaknesses
-
 ↓
-
 Refine
-
 ↓
-
 Improved Decision
 ```
 
@@ -1351,26 +1216,17 @@ It is an assessment of available evidence.
 
 Example:
 
-```yaml
-Decision:
-
-Recommended Refactoring
-
-Confidence:
-
-82%
-
-Evidence:
-
-Architecture Assessment
-
-Code Metrics
-
-Performance Report
-
-Outstanding Questions:
-
-Database Load Unknown
+```json
+{
+  "Decision": "Recommended Refactoring",
+  "Confidence": "82%",
+  "Evidence": [
+    "Architecture Assessment",
+    "Code Metrics",
+    "Performance Report"
+  ],
+  "Outstanding Questions": "Database Load Unknown"
+}
 ```
 
 Confidence becomes another reusable engineering artifact.
@@ -1439,25 +1295,15 @@ Example:
 
 ```text
 Business Analyst
-
 ↓
-
 Architect
-
 ↓
-
 Developer
-
 ↓
-
 Security Reviewer
-
 ↓
-
 QA Engineer
-
 ↓
-
 Release Manager
 ```
 
@@ -1649,33 +1495,19 @@ The relationship can be summarized as follows.
 
 ```text
 Business Goal
-
 ↓
-
 Workflow
-
 ↓
-
 Engineering Agent
-
 ↓
-
 Reasoning Engine
-
 ↓
-
 Prompt Assembly
-
 ↓
-
 Language Model
-
 ↓
-
 Structured Output
-
 ↓
-
 Engineering Artifact
 ```
 
@@ -1702,25 +1534,15 @@ The Reasoning Engine is itself composed of specialized components.
 
 ```text
 Reasoning Engine
-
 ├── Context Assembler
-
 ├── Prompt Composer
-
 ├── Strategy Selector
-
 ├── Memory Coordinator
-
 ├── Artifact Resolver
-
 ├── Capability Resolver
-
 ├── Output Validator
-
 ├── Confidence Estimator
-
 ├── Reflection Engine
-
 └── Telemetry Collector
 ```
 
@@ -1811,33 +1633,19 @@ A simplified Developer Agent may execute the following graph.
 
 ```text
 Retrieve Context
-
 ↓
-
 Retrieve Memory
-
 ↓
-
 Reason
-
 ↓
-
 Reflect
-
 ↓
-
 Confidence Check
-
 ↓
-
 Generate Artifact
-
 ↓
-
 Invoke MCP
-
 ↓
-
 Continue Workflow
 ```
 
@@ -1953,21 +1761,13 @@ The Reasoning subsystem should remain independent from workflow orchestration.
 
 ```text
 /src
-
 Athlon.Reasoning
-
 Athlon.Reasoning.Strategies
-
 Athlon.Reasoning.Prompts
-
 Athlon.Reasoning.Memory
-
 Athlon.Reasoning.Telemetry
-
 Athlon.Reasoning.Validation
-
 Athlon.Reasoning.Contracts
-
 Athlon.Reasoning.Tests
 ```
 
@@ -2109,51 +1909,28 @@ The complete reasoning architecture is illustrated below.
 
 ```text
                      Workflow
-
                          │
-
                 Engineering Agent
-
                          │
-
                  Reasoning Engine
-
        ┌──────────┼──────────┬──────────┐
-
        ▼          ▼          ▼
-
  Artifacts     Memory      Capabilities
-
        │          │          │
-
        └──────────┼──────────┘
-
                   ▼
-
           Prompt Composition
-
                   │
-
                   ▼
-
            Large Language Model
-
                   │
-
                   ▼
-
          Structured Engineering Output
-
                   │
-
                   ▼
-
            Engineering Artifact
-
                   │
-
                   ▼
-
            Organizational Memory
 ```
 

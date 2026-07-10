@@ -28,31 +28,19 @@ Every recommendation can be translated directly into source code.
 
 The implementation follows the layered architecture introduced throughout the book.
 
-```
+```text
 Presentation
-
 ↓
-
 Workflow
-
 ↓
-
 Engineering Agents
-
 ↓
-
 Reasoning
-
 ↓
-
 Knowledge Platform
-
 ↓
-
 Capabilities
-
 ↓
-
 Infrastructure
 ```
 
@@ -66,25 +54,16 @@ No layer should bypass another.
 
 The recommended repository structure is:
 
-```
+```text
 project-athlon/
-
 src/
-
 tests/
-
 docs/
-
 infra/
-
 tools/
-
 examples/
-
 playbooks/
-
 scripts/
-
 ```
 
 Each directory exists for a specific architectural reason.
@@ -95,27 +74,17 @@ Each directory exists for a specific architectural reason.
 
 Contains all production code.
 
-```
+```text
 Athlon.ApiGateway
-
 Athlon.Workflow
-
 Athlon.Agents
-
 Athlon.Reasoning
-
 Athlon.Artifacts
-
 Athlon.Memory
-
 Athlon.Capabilities
-
 Athlon.Mcp
-
 Athlon.Telemetry
-
 Athlon.SharedKernel
-
 Athlon.Contracts
 ```
 
@@ -123,19 +92,13 @@ Athlon.Contracts
 
 ## tests
 
-```
+```text
 Unit
-
 Integration
-
 Workflow
-
 Reasoning
-
 PromptRegression
-
 Performance
-
 Architecture
 ```
 
@@ -147,19 +110,13 @@ Testing mirrors the architecture.
 
 Contains architecture documentation.
 
-```
+```text
 Vision
-
 ADR
-
 Runbooks
-
 Playbooks
-
 Reference Architecture
-
 Implementation Guide
-
 Standards
 ```
 
@@ -173,43 +130,25 @@ One common mistake when building AI platforms is implementing agents before the 
 
 Project Athlon recommends the opposite.
 
-```
+```text
 Contracts
-
 ↓
-
 Shared Kernel
-
 ↓
-
 Artifact Layer
-
 ↓
-
 Workflow Engine
-
 ↓
-
 Memory
-
 ↓
-
 Reasoning
-
 ↓
-
 Capabilities
-
 ↓
-
 Engineering Agents
-
 ↓
-
 Portal
-
 ↓
-
 Observability
 ```
 
@@ -223,23 +162,14 @@ Every service communicates through contracts.
 
 Examples include:
 
-```
-Artifact
-
-WorkflowContext
-
-ReasoningRequest
-
-ReasoningResult
-
-CapabilityRequest
-
-CapabilityResponse
-
-WorkflowEvent
-
-AgentResponse
-```
+- Artifact
+- WorkflowContext
+- ReasoningRequest
+- ReasoningResult
+- CapabilityRequest
+- CapabilityResponse
+- WorkflowEvent
+- AgentResponse
 
 Contracts should be versioned independently.
 
@@ -251,21 +181,13 @@ Contains concepts shared across the platform.
 
 Examples:
 
-```
-Result<T>
-
-EntityId
-
-ValueObject
-
-Clock
-
-CorrelationId
-
-ExecutionContext
-
-DomainEvent
-```
+- `Result<T>`
+- EntityId
+- ValueObject
+- Clock
+- CorrelationId
+- ExecutionContext
+- DomainEvent
 
 The Shared Kernel should remain intentionally small.
 
@@ -323,39 +245,23 @@ LangGraph provides the orchestration engine, while Project Athlon defines the wo
 
 Each Engineering Agent follows the same execution lifecycle.
 
-```
+```text
 Receive Workflow Context
-
 ↓
-
 Load Artifacts
-
 ↓
-
 Load Memory
-
 ↓
-
 Select Reasoning Strategy
-
 ↓
-
 Assemble Prompt Assets
-
 ↓
-
 Invoke LLM
-
 ↓
-
 Validate Output
-
 ↓
-
 Generate Artifact
-
 ↓
-
 Publish Event
 ```
 
@@ -369,35 +275,21 @@ The Reasoning Engine should remain independent from any specific language model.
 
 Core components include:
 
-```
+```text
 Prompt Composer
-
 ↓
-
 Context Builder
-
 ↓
-
 Memory Coordinator
-
 ↓
-
 Strategy Selector
-
 ↓
-
 Model Provider
-
 ↓
-
 Reflection Engine
-
 ↓
-
 Validator
-
 ↓
-
 Confidence Estimator
 ```
 
@@ -411,21 +303,14 @@ Prompt Assets are first-class engineering assets.
 
 Suggested structure:
 
-```
+```text
 prompts/
-
 Architecture/
-
 Development/
-
 Review/
-
 Testing/
-
 Security/
-
 Operations/
-
 Shared/
 ```
 
@@ -448,23 +333,14 @@ Reasoning Strategies encapsulate engineering thinking.
 
 Examples:
 
-```
-Architecture Review
-
-Trade-off Analysis
-
-Root Cause Analysis
-
-Threat Modeling
-
-Performance Optimization
-
-Migration Planning
-
-Dependency Analysis
-
-Code Review
-```
+- Architecture Review
+- Trade-off Analysis
+- Root Cause Analysis
+- Threat Modeling
+- Performance Optimization
+- Migration Planning
+- Dependency Analysis
+- Code Review
 
 Strategies should be independently testable.
 
@@ -474,27 +350,17 @@ Strategies should be independently testable.
 
 Memory is divided into multiple repositories.
 
-```
+```text
 Artifacts
-
 ↓
-
 Architecture Decisions
-
 ↓
-
 Engineering Standards
-
 ↓
-
 Operational Knowledge
-
 ↓
-
 Historical Workflows
-
 ↓
-
 Lessons Learned
 ```
 
@@ -510,19 +376,13 @@ Capabilities abstract external systems.
 
 Example:
 
-```
+```text
 Git Capability
-
 ↓
-
 Create Branch
-
 ↓
-
 Commit Changes
-
 ↓
-
 Create Pull Request
 ```
 
@@ -538,23 +398,14 @@ Each MCP server should expose a bounded context.
 
 Recommended servers include:
 
-```
-Source Control
-
-CI/CD
-
-Issue Tracking
-
-Documentation
-
-Infrastructure
-
-Monitoring
-
-Secrets
-
-Messaging
-```
+- Source Control
+- CI/CD
+- Issue Tracking
+- Documentation
+- Infrastructure
+- Monitoring
+- Secrets
+- Messaging
 
 Small, focused MCP servers are easier to secure, maintain and evolve.
 
@@ -598,31 +449,19 @@ Engineering observability is as important as infrastructure observability.
 
 Project Athlon introduces additional testing layers beyond conventional software testing.
 
-```
+```text
 Unit Tests
-
 ↓
-
 Integration Tests
-
 ↓
-
 Workflow Tests
-
 ↓
-
 Prompt Regression Tests
-
 ↓
-
 Reasoning Validation
-
 ↓
-
 Architecture Conformance Tests
-
 ↓
-
 End-to-End Engineering Scenarios
 ```
 
@@ -634,43 +473,25 @@ Prompt regression testing becomes a standard engineering practice.
 
 A typical pipeline consists of:
 
-```
+```text
 Build
-
 ↓
-
 Static Analysis
-
 ↓
-
 Unit Tests
-
 ↓
-
 Architecture Validation
-
 ↓
-
 Prompt Regression
-
 ↓
-
 Integration Tests
-
 ↓
-
 Container Build
-
 ↓
-
 Security Scan
-
 ↓
-
 Deployment
-
 ↓
-
 Smoke Tests
 ```
 
@@ -701,35 +522,21 @@ Docker Compose is recommended for local development.
 
 A production deployment typically includes:
 
-```
+```text
 Ingress
-
 ↓
-
 API Gateway
-
 ↓
-
 Workflow Cluster
-
 ↓
-
 Agent Cluster
-
 ↓
-
 Reasoning Cluster
-
 ↓
-
 Memory Services
-
 ↓
-
 MCP Services
-
 ↓
-
 Infrastructure Services
 ```
 
@@ -773,49 +580,41 @@ Engineering throughput matters more than individual model latency.
 
 # B.23 Recommended Milestones
 
-Milestone 1
+**Milestone 1**
 
-One workflow.
-
-One agent.
-
-One artifact.
+- One workflow
+- One agent
+- One artifact
 
 ---
 
-Milestone 2
+**Milestone 2**
 
-Memory.
-
-Reasoning.
-
-Prompt Assets.
+- Memory
+- Reasoning
+- Prompt Assets
 
 ---
 
-Milestone 3
+**Milestone 3**
 
-Multiple agents.
-
-Workflow collaboration.
-
----
-
-Milestone 4
-
-MCP integration.
-
-Governed execution.
+- Multiple agents
+- Workflow collaboration
 
 ---
 
-Milestone 5
+**Milestone 4**
 
-Production deployment.
+- MCP integration
+- Governed execution
 
-Continuous learning.
+---
 
-Enterprise observability.
+**Milestone 5**
+
+- Production deployment
+- Continuous learning
+- Enterprise observability
 
 ---
 

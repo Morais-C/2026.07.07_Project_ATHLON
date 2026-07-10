@@ -1,0 +1,21 @@
+/* Project Athlon — markdown preview (minimal) */
+
+body.vscode-body {
+  max-width: none;
+  padding: 1.5rem 2.5rem;
+}
+
+blockquote {
+  background: #f4f1ea;
+  color: #2b2b2b;
+  border-left: 4px solid #8b7355;
+}
+
+/* Code + diagram boxes — background only, do not set text color */
+pre {
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  padding: 1em;
+  overflow-x: auto;
+}
