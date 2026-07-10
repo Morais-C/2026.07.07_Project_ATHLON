@@ -27,8 +27,8 @@ Near-verbatim duplicate in two chapters.
 | Ch. 6 | §6.9 Error Recovery |
 | Ch. 7 | §7.8 Error Recovery |
 
-- [ ] **Canonicalize in Ch. 6** (agent-runtime perspective)
-- [ ] **Ch. 7:** replace body with short orchestrator-specific notes + cross-ref to Ch. 6 §6.9
+- [x] **Canonicalize in Ch. 6** (agent-runtime perspective) *(done 2026-07-10)*
+- [x] **Ch. 7:** replace body with short orchestrator-specific notes + cross-ref to Ch. 6 §6.9 *(done 2026-07-10)*
 
 ---
 
@@ -43,8 +43,8 @@ Same concept restated in four places with different wording.
 | Ch. 6 | §6.10 Human Approval |
 | Ch. 7 | §7.7 Human Approval |
 
-- [ ] **Canonicalize in Ch. 4** (numbered gate list)
-- [ ] Ch. 3 / 6 / 7: shorten to principle-level mention + “see Ch. 4”
+- [x] **Canonicalize in Ch. 4** (numbered gate list) *(done 2026-07-10; merged security + financial from Ch. 6)*
+- [x] Ch. 3 / 6 / 7: shorten to principle-level mention + “see Ch. 4” *(done 2026-07-10)*
 
 ---
 
@@ -68,10 +68,10 @@ Similar `Business Request → … → Agent` flow diagrams recur across multiple
 | Two **Best Practices** sections | ~line 1406 · ~line 1905 | Mid-chapter block appears **before** §10.25 resumes |
 | Two **Common Anti-Patterns** sections | ~line 1418 · ~line 1920 | Same ordering problem |
 
-- [ ] Rename §10.23 → e.g. **“MCP Server Observability”** (or merge under one Observability parent with subsections)
-- [ ] Rename §10.29 → e.g. **“Platform Observability”**
-- [ ] Rename first anti-patterns block → e.g. **“MCP Anti-Patterns”**; keep end block as **“Architectural Anti-Patterns”** — or merge into one section
-- [ ] **Reorder:** move mid-chapter Best Practices / Anti-Patterns to after §10.28 (or delete if redundant with end-of-chapter versions)
+- [x] Rename §10.23 → **MCP Server Observability** *(done 2026-07-10)*
+- [x] Rename §10.29 → **Platform Observability** *(done 2026-07-10)*
+- [x] Mid-chapter block → **MCP Best Practices** / **MCP Anti-Patterns**; end → **Platform Best Practices** / **Architectural Anti-Patterns** *(done 2026-07-10)*
+- [x] **Reorder:** moved MCP Best Practices / Anti-Patterns to after §10.28 *(done 2026-07-10)*
 
 ---
 
@@ -112,7 +112,7 @@ Third overlapping implementation narrative alongside Appendix A and B.
 
 Index marks Ch. 5 as *(preview)*; chapter body still reads like a standalone architecture chapter (ADR-001–005).
 
-- [ ] Add opening disclaimer: maps the territory; Ch. 6–11 go deep; Ch. 12 synthesizes
+- [x] Add opening disclaimer: maps the territory; Ch. 6–11 go deep; Ch. 12 synthesizes *(done 2026-07-10)*
 - [ ] Optional: trim ADR detail here since Ch. 5 ADRs are formally introduced in the ledger starting Ch. 5 / continued in later chapters
 
 ---
@@ -254,10 +254,10 @@ Presentation-only fixes applied file-by-file. Does not resolve content/structure
 
 ### Pass 2A — Quick wins (~1–2 hours)
 
-1. Error-recovery ladder → canonical Ch. 6
-2. Human-approval gates → canonical Ch. 4
-3. Ch. 10 heading renames + section reorder
-4. Ch. 5 preview disclaimer paragraph
+1. ~~Error-recovery ladder → canonical Ch. 6~~ ✓ done 2026-07-10
+2. ~~Human-approval gates → canonical Ch. 4~~ ✓ done 2026-07-10
+3. ~~Ch. 10 heading renames + section reorder~~ ✓ done 2026-07-10
+4. ~~Ch. 5 preview disclaimer paragraph~~ ✓ done 2026-07-10
 
 ### Pass 2B — Structural (editorial decision)
 
@@ -292,7 +292,10 @@ These are **done**; listed here for context only.
 | Date | Change |
 |------|--------|
 | 2026-07-10 | Initial TODO created from formatting review Ch. 1–10 + prior LLM structural reviews |
-| 2026-07-10 | **Formatting review complete** (16/17 files; Ch. 11 frozen) |
+| 2026-07-10 | **Pass 2A complete** (QW1–QW4) |
+| 2026-07-10 | Pass 2A QW4: Ch. 10 heading dedup + section reorder |
+| 2026-07-10 | Pass 2A QW2: error-recovery ladder dedup (Ch. 6 canonical, Ch. 7 cross-ref) |
+| 2026-07-10 | Pass 2A QW1: Ch. 5 preview disclaimer added |
 | 2026-07-10 | Appendix D formatting review complete |
 | 2026-07-10 | Appendix B formatting review complete |
 | 2026-07-10 | Appendix A formatting review complete |

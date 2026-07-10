@@ -8,6 +8,12 @@
 > Engineering. The Autonomous SDLC is its flagship reference
 > implementation.
 
+This chapter is a deliberate **preview** of the full platform. It maps
+every major subsystem at a glance so you know where the book is headed.
+Chapters 6–11 explain each area in depth. Chapter 12 synthesizes the
+whole. ADRs introduced here are expanded in the formal ledger as the
+narrative progresses.
+
 ## 5.1 Architectural Vision
 
 Athlon separates *engineering workflow* from *LLM implementation*.

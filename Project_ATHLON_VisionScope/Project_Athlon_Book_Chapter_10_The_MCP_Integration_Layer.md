@@ -1255,7 +1255,7 @@ These require workflow intervention.
 
 ---
 
-# 10.23 Observability
+# 10.23 MCP Server Observability
 
 Every MCP Server should emit telemetry.
 
@@ -1400,52 +1400,6 @@ Capability registration is dynamic and discoverable.
 ## ADR-031
 
 Authentication combines user, workflow and agent identities.
-
----
-
-# Best Practices
-
-- Keep MCP Servers focused on a bounded context.
-- Separate protocol handling from business logic.
-- Expose capabilities, not implementation details.
-- Make every execution auditable.
-- Treat failures as reusable engineering knowledge.
-- Prefer configuration over code for capability registration.
-- Design for replacement rather than extension.
-
----
-
-# Common Anti-Patterns
-
-Avoid the following practices.
-
-### Embedding business logic in MCP handlers
-
-Handlers should translate requests, not implement engineering workflows.
-
----
-
-### Exposing vendor-specific operations
-
-Capabilities should express engineering intent.
-
----
-
-### Bypassing approval workflows
-
-Governance should never depend on prompt instructions.
-
----
-
-### Hardcoding credentials
-
-Identity should be delegated to enterprise identity providers.
-
----
-
-### Returning unstructured errors
-
-Failures should become structured artifacts.
 
 ---
 
@@ -1700,7 +1654,53 @@ The MCP Layer determines how it occurs.
 
 ---
 
-# 10.29 Observability
+# MCP Best Practices
+
+- Keep MCP Servers focused on a bounded context.
+- Separate protocol handling from business logic.
+- Expose capabilities, not implementation details.
+- Make every execution auditable.
+- Treat failures as reusable engineering knowledge.
+- Prefer configuration over code for capability registration.
+- Design for replacement rather than extension.
+
+---
+
+# MCP Anti-Patterns
+
+Avoid the following practices.
+
+### Embedding business logic in MCP handlers
+
+Handlers should translate requests, not implement engineering workflows.
+
+---
+
+### Exposing vendor-specific operations
+
+Capabilities should express engineering intent.
+
+---
+
+### Bypassing approval workflows
+
+Governance should never depend on prompt instructions.
+
+---
+
+### Hardcoding credentials
+
+Identity should be delegated to enterprise identity providers.
+
+---
+
+### Returning unstructured errors
+
+Failures should become structured artifacts.
+
+---
+
+# 10.29 Platform Observability
 
 Autonomous platforms must be observable.
 
@@ -1902,7 +1902,7 @@ These responsibilities remain separate.
 
 ---
 
-# Best Practices
+# Platform Best Practices
 
 Project Athlon recommends the following practices.
 
@@ -1917,7 +1917,7 @@ Project Athlon recommends the following practices.
 
 ---
 
-# Common Anti-Patterns
+# Architectural Anti-Patterns
 
 Avoid the following architectural mistakes.
 

@@ -341,19 +341,18 @@ Abort workflow.
 
 Every retry is recorded.
 
+The Workflow Orchestrator enforces this ladder at the workflow level;
+see Chapter 7, §7.8.
+
 ---
 
 # 6.10 Human Approval
 
 Project Athlon intentionally avoids full autonomy.
 
-Human approval is required before:
-
-- Architecture changes
-- Database schema modifications
-- Production deployment
-- Security-sensitive actions
-- Financial calculations
+Agents must not bypass the approval gates defined in Chapter 4. The
+runtime blocks publication of artifacts that require approval until the
+corresponding gate is satisfied.
 
 Humans remain accountable.
 

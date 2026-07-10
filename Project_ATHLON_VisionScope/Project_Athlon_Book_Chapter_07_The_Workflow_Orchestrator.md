@@ -256,17 +256,11 @@ This enables integration with monitoring and analytics systems.
 
 Not every decision should be automated.
 
-Typical approval gates include:
+The approval gates defined in Chapter 4 are modeled as first-class
+workflow states (for example, `WaitingForApproval`)—not as exceptions.
 
-- Requirements accepted
-- Architecture approved
-- Database migration approved
-- Security review approved
-- Production deployment approved
-
-Approval becomes another workflow state.
-
-It is not an exception.
+The orchestrator pauses execution, records the approval request, and
+resumes only after an authorized human acts.
 
 ---
 
@@ -274,27 +268,18 @@ It is not an exception.
 
 Failures are expected.
 
-The orchestrator defines recovery policies.
+Agent execution follows the progressive recovery ladder defined in
+Chapter 6, §6.9 (retry, enriched context, alternate model, human
+escalation, abort). The orchestrator enforces that ladder across
+workflow state—it does not redefine it.
 
-Level 1
+Orchestrator-specific responsibilities include:
 
-Retry same agent.
-
-Level 2
-
-Retry with additional context.
-
-Level 3
-
-Retry using another model.
-
-Level 4
-
-Escalate to human.
-
-Level 5
-
-Abort workflow.
+- Selecting which recovery level applies after an agent failure
+- Transitioning workflow state (for example, `Retrying`, `Failed`)
+- Recording every retry in execution history
+- Routing the workflow to the same or a substitute agent
+- Pausing for human approval before a retry when policy requires it
 
 Every retry must be recorded.
 

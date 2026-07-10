@@ -102,7 +102,7 @@ Editorial issues that are **not** formatting — duplicated prose, chapter seams
 
 Mark items resolved in `ToDo_Content_Structure.md` as they are completed.
 
-**Formatting review:** **COMPLETE** — Ch. 1–10, Ch. 12, Appendices A–D (Ch. 11 frozen). Full manuscript audit: no issues. Content/structure work remains in [ToDo_Content_Structure.md](ToDo_Content_Structure.md).
+**Pass 2A (quick wins):** **COMPLETE** — see `ToDo_Content_Structure.md`. Content/structure work (Priorities 1–3 beyond QW) remains open.
 
 ---
 

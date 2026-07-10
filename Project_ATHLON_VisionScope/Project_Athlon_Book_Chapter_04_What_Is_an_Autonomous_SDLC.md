@@ -85,13 +85,18 @@ Artifacts---not conversations---become the interface between agents.
 
 Project Athlon intentionally avoids fully autonomous delivery.
 
+The following gates are the authoritative list for the platform;
+subsystem chapters reference this section rather than restating it.
+
 Recommended approval gates:
 
 1.  Requirements accepted.
 2.  Architecture approved.
 3.  Database changes approved.
 4.  Pull Request approved.
-5.  Production deployment approved.
+5.  Security-sensitive actions approved.
+6.  Production deployment approved.
+7.  Financial calculations approved.
 
 ## Design Principles
 

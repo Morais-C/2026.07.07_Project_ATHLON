@@ -17,12 +17,8 @@ cloud provider.
 
 AI accelerates engineering, but accountability remains with people.
 
-Human approval gates should exist before:
-
-- Architecture changes
-- Database schema changes
-- Production deployments
-- Security-sensitive modifications
+Human approval gates should exist before irreversible or high-risk
+engineering actions. The recommended gates are defined in Chapter 4.
 
 ---
 
