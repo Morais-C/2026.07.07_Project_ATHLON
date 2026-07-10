@@ -1,6 +1,6 @@
 # Project Athlon — Building the Autonomous SDLC
 
-# Part II — Architecture
+# Part III — Architecture
 
 # Chapter 6 — The Agent Runtime
 

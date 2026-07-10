@@ -1,6 +1,6 @@
 # Project Athlon — Building the Autonomous SDLC
 
-# Part IV — Engineering Intelligence
+# Part V — Engineering Intelligence
 
 # Chapter 11 — Engineering Agent Behavior
 
@@ -19,7 +19,13 @@ After completing this chapter, the reader should understand:
 - The concept of the Agent Reasoning Stack
 - How Project Athlon models engineering reasoning
 - Why reasoning should be governed like every other architectural capability
-- The relationship between Workflows, Memory, MCP and reasoning
+- The relationship between Reasoning, Workflows, Memory, Artifacts and MCP
+- How the Reasoning Engine is implemented within Project Athlon
+- How LangGraph integrates with the reasoning architecture
+- How reasoning is monitored and evaluated
+- Recommended .NET implementation patterns
+- Best practices and architectural anti-patterns
+- How the complete reasoning architecture prepares the Autonomous SDLC presented in Chapter 12
 
 ---
 
@@ -1626,20 +1632,6 @@ Multiple specialized agents generally outperform one general-purpose agent.
 ## Principle 7 — Reasoning Produces Knowledge
 
 Every reasoning activity generates reusable organizational assets.
-
----
-
-# Learning Objectives
-
-After completing this chapter, the reader should understand:
-
-- How the Reasoning Engine is implemented within Project Athlon
-- How LangGraph integrates with the reasoning architecture
-- The relationship between Reasoning, Workflows, Memory, Artifacts and MCP
-- How reasoning is monitored and evaluated
-- Recommended .NET implementation patterns
-- Best practices and architectural anti-patterns
-- How the complete reasoning architecture prepares the Autonomous SDLC presented in Chapter 12
 
 ---
 

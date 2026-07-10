@@ -1,6 +1,6 @@
 # Project Athlon — Building the Autonomous SDLC
 
-# Part III — Intelligence & Execution
+# Part IV — Knowledge & Execution
 
 # Chapter 10 — The MCP Integration Layer
 

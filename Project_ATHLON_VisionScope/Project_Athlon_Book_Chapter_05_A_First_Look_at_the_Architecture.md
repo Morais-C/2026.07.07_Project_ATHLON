@@ -1,6 +1,8 @@
 # Project Athlon --- Building the Autonomous SDLC
 
-# Chapter 5 --- The Athlon Reference Architecture
+# Part II — Principles & Vision
+
+# Chapter 5 --- A First Look at the Architecture
 
 > **Project Athlon** is an open platform for Agentic Software
 > Engineering. The Autonomous SDLC is its flagship reference
@@ -242,7 +244,8 @@ No orchestrator changes should be required.
 
 ## 5.12 Initial ADRs
 
-**ADR-001** --- Start with sequential orchestration.
+**ADR-001** --- Start with sequential orchestration *(previewed
+informally in Chapter 3)*.
 
 **ADR-002** --- Exchange structured artifacts, not chat transcripts.
 

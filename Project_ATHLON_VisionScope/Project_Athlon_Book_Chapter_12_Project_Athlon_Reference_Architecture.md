@@ -1,12 +1,10 @@
 # Project Athlon — Building the Autonomous SDLC
 
-# Part V — The Autonomous Enterprise
+# Part VI — The Autonomous Enterprise
 
 # Chapter 12 — Project Athlon Reference Architecture
 
 ## Building an Enterprise Autonomous Software Engineering Platform
-
-### Part 1 — The Platform Comes Together
 
 > *"Architectures are remembered not because of the technologies they use, but because they organize complexity into understandable systems."*
 
@@ -21,6 +19,11 @@ After completing this chapter, the reader should understand:
 - The role of each major subsystem within Project Athlon.
 - How enterprise organizations transition from AI-assisted development to Autonomous SDLC.
 - Why Organizational Intelligence becomes the primary competitive advantage of future software organizations.
+- How Project Athlon can be implemented using modern enterprise technologies.
+- The responsibilities of each platform component.
+- The relationship between logical architecture and physical implementation.
+- How autonomous engineering workflows execute across distributed services.
+- Why implementation details remain subordinate to architectural principles.
 
 ---
 
@@ -518,7 +521,7 @@ The Workflow Engine receives the business request.
 
 Rather than assigning work directly to developers, it creates an Engineering Workflow.
 
-The first participant is the Product Analyst Agent.
+The first participant is the Business Analyst Agent.
 
 Its responsibilities include:
 
@@ -992,18 +995,6 @@ Every completed workflow strengthens the platform.
 
 ---
 
-# Learning Objectives
-
-After completing this part, the reader should understand:
-
-- How Project Athlon can be implemented using modern enterprise technologies.
-- The responsibilities of each platform component.
-- The relationship between logical architecture and physical implementation.
-- How autonomous engineering workflows execute across distributed services.
-- Why implementation details remain subordinate to architectural principles.
-
----
-
 # 12.22 From Reference Architecture to Reference Implementation
 
 The previous chapters described **what** the platform is.
@@ -1162,7 +1153,7 @@ Project Athlon models Engineering Agents as independently deployable services.
 
 Examples include:
 
-- Product Analyst Agent
+- Business Analyst Agent
 - Architect Agent
 - Developer Agent
 - Reviewer Agent

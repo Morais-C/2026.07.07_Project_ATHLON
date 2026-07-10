@@ -1,5 +1,7 @@
 # Project Athlon --- Building the Autonomous SDLC
 
+# Part II — Principles & Vision
+
 # Chapter 3 --- Engineering Principles
 
 ## Introduction
@@ -111,11 +113,15 @@ Phase 4: Enterprise governance
 
 ## Architecture Decision
 
-**ADR-001:** Prefer simple orchestration over sophisticated frameworks
+Prefer simple orchestration over sophisticated frameworks
 until workflow complexity justifies additional abstraction.
 
 This keeps early development understandable and lowers the barrier to
 contribution.
+
+This decision is formalized as **ADR-001** in Chapter 5 ("Start with
+sequential orchestration"), where the complete Architecture Decision
+Record ledger for Project Athlon begins.
 
 ------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 # Project Athlon --- Building the Autonomous SDLC
 
-## Part I --- Foundations
+# Part I — Foundations
 
 # Chapter 1 --- The New Era of Software Engineering
 

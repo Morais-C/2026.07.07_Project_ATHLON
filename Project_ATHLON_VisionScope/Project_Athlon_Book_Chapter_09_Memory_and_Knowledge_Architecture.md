@@ -1,6 +1,6 @@
 # Project Athlon — Building the Autonomous SDLC
 
-# Part III — Knowledge & Intelligence
+# Part IV — Knowledge & Execution
 
 # Chapter 9 — Memory & Knowledge Architecture
 
