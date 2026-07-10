@@ -4,7 +4,25 @@ Open editorial issues flagged during the manuscript review (formatting pass Ch. 
 
 **Scope:** `Project_ATHLON_VisionScope/`  
 **Last updated:** 2026-07-10  
-**Formatting review progress:** **COMPLETE (2026-07-10)** — INDEX + Ch. 1–10, Ch. 12, Appendices A–D · Ch. 11 skipped (frozen)
+**Formatting review progress:** **COMPLETE (2026-07-10)** — INDEX + Ch. 1–10, Ch. 12, Appendices A–D · Ch. 11 not reviewed (formatting pass skipped)
+
+---
+
+## When resuming
+
+**Paused:** 2026-07-10 after Pass 2A (quick wins). Pick up with **Pass 2B** and remaining Priority 1–3 items.
+
+| Step | Task | Effort | Tracker |
+|------|------|--------|---------|
+| **1** | Fix Ch. 12 §12.1 “Looking Back” chapter map | ~30 min | Priority 2 |
+| **2** | SDLC pipeline diagram audit (canonical home: Ch. 4 or Ch. 12) | ~1 hr | Priority 1 |
+| **3** | Ch. 10 mid-chapter `# Integration with Project Athlon` + `# Architectural Decision Records` blocks (after §10.24) | ~30 min | Priority 1 (new) |
+| **4** | Pass 2B: Appendix A/B boundary + Ch. 12 §12.22+ vs appendices | editorial | Priority 1 |
+| **5** | Ch. 11 / Ch. 12 seam decisions (split vs transition blocks) | editorial | Priority 2 |
+| *opt* | Ch. 11 formatting review (never walked in formatting pass) | ~1 hr | Priority 4 |
+| *opt* | INDEX.md Open work table sync; git commit VisionScope v1 batch | housekeeping | — |
+
+**Pass 2A:** complete (Ch. 5 disclaimer, error recovery, approval gates, Ch. 10 Observability / Best Practices headings).
 
 ---
 
@@ -75,6 +93,22 @@ Similar `Business Request → … → Agent` flow diagrams recur across multiple
 
 ---
 
+### Chapter 10 — duplicate mid-chapter synthesis blocks
+
+`Project_Athlon_Book_Chapter_10_The_MCP_Integration_Layer.md`
+
+After §10.24, unnumbered sections interrupt the §10.25–§10.28 sequence (same structural pattern as the Best Practices fix):
+
+| Issue | Location | Notes |
+|-------|----------|-------|
+| `# Integration with Project Athlon` | After §10.24 (~line 1348) | Diagram + subsystem summary; duplicated in spirit by end-of-chapter Reference Architecture |
+| `# Architectural Decision Records` | Mid-chapter (~line 1374) | ADR-027–031; second ADR block at end has ADR-032–036 |
+
+- [ ] Move or renumber mid-chapter Integration + ADR blocks (e.g. after §10.28 or merge into end-of-chapter sections)
+- [ ] Ensure §10.25–§10.28 read as one uninterrupted sequence
+
+---
+
 ### Appendix A / B overlap
 
 Two implementation guides answer many of the same questions.
@@ -126,12 +160,11 @@ Duplicate Learning Objectives were merged, but the **conceptual seam** remains.
 | A — Reasoning engineering (conceptual) | §11.1 – §11.26 | |
 | B — .NET / LangGraph implementation | §11.27+ | §11.27 *From Language Models to Reasoning Engines* (~line 1484) |
 
-- [ ] **Do not edit** until user lifts Ch. 11 freeze — then choose:
+- [ ] Choose editorial approach:
   - **Option A:** Split into two chapters (renumber Part V/VI)
   - **Option B:** Keep one chapter; add hard `---` transition + “Part B assumes Ch. 6–10”
 - [ ] Cross-ref Ch. 6 §6.5 Prompt Builder to reduce overlap with Ch. 11 reasoning content
-
-**Status:** Ch. 11 explicitly **frozen** — no formatting or content edits during current pass.
+- [ ] Optional: run formatting review (skipped in 2026-07-10 pass)
 
 ---
 
@@ -211,13 +244,11 @@ Same pattern as Ch. 11.
 
 ---
 
-## Priority 4 — Pending review (may surface new items)
-
-Files not yet walked in the one-by-one formatting pass:
+## Priority 4 — Formatting review status
 
 | File | Status |
 |------|--------|
-| `Project_Athlon_Book_Chapter_11_Engineering_Agent_Behavior.md` | **SKIP — frozen** |
+| `Project_Athlon_Book_Chapter_11_Engineering_Agent_Behavior.md` | **Not reviewed** — formatting pass skipped; eligible when resuming |
 | `Project_Athlon_Book_Chapter_12_Project_Athlon_Reference_Architecture.md` | **Formatting done** — content issues in Priority 2 |
 | `Project_Athlon_Book_Chapter_Appendix_A_Building_Project_Athlon.md` | **Formatting done** — A/B overlap remains in Priority 1 |
 | `Project_Athlon_Book_Chapter_Appendix_B_Reference_Implementation_Guide.md` | **Formatting done** — A/B overlap remains in Priority 1 |
@@ -241,7 +272,7 @@ Presentation-only fixes applied file-by-file. Does not resolve content/structure
 | Ch. 8 | 2026-07-10 | Fixed | JSON compaction |
 | Ch. 9 | 2026-07-10 | Fixed | Inline code, bullet lists |
 | Ch. 10 | 2026-07-10 | Fixed | Inline code, diagram alignment |
-| Ch. 11 | — | **SKIP** | Frozen — no edits |
+| Ch. 11 | — | **Not reviewed** | Formatting pass skipped |
 | Ch. 12 | 2026-07-10 | Fixed | Bare fences → ` ```text ` / inline / bullets; solution trees; §12.18, §12.28, §12.37 lists |
 | Appendix A | 2026-07-10 | Fixed | Repo/docs/src trees; 10+ catalog sections → bullets; A.15–A.22 fence spacing |
 | Appendix B | 2026-07-10 | Fixed | 20+ bare fences → ` ```text ` / bullets; B.4 dev order; B.23 milestones |
@@ -259,7 +290,9 @@ Presentation-only fixes applied file-by-file. Does not resolve content/structure
 3. ~~Ch. 10 heading renames + section reorder~~ ✓ done 2026-07-10
 4. ~~Ch. 5 preview disclaimer paragraph~~ ✓ done 2026-07-10
 
-### Pass 2B — Structural (editorial decision)
+### Pass 2B — Structural (editorial decision) — **resume here**
+
+**Recommended order:** Ch. 12 §12.1 fix → pipeline diagrams → Ch. 10 ADR block → appendix dedup → Ch. 11/12 seams.
 
 **Option B (recommended — less disruptive than full renumbering):**
 
@@ -291,6 +324,7 @@ These are **done**; listed here for context only.
 
 | Date | Change |
 |------|--------|
+| 2026-07-10 | Session pause: added **When resuming**; Ch. 11 un-frozen; Ch. 10 ADR-block item; INDEX sync pending |
 | 2026-07-10 | Initial TODO created from formatting review Ch. 1–10 + prior LLM structural reviews |
 | 2026-07-10 | **Pass 2A complete** (QW1–QW4) |
 | 2026-07-10 | Pass 2A QW4: Ch. 10 heading dedup + section reorder |

@@ -90,19 +90,19 @@ Editorial issues that are **not** formatting — duplicated prose, chapter seams
 
 | Priority | Area | Examples |
 |----------|------|----------|
-| **1 — Deduplication** | Repeated content across chapters | Error-recovery ladder (Ch. 6 / 7); human-approval gates (Ch. 3, 4, 6, 7); SDLC pipeline diagrams; Ch. 10 duplicate Observability / Best Practices / Anti-Patterns; Appendix A/B overlap; Ch. 12 §12.22+ vs appendices |
-| **2 — Structure** | Chapter assembly & placement | Ch. 5 preview disclaimer; Ch. 11 / 12 two-in-one seams; Ch. 11 placement vs Ch. 6; Ch. 9 duplicate Reference Architecture headings |
+| **1 — Deduplication** | Repeated content (partially done) | ~~Error recovery~~ ✓ · ~~Approval gates~~ ✓ · ~~Ch. 10 Observability / Best Practices headings~~ ✓ · SDLC pipeline diagrams · Ch. 10 Integration/ADR mid-chapter blocks · Appendix A/B overlap · Ch. 12 §12.22+ vs appendices |
+| **2 — Structure** | Chapter assembly & placement | ~~Ch. 5 preview disclaimer~~ ✓ · **Ch. 12 §12.1 chapter map** · Ch. 11 / 12 two-in-one seams · Ch. 11 placement vs Ch. 6 · Ch. 9 duplicate Reference Architecture headings |
 | **3 — Consistency** | Cross-manuscript style | Title punctuation (`---` vs `—`); H1 vs H2 section numbering; bullet spacing |
-| **4 — Review** | **Formatting complete** | 16/17 files done; Ch. 11 frozen; content issues remain in Priorities 1–3 |
+| **4 — Review** | Formatting | 16/17 files done · Ch. 11 not reviewed · content work in Priorities 1–3 |
 
 ### Suggested next pass
 
-1. **Pass 2A** — Canonicalize duplicated lists (error recovery, approval gates); fix Ch. 10 headings; add Ch. 5 preview note.
-2. **Pass 2B** — Resolve Ch. 11/12 seams and consolidate the three “how to build” narratives (Ch. 12 §12.22+, Appendix A, Appendix B).
+1. ~~**Pass 2A**~~ — **COMPLETE** (error recovery, approval gates, Ch. 10 headings, Ch. 5 disclaimer).
+2. **Pass 2B** — Start with Ch. 12 §12.1 → pipeline diagrams → Ch. 10 ADR blocks → Appendix A/B + Ch. 12 §12.22+ consolidation → Ch. 11/12 seams.
 
 Mark items resolved in `ToDo_Content_Structure.md` as they are completed.
 
-**Pass 2A (quick wins):** **COMPLETE** — see `ToDo_Content_Structure.md`. Content/structure work (Priorities 1–3 beyond QW) remains open.
+**Pass 2A (quick wins):** **COMPLETE**. **Pass 2B** and Priorities 1–3 remain open — see [ToDo_Content_Structure.md](ToDo_Content_Structure.md) § *When resuming*.
 
 ---
 
