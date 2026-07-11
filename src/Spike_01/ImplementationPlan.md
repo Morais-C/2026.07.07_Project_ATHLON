@@ -180,10 +180,10 @@ Athlon.Spike.Console
 | Output instruction | Require raw JSON only, matching schema |
 | `JsonSchemaValidator` | Use `System.Text.Json` + `JsonSchema.Net` (or manual required-field check for spike) |
 | `schemas/implementation-artifact.schema.json` | Define minimum fields (e.g. title, summary, tasks, acceptanceCriteria) |
-| Retry policy | 1 retry on validation failure with “fix your JSON” hint (optional) |
+| Retry policy | **Required:** 1 retry on schema validation failure — append validation errors + “Return corrected JSON only” to the prompt, call `CompleteAsync` again, validate once more, then fail loudly if still invalid |
 | Telemetry handoff | Agent returns `LlmCompletionResult` usage via `AgentExecutionResult` for workflow summary |
 
-**Exit criteria:** Given a fixed mock LLM response, agent publishes valid artifact. With real OpenRouter, end-to-end once.
+**Exit criteria:** Given a fixed mock LLM response, agent publishes valid artifact. Given a mock LLM that returns invalid JSON once then valid JSON on retry, agent recovers on retry and publishes the artifact. With real OpenRouter, end-to-end once.
 
 ---
 
@@ -293,7 +293,7 @@ Store canonical definition in `schemas/implementation-artifact.schema.json`.
 
 | Risk | Mitigation |
 |------|------------|
-| LLM returns markdown fences or prose | Prompt: “JSON only”; strip ```json blocks in validator |
+| LLM returns markdown fences or prose | Prompt: “JSON only”; strip ```json blocks in validator; **1 required retry** on schema failure with validation errors echoed back to the model |
 | OpenRouter rate limits / cost | Use smaller model for dev; mock provider for CI tests |
 | .NET 10 SDK not installed | Fall back to `net9.0`; note in README |
 | Scope creep into “real platform” | Reject any task not on Phase 0–6 list without explicit spike amendment |
@@ -307,7 +307,7 @@ Store canonical definition in `schemas/implementation-artifact.schema.json`.
 |-------|----------|
 | Artifact store | Integration test with temp folder |
 | Validator | Unit tests with valid/invalid JSON fixtures |
-| LLM | `MockLLMProvider` returning fixed JSON for agent/workflow tests |
+| LLM / agent retry | `MockLLMProvider` returning invalid JSON on first call, valid JSON on second — agent must publish artifact |
 | OpenRouter | Manual smoke only; no key in CI |
 | End-to-end | One scripted demo run documented in README |
 
