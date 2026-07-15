@@ -341,7 +341,7 @@ Keep spike folder as archive or delete after promotion — team decision.
 | 2 — File store | ✅ Complete |
 | 3 — LLM provider | ✅ Complete |
 | 4 — Developer Agent | ✅ Complete |
-| 5 — Workflow | ⬜ Not started |
+| 5 — Workflow | ✅ Complete |
 | 6 — Console & demo | ⬜ Not started |
 
 Update this table as phases complete.
