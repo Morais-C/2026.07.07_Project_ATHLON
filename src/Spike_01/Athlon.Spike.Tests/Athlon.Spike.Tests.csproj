@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Athlon.Spike.Contracts\Athlon.Spike.Contracts.csproj" />
     <ProjectReference Include="..\Athlon.Spike.Artifacts\Athlon.Spike.Artifacts.csproj" />
     <ProjectReference Include="..\Athlon.Spike.Llm\Athlon.Spike.Llm.csproj" />
+    <ProjectReference Include="..\Athlon.Spike.Agents\Athlon.Spike.Agents.csproj" />
   </ItemGroup>
 
 </Project>

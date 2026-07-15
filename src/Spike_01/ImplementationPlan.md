@@ -340,7 +340,7 @@ Keep spike folder as archive or delete after promotion — team decision.
 | 1 — Contracts | ✅ Complete |
 | 2 — File store | ✅ Complete |
 | 3 — LLM provider | ✅ Complete |
-| 4 — Developer Agent | ⬜ Not started |
+| 4 — Developer Agent | ✅ Complete |
 | 5 — Workflow | ⬜ Not started |
 | 6 — Console & demo | ⬜ Not started |
 

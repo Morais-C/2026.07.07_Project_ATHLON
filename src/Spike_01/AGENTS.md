@@ -8,7 +8,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 2. Implement strictly from [ImplementationPlan.md](./ImplementationPlan.md), **one phase at a time** (Phase 0 → 6).
 3. Update the **Checklist tracker** (§11 in the plan) as each phase completes.
 
-**Current state:** Phase 3 complete. Continue at **Phase 4 — Developer Agent**.
+**Current state:** Phase 4 complete. Continue at **Phase 5 — Workflow**.
 
 ## Scope rules
 
