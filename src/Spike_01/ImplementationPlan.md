@@ -342,7 +342,7 @@ Keep spike folder as archive or delete after promotion — team decision.
 | 3 — LLM provider | ✅ Complete |
 | 4 — Developer Agent | ✅ Complete |
 | 5 — Workflow | ✅ Complete |
-| 6 — Console & demo | ⬜ Not started |
+| 6 — Console & demo | ✅ Complete |
 
 Update this table as phases complete.
 

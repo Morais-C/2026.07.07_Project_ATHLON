@@ -1,7 +1,7 @@
 # Spike_01 — Artifact Slice
 
-> **Status:** In progress  
-> **Current state:** Solution scaffolded; implementing per [ImplementationPlan.md](./ImplementationPlan.md).  
+> **Status:** Complete  
+> **Current state:** Phases 0–6 implemented. Run the demo script in [ImplementationPlan.md](./ImplementationPlan.md) §5 Phase 6.  
 > **Target framework:** `net9.0` for this spike (deliberate — no spike feature requires .NET 10). `net10.0` is the promotion target when code moves to `Athlon.*` per VisionScope Appendix A.  
 > **VisionScope:** v1 — first executable proof of the Autonomous SDLC thesis
 
@@ -90,7 +90,16 @@ Projects use the `Athlon.Spike.*` prefix so it is obvious what is experimental v
 
 ## Configuration
 
-Set these environment variables before running:
+Preferred: edit `src/Spike_01/.env` (gitignored; loaded automatically by the console):
+
+```text
+OPENROUTER_API_KEY=sk-or-v1-...
+OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
+```
+
+Copy from `.env.example` if needed. Shell env vars still override `.env` values.
+
+Alternatively set variables in PowerShell before running:
 
 ```powershell
 $env:OPENROUTER_API_KEY = "sk-or-..."
@@ -103,7 +112,7 @@ Optional:
 $env:ATHLON_ARTIFACTS_PATH = "C:\path\to\artifacts"      # default: ./artifacts under Spike_01
 ```
 
-Never commit API keys. Add `artifacts/`, `.env`, and `user-secrets` paths to `.gitignore` when the solution is scaffolded.
+Never commit API keys — `.env` is listed in `.gitignore`.
 
 ---
 
@@ -174,12 +183,12 @@ Full manuscript index: [Project_ATHLON_VisionScope/INDEX.md](../../Project_ATHLO
 
 Spike_01 is **done** when:
 
-- [ ] A business requirement submitted via console produces a validated `ImplementationArtifact`
-- [ ] Both input and output artifacts are persisted and loadable by id
-- [ ] Agent logic has no direct HTTP calls to OpenRouter (goes through `ILLMProvider`)
-- [ ] Invalid LLM output triggers one schema-validation retry (with errors echoed to the model); workflow fails only if the second attempt is still invalid — no bad artifact is published
-- [ ] Each run prints token usage, duration, and estimated cost alongside artifact ids
-- [ ] A 5-minute demo can be run without explaining “it’s just ChatGPT”
+- [x] A business requirement submitted via console produces a validated `ImplementationArtifact`
+- [x] Both input and output artifacts are persisted and loadable by id
+- [x] Agent logic has no direct HTTP calls to OpenRouter (goes through `ILLMProvider`)
+- [x] Invalid LLM output triggers one schema-validation retry (with errors echoed to the model); workflow fails only if the second attempt is still invalid — no bad artifact is published
+- [x] Each run prints token usage, duration, and estimated cost alongside artifact ids
+- [x] A 5-minute demo can be run without explaining “it’s just ChatGPT”
 
 ---
 
