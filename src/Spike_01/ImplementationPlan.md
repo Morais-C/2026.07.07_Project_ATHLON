@@ -336,10 +336,10 @@ Keep spike folder as archive or delete after promotion — team decision.
 
 | Phase | Status |
 |-------|--------|
-| 0 — Bootstrap | ⬜ Not started |
-| 1 — Contracts | ⬜ Not started |
-| 2 — File store | ⬜ Not started |
-| 3 — LLM provider | ⬜ Not started |
+| 0 — Bootstrap | ✅ Complete |
+| 1 — Contracts | ✅ Complete |
+| 2 — File store | ✅ Complete |
+| 3 — LLM provider | ✅ Complete |
 | 4 — Developer Agent | ⬜ Not started |
 | 5 — Workflow | ⬜ Not started |
 | 6 — Console & demo | ⬜ Not started |

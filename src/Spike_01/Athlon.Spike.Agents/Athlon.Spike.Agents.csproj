@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Athlon.Spike.Contracts\Athlon.Spike.Contracts.csproj" />
+    <ProjectReference Include="..\Athlon.Spike.Artifacts\Athlon.Spike.Artifacts.csproj" />
+    <ProjectReference Include="..\Athlon.Spike.Llm\Athlon.Spike.Llm.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -1,6 +1,8 @@
 # Spike_01 — Artifact Slice
 
-> **Status:** Planning  
+> **Status:** In progress  
+> **Current state:** Solution scaffolded; implementing per [ImplementationPlan.md](./ImplementationPlan.md).  
+> **Target framework:** `net9.0` for this spike (deliberate — no spike feature requires .NET 10). `net10.0` is the promotion target when code moves to `Athlon.*` per VisionScope Appendix A.  
 > **VisionScope:** v1 — first executable proof of the Autonomous SDLC thesis
 
 ## Purpose
@@ -57,6 +59,7 @@ See [ImplementationPlan.md](./ImplementationPlan.md) for phased delivery and pro
 ```text
 src/Spike_01/
   README.md
+  AGENTS.md                     # Cursor / implementer entry point
   ImplementationPlan.md
   Spike_01.sln
   Athlon.Spike.Contracts/       # Artifact, workflow, agent contracts
@@ -78,7 +81,8 @@ Projects use the `Athlon.Spike.*` prefix so it is obvious what is experimental v
 
 | Requirement | Notes |
 |-------------|-------|
-| [.NET 10 SDK](https://dotnet.microsoft.com/download) | Matches VisionScope reference stack (Appendix A) |
+| [.NET 9 SDK](https://dotnet.microsoft.com/download) | Required to build and run this spike (`net9.0`) |
+| [.NET 10 SDK](https://dotnet.microsoft.com/download) | Promotion target — VisionScope reference stack (Appendix A); not required for Spike_01 |
 | [OpenRouter](https://openrouter.ai/) API key | Set via environment variable (see below) |
 | Cursor / VS Code | Optional; recommended in playbook |
 
@@ -173,7 +177,7 @@ Spike_01 is **done** when:
 - [ ] A business requirement submitted via console produces a validated `ImplementationArtifact`
 - [ ] Both input and output artifacts are persisted and loadable by id
 - [ ] Agent logic has no direct HTTP calls to OpenRouter (goes through `ILLMProvider`)
-- [ ] Invalid LLM output is rejected; workflow does not publish a bad artifact
+- [ ] Invalid LLM output triggers one schema-validation retry (with errors echoed to the model); workflow fails only if the second attempt is still invalid — no bad artifact is published
 - [ ] Each run prints token usage, duration, and estimated cost alongside artifact ids
 - [ ] A 5-minute demo can be run without explaining “it’s just ChatGPT”
 
@@ -181,6 +185,6 @@ Spike_01 is **done** when:
 
 ## Next steps
 
-1. Follow [ImplementationPlan.md](./ImplementationPlan.md) phase by phase.
+1. **Implementers / Cursor:** read [AGENTS.md](./AGENTS.md), then follow [ImplementationPlan.md](./ImplementationPlan.md) phase by phase.
 2. On spike success, promote contracts and interfaces to `Athlon.*` (drop `Spike` prefix).
 3. PoC Sprint 1 adds Basic Portal, CI, and optional SQL artifact store.
