@@ -194,6 +194,8 @@ Spike_01 is **done** when:
 
 ## Next steps
 
-1. **Implementers / Cursor:** read [AGENTS.md](./AGENTS.md), then follow [ImplementationPlan.md](./ImplementationPlan.md) phase by phase.
-2. On spike success, promote contracts and interfaces to `Athlon.*` (drop `Spike` prefix).
-3. PoC Sprint 1 adds Basic Portal, CI, and optional SQL artifact store.
+1. ~~Implement Spike_01~~ — **done** (Phases 0–6 + live demo).
+2. **Next (decision 2026-07-17):** [Spike_02](../Spike_02/) — BA → Developer handoff via artifacts. See project [ROADMAP.md](../../ROADMAP.md).
+3. **After Spike_02:** promote proven code to `Athlon.*`, then PoC Sprint 1 (API + Basic Portal + CI).
+
+Promotion is **deferred** until Spike_02 answers: *Can agents chain through artifacts?*

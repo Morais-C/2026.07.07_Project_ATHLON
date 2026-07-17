@@ -317,7 +317,9 @@ No requirement for full test project in Phase 0; add `Athlon.Spike.Tests` in Pha
 
 ## 10. Promotion path (post-spike)
 
-When spike succeeds, migrate in this order (matches Appendix A §A.15):
+> **Deferred (decision 2026-07-17):** Do **Spike_02** (BA → Developer artifact chain) **before** promoting to `Athlon.*`. See project [ROADMAP.md](../../ROADMAP.md).
+
+When Spike_02 also succeeds, migrate in this order (matches Appendix A §A.15):
 
 ```text
 1. Athlon.Spike.Contracts     →  Athlon.Contracts

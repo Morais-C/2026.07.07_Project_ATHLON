@@ -8,7 +8,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 2. Implement strictly from [ImplementationPlan.md](./ImplementationPlan.md), **one phase at a time** (Phase 0 → 6).
 3. Update the **Checklist tracker** (§11 in the plan) as each phase completes.
 
-**Current state:** Phase 6 complete. Spike_01 implementation finished — run the demo script in ImplementationPlan §5 Phase 6.
+**Current state:** Spike_01 complete. Project decision (2026-07-17): next is **Spike_02** (BA → Developer via artifacts), **before** promotion. See [ROADMAP.md](../../ROADMAP.md).
 
 ## Scope rules
 
