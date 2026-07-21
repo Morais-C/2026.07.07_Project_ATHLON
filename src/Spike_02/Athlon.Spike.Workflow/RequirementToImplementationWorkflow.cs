@@ -3,12 +3,16 @@ using Athlon.Spike.Contracts;
 
 namespace Athlon.Spike.Workflow;
 
+/// <summary>
+/// Business pipeline: requirement text → Developer agent → approval → done.
+/// Uses WorkflowRunner for shared run bookkeeping (instance, artifacts, status, telemetry).
+/// </summary>
 public sealed class RequirementToImplementationWorkflow : IWorkflow
 {
     public const string WorkflowNameValue = "RequirementToImplementation";
 
-    private readonly WorkflowRunner _runner;
-    private readonly IAgent _developerAgent;
+    private readonly WorkflowRunner _runner;       // shared lifecycle helpers
+    private readonly IAgent _developerAgent;      // the only agent in this spike phase
     private readonly IWorkflowStepLogger _logger;
     private readonly Func<CancellationToken, Task<bool>> _approvalHandler;
 
@@ -21,6 +25,7 @@ public sealed class RequirementToImplementationWorkflow : IWorkflow
         _runner = runner ?? throw new ArgumentNullException(nameof(runner));
         _developerAgent = developerAgent ?? throw new ArgumentNullException(nameof(developerAgent));
         _logger = logger ?? new ConsoleWorkflowStepLogger();
+        // Default: always approve (Program.cs also passes AutoApprove: true)
         _approvalHandler = approvalHandler ?? (_ => Task.FromResult(true));
     }
 
@@ -38,10 +43,12 @@ public sealed class RequirementToImplementationWorkflow : IWorkflow
 
         try
         {
+            // 1) Start run + save the raw need as an immutable input artifact
             (instance, inputArtifact) = await _runner
                 .StartAndSaveInputAsync(Name, input.RequirementText, cancellationToken)
                 .ConfigureAwait(false);
 
+            // 2) Developer works from artifact id only (not the raw string again)
             var agentStarted = Stopwatch.StartNew();
             var agentResult = await _developerAgent.ExecuteAsync(
                 new AgentExecutionContext(instance.Id, inputArtifact.Id),
@@ -49,6 +56,7 @@ public sealed class RequirementToImplementationWorkflow : IWorkflow
             agentStarted.Stop();
             _logger.LogStep("run-developer-agent", agentStarted.Elapsed, agentResult.OutputArtifact.Id);
 
+            // 3) Human gate (skipped when AutoApprove is true)
             instance = _runner.MarkAwaitingApproval(instance);
             _logger.LogStep("awaiting-approval", TimeSpan.Zero);
 
@@ -64,6 +72,7 @@ public sealed class RequirementToImplementationWorkflow : IWorkflow
                     FailureMessage: "Workflow was not approved.");
             }
 
+            // 4) Success path: mark done + persist LLM telemetry next to artifacts
             instance = _runner.MarkCompleted(instance);
             _logger.LogStep("complete", TimeSpan.Zero, agentResult.OutputArtifact.Id);
 
@@ -76,11 +85,12 @@ public sealed class RequirementToImplementationWorkflow : IWorkflow
                 OutputArtifact: agentResult.OutputArtifact,
                 Telemetry: agentResult.Telemetry);
 
-            _runner.PrintRunSummary(result);
+            WorkflowRunner.PrintRunSummary(result);
             return result;
         }
         catch (Exception ex)
         {
+            // If we already created an instance, fail it instead of crashing silently
             if (instance is null || inputArtifact is null)
             {
                 throw;

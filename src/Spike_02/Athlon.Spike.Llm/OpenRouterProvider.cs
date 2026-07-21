@@ -10,7 +10,7 @@ namespace Athlon.Spike.Llm;
 public sealed class OpenRouterProvider : ILLMProvider, IDisposable
 {
     private const string DefaultReferer = "https://github.com/athlon-project";
-    private const string DefaultTitle = "Project Athlon Spike_01";
+    private const string DefaultTitle = "Project Athlon Spike_02";
 
     private readonly HttpClient _httpClient;
     private readonly string _model;
@@ -21,12 +21,12 @@ public sealed class OpenRouterProvider : ILLMProvider, IDisposable
         _model = model
             ?? Environment.GetEnvironmentVariable("OPENROUTER_MODEL")
             ?? throw new InvalidOperationException(
-                "OPENROUTER_MODEL environment variable is required (e.g. anthropic/claude-3.5-sonnet).");
+                "OpenRouter model is required (pass ctor model, or set OpenRouter:Model / OPENROUTER_MODEL).");
 
         var key = apiKey
             ?? Environment.GetEnvironmentVariable("OPENROUTER_API_KEY")
             ?? throw new InvalidOperationException(
-                "OPENROUTER_API_KEY environment variable is required.");
+                "OpenRouter API key is required (pass ctor apiKey, or set OpenRouter:ApiKey / OPENROUTER_API_KEY).");
 
         if (httpClient is null)
         {
@@ -74,7 +74,7 @@ public sealed class OpenRouterProvider : ILLMProvider, IDisposable
             {
                 HttpStatusCode.Unauthorized =>
                     new InvalidOperationException(
-                        "OpenRouter rejected the API key (401 Unauthorized). Check OPENROUTER_API_KEY."),
+                        "OpenRouter rejected the API key (401 Unauthorized). Check OpenRouter:ApiKey."),
                 HttpStatusCode.TooManyRequests =>
                     new InvalidOperationException(
                         "OpenRouter rate limit exceeded (429 Too Many Requests). Retry later or use a smaller model."),

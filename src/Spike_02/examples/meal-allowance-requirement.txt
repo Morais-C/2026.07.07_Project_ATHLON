@@ -1,6 +1,0 @@
-As an employee, I want a daily meal allowance so that I can cover lunch expenses while at the office.
-
-Acceptance intent:
-- Eligible employees receive a fixed daily allowance on working days
-- Payroll must show the allowance as a separate line item
-- Managers can review monthly totals per team

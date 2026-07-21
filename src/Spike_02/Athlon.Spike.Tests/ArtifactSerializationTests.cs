@@ -47,4 +47,46 @@ public class ArtifactSerializationTests
         Assert.Single(parsed.Tasks);
         Assert.Equal("T1", parsed.Tasks[0].Id);
     }
+
+    [Fact]
+    public void StructuredRequirement_round_trips_through_json()
+    {
+        var workflowId = Guid.NewGuid();
+        var payload = new StructuredRequirementPayload(
+            Title: "Employee Daily Meal Allowance",
+            Actors: ["Employee", "Payroll", "Manager"],
+            Goal: "Provide a fixed daily meal allowance on working days",
+            AcceptanceCriteriaDraft:
+            [
+                "Eligible employees receive a fixed daily allowance on working days",
+                "Payroll shows the allowance as a separate line item"
+            ],
+            Constraints: ["On-site working days only", "Configurable rate"],
+            Priority: "Medium");
+
+        var original = StructuredRequirement.Create(
+            payload,
+            workflowId,
+            producer: "BusinessAnalystAgent");
+
+        var json = ArtifactJson.Serialize(original);
+        var restored = ArtifactJson.Deserialize(json);
+        var parsed = StructuredRequirement.Parse(restored);
+
+        Assert.Equal(original.Id, restored.Id);
+        Assert.Equal(ArtifactTypes.StructuredRequirement, restored.Type);
+        Assert.Equal("Employee Daily Meal Allowance", parsed.Title);
+        Assert.Equal(3, parsed.Actors.Count);
+        Assert.Equal("Medium", parsed.Priority);
+        Assert.Equal(2, parsed.AcceptanceCriteriaDraft.Count);
+    }
+
+    [Fact]
+    public void StructuredRequirement_Parse_rejects_wrong_artifact_type()
+    {
+        var wrong = BusinessRequirement.FromText("not structured", Guid.NewGuid());
+
+        var ex = Assert.Throws<ArgumentException>(() => StructuredRequirement.Parse(wrong));
+        Assert.Contains(ArtifactTypes.StructuredRequirement, ex.Message);
+    }
 }

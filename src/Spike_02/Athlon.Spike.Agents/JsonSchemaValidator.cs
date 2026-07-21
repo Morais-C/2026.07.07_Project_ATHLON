@@ -28,7 +28,9 @@ public sealed class JsonSchemaValidator
         try
         {
             using var document = System.Text.Json.JsonDocument.Parse(json);
-            var result = _schema.Evaluate(document.RootElement);
+            var result = _schema.Evaluate(
+                document.RootElement,
+                new EvaluationOptions { OutputFormat = OutputFormat.List });
 
             if (result.IsValid)
             {
@@ -36,6 +38,11 @@ public sealed class JsonSchemaValidator
             }
 
             var errors = CollectErrors(result);
+            if (errors.Count == 0)
+            {
+                errors.Add("JSON does not match the required schema.");
+            }
+
             return ValidationOutcome.Invalid(json, errors);
         }
         catch (System.Text.Json.JsonException ex)
