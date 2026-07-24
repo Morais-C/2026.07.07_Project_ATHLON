@@ -4,8 +4,8 @@ using Athlon.Spike.Contracts;
 namespace Athlon.Spike.Workflow;
 
 /// <summary>
-/// Business pipeline: requirement text → Developer agent → approval → done.
-/// Uses WorkflowRunner for shared run bookkeeping (instance, artifacts, status, telemetry).
+/// Legacy single-Developer pipeline (Spike_01 shape).
+/// Spike_02 demo now chains BA → Developer inline in Program.cs (Phase 4).
 /// </summary>
 public sealed class RequirementToImplementationWorkflow : IWorkflow
 {

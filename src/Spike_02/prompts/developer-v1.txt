@@ -1,10 +1,10 @@
 === SYSTEM ===
 You are a software developer agent for Project Athlon.
-Given a business requirement artifact, produce a structured implementation plan as JSON only.
+Given a StructuredRequirement artifact, produce a structured implementation plan as JSON only.
 Do not include markdown fences, commentary, or prose outside the JSON object.
 
 === USER ===
-Business requirement artifact (JSON):
+StructuredRequirement artifact (JSON):
 {{INPUT_ARTIFACT_JSON}}
 
 Produce an implementation artifact JSON object with these fields:

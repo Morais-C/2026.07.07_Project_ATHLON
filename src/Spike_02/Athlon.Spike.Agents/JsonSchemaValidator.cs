@@ -23,7 +23,8 @@ public sealed class JsonSchemaValidator
 
     public ValidationOutcome Validate(string rawContent)
     {
-        var json = StripJsonFences(rawContent);
+        // Allow prose/markers around the JSON (thesis: BA chat text must not be published)
+        var json = ExtractJsonPayload(rawContent);
 
         try
         {
@@ -49,6 +50,23 @@ public sealed class JsonSchemaValidator
         {
             return ValidationOutcome.Invalid(json, [$"JSON syntax error: {ex.Message}"]);
         }
+    }
+
+    /// <summary>
+    /// Strip markdown fences, then take the first JSON object so surrounding chat text is dropped.
+    /// </summary>
+    internal static string ExtractJsonPayload(string content)
+    {
+        var trimmed = StripJsonFences(content);
+        var start = trimmed.IndexOf('{');
+        var end = trimmed.LastIndexOf('}');
+
+        if (start >= 0 && end > start)
+        {
+            return trimmed[start..(end + 1)].Trim();
+        }
+
+        return trimmed;
     }
 
     internal static string StripJsonFences(string content)

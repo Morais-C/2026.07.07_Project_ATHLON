@@ -30,7 +30,12 @@ public sealed class OpenRouterProvider : ILLMProvider, IDisposable
 
         if (httpClient is null)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri("https://openrouter.ai/") };
+            // LLM calls (especially Developer) can exceed the default 100s HttpClient timeout
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://openrouter.ai/"),
+                Timeout = TimeSpan.FromMinutes(5)
+            };
             _ownsHttpClient = true;
         }
         else

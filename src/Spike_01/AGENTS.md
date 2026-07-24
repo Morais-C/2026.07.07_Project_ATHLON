@@ -8,7 +8,8 @@ Instructions for Cursor (or any implementer) working on this spike.
 2. Implement strictly from [ImplementationPlan.md](./ImplementationPlan.md), **one phase at a time** (Phase 0 → 6).
 3. Update the **Checklist tracker** (§11 in the plan) as each phase completes.
 
-**Current state:** Spike_01 complete. Project decision (2026-07-17): next is **Spike_02** (BA → Developer via artifacts), **before** promotion. See [ROADMAP.md](../../ROADMAP.md).
+**Current state:** Spike_01 complete (**frozen archive**). Spike_02 is also complete.  
+**Next:** promote Spike_02 → `Athlon.*` per [ROADMAP.md](../../ROADMAP.md) and [PromotionPlan.md](../../PromotionPlan.md). **Do not modify this folder** for Spike_02 or promotion feature work.
 
 ## Scope rules
 
@@ -59,13 +60,10 @@ Full index: [Project_ATHLON_VisionScope/INDEX.md](../../Project_ATHLON_VisionSco
 ## Suggested opening prompt
 
 ```text
-Implement Spike_01 per src/Spike_01/ImplementationPlan.md.
-
-Read src/Spike_01/AGENTS.md and README.md first.
-Start at Phase 0. Complete one phase at a time and update the checklist.
-Phase 4 retry-on-invalid-JSON is required. No scope beyond the plan.
+Spike_01 is a frozen archive. Do not implement new Spike_01 phases.
+Next work is promotion of Spike_02 → Athlon.* (see ROADMAP.md and PromotionPlan.md).
 ```
 
 ## Definition of done
 
-All items in README **Success criteria** are checked, and the Phase 6 demo script in the plan runs end-to-end.
+All items in README **Success criteria** are checked, and the Phase 6 demo script in the plan runs end-to-end. **Met — archive only.**

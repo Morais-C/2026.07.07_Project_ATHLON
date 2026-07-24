@@ -6,6 +6,6 @@
   "cSpell.words": ["Athlon"],
   "dotnet.defaultSolution": "src/Spike_02/Spike_02.sln",
   "dotrush.roslyn.projectOrSolutionFiles": [
-    "c:\\Users\\CarlosMorais\\Desktop\\Training\\000_BarracudaProject\\2026.07.07_Project_ATHLON\\src\\Spike_02\\Spike_02.sln"
+    "src/Spike_02/Spike_02.sln"
   ]
 }

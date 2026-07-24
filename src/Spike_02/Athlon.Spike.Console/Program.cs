@@ -7,8 +7,7 @@ using Athlon.Spike.Workflow;
 
 // Spike_02 console — Minimal + real LLM (no CLI flags).
 // Run from src/Spike_02 so ./prompts, ./schemas, ./artifacts, ./appsettings*.json resolve locally.
-// Phase 0.5: still the Spike_01 single-Developer loop.
-// Later: BA → StructuredRequirement → Developer (by artifact id).
+// Thesis: BA → artifact on disk → Developer loads by id only (no chat handoff).
 
 try
 {
@@ -23,54 +22,79 @@ try
         - Managers can review monthly totals per team
         """;
 
-    // 2) OpenRouter settings (appsettings.json + optional Local override)
+    // 2) OpenRouter settings + immutable artifact store
     var (apiKey, model) = OpenRouterConfig.Load();
-
     const string artifactsRoot = "artifacts";
-
-    // 3) Immutable JSON artifact store on disk
     var store = new FileArtifactStore(artifactsRoot);
+    var runner = new WorkflowRunner(store, artifactRoot: artifactsRoot);
 
-    // 4) Real LLM + Developer agent (BA agent comes in Phase 2)
     using var llm = new OpenRouterProvider(apiKey: apiKey, model: model);
-    var agent = new DeveloperAgent(
+
+    var ba = new BusinessAnalystAgent(
+        llm,
+        store,
+        promptTemplatePath: Path.Combine("prompts", "ba-v1.txt"),
+        schemaPath: Path.Combine("schemas", "structured-requirement.schema.json"));
+
+    var developer = new DeveloperAgent(
         llm,
         store,
         promptTemplatePath: Path.Combine("prompts", "developer-v1.txt"),
         schemaPath: Path.Combine("schemas", "implementation-artifact.schema.json"));
 
-    // 5) Run workflow: save input artifact → Developer → complete (auto-continue)
-    var runner = new WorkflowRunner(store, artifactRoot: artifactsRoot);
-    var workflow = new RequirementToImplementationWorkflow(runner, agent);
-
     Console.WriteLine($"Working directory : {Directory.GetCurrentDirectory()}");
     Console.WriteLine($"Artifacts         : {Path.GetFullPath(artifactsRoot)}");
     Console.WriteLine($"Model             : {model}");
-    Console.WriteLine($"Workflow          : {RequirementToImplementationWorkflow.WorkflowNameValue}");
+    Console.WriteLine($"Workflow          : BA → Developer (by artifact id)");
     Console.WriteLine();
 
-    var result = await workflow.RunAsync(
-        new WorkflowInput(need, AutoApprove: true),
+    // 3) Persist raw need, then BA → StructuredRequirement on disk
+    var (instance, inputArtifact) = await runner.StartAndSaveInputAsync(
+        "BusinessNeedToImplementation",
+        need,
         CancellationToken.None);
 
-    // 6) Show where artifacts landed (open these JSON files to inspect)
+    Console.WriteLine($"Workflow id       : {instance.Id:D}");
+    Console.WriteLine($"Input artifact    : {inputArtifact.Id:D}");
+    Console.WriteLine($"  path            : {ArtifactPath(inputArtifact)}");
     Console.WriteLine();
-    Console.WriteLine($"Workflow id     : {result.Instance.Id:D}");
-    Console.WriteLine($"Status          : {result.Instance.Status}");
-    Console.WriteLine($"Input artifact  : {result.InputArtifact.Id:D}");
-    Console.WriteLine($"  path          : {ArtifactPath(result.InputArtifact)}");
+    Console.WriteLine("Running BusinessAnalystAgent...");
 
-    if (result.OutputArtifact is not null)
-    {
-        Console.WriteLine($"Output artifact : {result.OutputArtifact.Id:D}");
-        Console.WriteLine($"  path          : {ArtifactPath(result.OutputArtifact)}");
-    }
+    var baResult = await ba.ExecuteAsync(
+        new AgentExecutionContext(instance.Id, inputArtifact.Id),
+        CancellationToken.None);
 
-    if (!result.Succeeded)
-    {
-        Console.WriteLine($"Failure         : {result.FailureMessage}");
-        return 1;
-    }
+    var structured = baResult.OutputArtifact;
+    Console.WriteLine($"BA artifact       : {structured.Id:D}");
+    Console.WriteLine($"  path            : {ArtifactPath(structured)}");
+    Console.WriteLine($"  type            : {structured.Type}");
+    PrintAgentTelemetry("BA", baResult.Telemetry);
+    Console.WriteLine();
+
+    // 4) Mid-chain gate — inspect BA JSON on disk before Developer runs
+    Console.WriteLine("Press Enter to continue to DeveloperAgent (or Ctrl+C to stop)...");
+    Console.ReadLine();
+
+    // 5) Developer: InputArtifactId only — prompt built from LoadAsync inside the agent
+    Console.WriteLine("Running DeveloperAgent...");
+    var devResult = await developer.ExecuteAsync(
+        new AgentExecutionContext(instance.Id, structured.Id),
+        CancellationToken.None);
+
+    var implementation = devResult.OutputArtifact;
+    Console.WriteLine($"Implementation    : {implementation.Id:D}");
+    Console.WriteLine($"  path            : {ArtifactPath(implementation)}");
+    Console.WriteLine($"  type            : {implementation.Type}");
+    PrintAgentTelemetry("Developer", devResult.Telemetry);
+
+    // 6) Combined telemetry next to this run's artifacts
+    var combined = CombineTelemetry(baResult.Telemetry, devResult.Telemetry);
+    await runner.PersistTelemetryAsync(instance.Id, combined, CancellationToken.None);
+    WorkflowRunner.PrintRunSummary(new WorkflowResult(
+        Instance: runner.MarkCompleted(instance),
+        InputArtifact: inputArtifact,
+        OutputArtifact: implementation,
+        Telemetry: combined));
 
     return 0;
 }
@@ -82,3 +106,23 @@ catch (Exception ex)
 
 static string ArtifactPath(Artifact artifact) =>
     Path.Combine("artifacts", artifact.WorkflowInstanceId.ToString("D"), $"{artifact.Id:D}.json");
+
+static void PrintAgentTelemetry(string label, LlmCompletionResult telemetry)
+{
+    Console.WriteLine($"  {label} tokens   : {telemetry.TotalTokens} (prompt {telemetry.PromptTokens}, completion {telemetry.CompletionTokens})");
+    Console.WriteLine($"  {label} duration : {telemetry.Duration.TotalSeconds:F1}s");
+    if (telemetry.EstimatedCostUsd is { } cost)
+    {
+        Console.WriteLine($"  {label} est.cost : ${cost:F4}");
+    }
+}
+
+static LlmCompletionResult CombineTelemetry(LlmCompletionResult ba, LlmCompletionResult developer) =>
+    new(
+        Content: developer.Content,
+        Model: developer.Model,
+        PromptTokens: ba.PromptTokens + developer.PromptTokens,
+        CompletionTokens: ba.CompletionTokens + developer.CompletionTokens,
+        TotalTokens: ba.TotalTokens + developer.TotalTokens,
+        Duration: ba.Duration + developer.Duration,
+        EstimatedCostUsd: (ba.EstimatedCostUsd ?? 0m) + (developer.EstimatedCostUsd ?? 0m));

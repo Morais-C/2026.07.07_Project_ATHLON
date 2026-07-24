@@ -349,11 +349,11 @@ Promote from **Spike_02** (not Spike_01) when ready, since Spike_02 supersedes t
 | 0 — Verify baseline | ✅ Complete |
 | 0.5 — Simplify console host | ✅ Complete |
 | 1 — StructuredRequirement | ✅ Complete |
-| 2 — BusinessAnalystAgent | ⬜ Not started ← **next** |
-| 3 — Developer by-id handoff | ⬜ Not started |
-| 4 — Chain BA → Developer | ⬜ Not started |
-| 5 — Thesis test + host polish | ⬜ Not started |
-| 6 — Demo | ⬜ Not started |
+| 2 — BusinessAnalystAgent | ✅ Complete |
+| 3 — Developer by-id handoff | ✅ Complete |
+| 4 — Chain BA → Developer | ✅ Complete |
+| 5 — Thesis test + host polish | ✅ Complete |
+| 6 — Demo | ✅ Complete |
 
 ---
 

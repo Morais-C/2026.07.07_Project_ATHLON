@@ -1,7 +1,7 @@
 # Project Athlon — Execution Roadmap
 
 > **Living master plan** for build order (distinct from the VisionScope manuscript).  
-> **Last updated:** 2026-07-20  
+> **Last updated:** 2026-07-24  
 > **Manuscript:** [Project_ATHLON_VisionScope/INDEX.md](./Project_ATHLON_VisionScope/INDEX.md)
 
 ---
@@ -11,11 +11,11 @@
 | Milestone | Status |
 |-----------|--------|
 | **Spike_01 — Artifact Slice** | ✅ Complete (2026-07-15) — **frozen archive** |
-| **Spike_02 — Agent chain via artifacts** | ⬜ In progress — phases: [Spike_02 checklist](./src/Spike_02/ImplementationPlan.md#12-checklist-tracker) |
-| **Promotion to `Athlon.*`** | ⬜ After Spike_02 |
+| **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — [checklist](./src/Spike_02/ImplementationPlan.md#12-checklist-tracker) |
+| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
-Milestone row only — do **not** put phase numbers here; update the Spike_02 checklist instead.
+Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
 
 ---
 
@@ -31,7 +31,7 @@ Milestone row only — do **not** put phase numbers here; update the Spike_02 ch
 
 ```text
 1. Spike_01 (done, frozen) — single Developer Agent loop
-2. Spike_02 (next) — BA → StructuredRequirement → Developer → Implementation
+2. Spike_02 (done) — BA → StructuredRequirement → Developer → Implementation
 3. Promote proven code → Athlon.*
 4. PoC Sprint 1 — Athlon.Api + Basic Portal + CI
 ```
@@ -70,7 +70,7 @@ See [src/Spike_02/ImplementationPlan.md](./src/Spike_02/ImplementationPlan.md) �
 
 ---
 
-## Spike_02 (in progress) — summary
+## Spike_02 (complete) — summary
 
 | Item | Detail |
 |------|--------|
@@ -78,7 +78,7 @@ See [src/Spike_02/ImplementationPlan.md](./src/Spike_02/ImplementationPlan.md) �
 | **Chain** | Raw need → **BA Agent** → StructuredRequirement → (**Enter pause**) → **Developer Agent** → Implementation |
 | **Host** | Minimal + real LLM (no CLI flags) |
 | **Baseline** | Full copy of Spike_01 under [`src/Spike_02/`](./src/Spike_02/) |
-| **Phase progress** | [Checklist in ImplementationPlan](./src/Spike_02/ImplementationPlan.md#12-checklist-tracker) |
+| **Phase progress** | [Checklist](./src/Spike_02/ImplementationPlan.md#12-checklist-tracker) — all phases ✅ |
 | **Docs** | [README](./src/Spike_02/README.md) · [ImplementationPlan](./src/Spike_02/ImplementationPlan.md) · [AGENTS](./src/Spike_02/AGENTS.md) |
 
 Success: Developer Agent’s only input is a BA-produced artifact loaded by id — not pasted chat / not BA completion text.
@@ -86,6 +86,8 @@ Success: Developer Agent’s only input is a BA-produced artifact loaded by id �
 ---
 
 ## After Spike_02 — promotion & Sprint 1
+
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** (stub — refine then execute).
 
 ```text
 Athlon.Spike.* (from Spike_02)  →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm
@@ -97,10 +99,9 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Implement Spike_02 per src/Spike_02/ImplementationPlan.md.
-
-Read ROADMAP.md, src/Spike_02/AGENTS.md and README.md first.
-Check the Checklist tracker in ImplementationPlan.md §12 for the next phase.
-Complete one phase at a time; update only that checklist; stop for human verification.
-Do not modify src/Spike_01. Do not promote to Athlon.*. No portal/API. No CLI flags.
+Read ROADMAP.md and PromotionPlan.md.
+Spike_01 and Spike_02 are complete — do not reopen spike phases.
+Next: promote src/Spike_02 Athlon.Spike.* into Athlon.*.
+Keep Spike_02 intact as reference until promotion tests pass.
+Do not modify src/Spike_01. No portal/API until promotion is done.
 ```

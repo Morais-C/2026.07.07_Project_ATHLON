@@ -3,19 +3,19 @@ using Athlon.Spike.Contracts;
 namespace Athlon.Spike.Agents;
 
 /// <summary>
-/// StructuredRequirement (by id) → validated Implementation artifact.
-/// Prompt is built from LoadAsync(id) only — never from a BA completion string.
+/// Raw BusinessRequirement → validated StructuredRequirement artifact.
+/// Publish only after schema OK — no chat handoff to the next agent.
 /// </summary>
-public sealed class DeveloperAgent : IAgent
+public sealed class BusinessAnalystAgent : IAgent
 {
-    public const string AgentName = "DeveloperAgent";
+    public const string AgentName = "BusinessAnalystAgent";
 
     private readonly ILLMProvider _llmProvider;
     private readonly IArtifactStore _artifactStore;
     private readonly PromptComposer _promptComposer;
     private readonly JsonSchemaValidator _validator;
 
-    public DeveloperAgent(
+    public BusinessAnalystAgent(
         ILLMProvider llmProvider,
         IArtifactStore artifactStore,
         string promptTemplatePath,
@@ -35,16 +35,15 @@ public sealed class DeveloperAgent : IAgent
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        // Handoff is by artifact id — load from store, do not accept BA chat text
         var inputArtifact = await _artifactStore.LoadAsync(context.InputArtifactId, cancellationToken)
             .ConfigureAwait(false)
             ?? throw new InvalidOperationException(
                 $"Input artifact '{context.InputArtifactId}' was not found.");
 
-        if (!string.Equals(inputArtifact.Type, ArtifactTypes.StructuredRequirement, StringComparison.Ordinal))
+        if (!string.Equals(inputArtifact.Type, ArtifactTypes.BusinessRequirement, StringComparison.Ordinal))
         {
             throw new InvalidOperationException(
-                $"DeveloperAgent expects a StructuredRequirement artifact, got '{inputArtifact.Type}'.");
+                $"BusinessAnalystAgent expects a BusinessRequirement artifact, got '{inputArtifact.Type}'.");
         }
 
         var inputArtifactJson = ArtifactJson.Serialize(inputArtifact);
@@ -54,6 +53,7 @@ public sealed class DeveloperAgent : IAgent
         var validation = await CompleteAndValidateAsync(systemPrompt, userPrompt, completions, cancellationToken)
             .ConfigureAwait(false);
 
+        // Same rigor as Developer: 1 retry with validation errors echoed
         if (!validation.IsValid)
         {
             var retryPrompt = _promptComposer.AppendValidationFeedback(userPrompt, validation.Errors);
@@ -64,13 +64,14 @@ public sealed class DeveloperAgent : IAgent
             {
                 var errorSummary = string.Join("; ", validation.Errors);
                 throw new InvalidOperationException(
-                    $"DeveloperAgent failed schema validation after one retry: {errorSummary}");
+                    $"BusinessAnalystAgent failed schema validation after one retry: {errorSummary}");
             }
         }
 
+        // Only publish once schema is valid
         var outputArtifact = new Artifact(
             Id: Guid.NewGuid(),
-            Type: ArtifactTypes.Implementation,
+            Type: ArtifactTypes.StructuredRequirement,
             Version: 1,
             Producer: AgentName,
             CreatedUtc: DateTime.UtcNow,

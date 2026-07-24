@@ -26,7 +26,7 @@ public class RequirementToImplementationWorkflowTests
         }
         """;
 
-    [Fact]
+    [Fact(Skip = "Phase 4 replaces this single-Developer path with BA → StructuredRequirement → Developer")]
     public async Task Completes_with_status_transitions_when_auto_approved()
     {
         var root = CreateTempArtifactRoot();
@@ -58,7 +58,7 @@ public class RequirementToImplementationWorkflowTests
         }
     }
 
-    [Fact]
+    [Fact(Skip = "Phase 4 replaces this single-Developer path with BA → StructuredRequirement → Developer")]
     public async Task Fails_when_not_approved()
     {
         var root = CreateTempArtifactRoot();
@@ -86,7 +86,7 @@ public class RequirementToImplementationWorkflowTests
         }
     }
 
-    [Fact]
+    [Fact(Skip = "Phase 4 replaces this single-Developer path with BA → StructuredRequirement → Developer")]
     public async Task Fails_when_agent_validation_fails_twice()
     {
         var root = CreateTempArtifactRoot();

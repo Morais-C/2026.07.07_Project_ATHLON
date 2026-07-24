@@ -34,7 +34,7 @@ public class DeveloperAgentTests
 
         try
         {
-            var input = BusinessRequirement.FromText("As an employee I want meal allowance", workflowId);
+            var input = CreateStructuredRequirement(workflowId);
             await store.SaveAsync(input);
 
             var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidImplementationJson)));
@@ -63,7 +63,7 @@ public class DeveloperAgentTests
 
         try
         {
-            var input = BusinessRequirement.FromText("Meal allowance requirement", workflowId);
+            var input = CreateStructuredRequirement(workflowId);
             await store.SaveAsync(input);
 
             var agent = CreateAgent(store, new MockLLMProvider(
@@ -91,7 +91,7 @@ public class DeveloperAgentTests
 
         try
         {
-            var input = BusinessRequirement.FromText("Meal allowance requirement", workflowId);
+            var input = CreateStructuredRequirement(workflowId);
             await store.SaveAsync(input);
 
             var agent = CreateAgent(store, new MockLLMProvider(
@@ -105,6 +105,32 @@ public class DeveloperAgentTests
 
             var files = Directory.GetFiles(root, "*.json", SearchOption.AllDirectories);
             Assert.Single(files);
+        }
+        finally
+        {
+            Cleanup(root);
+        }
+    }
+
+    [Fact]
+    public async Task Rejects_BusinessRequirement_input_type()
+    {
+        var root = CreateTempArtifactRoot();
+        var store = new FileArtifactStore(root);
+        var workflowId = Guid.NewGuid();
+
+        try
+        {
+            var wrong = BusinessRequirement.FromText("raw need — not structured", workflowId);
+            await store.SaveAsync(wrong);
+
+            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidImplementationJson)));
+
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, wrong.Id)));
+
+            Assert.Contains(ArtifactTypes.StructuredRequirement, exception.Message);
+            Assert.Contains(ArtifactTypes.BusinessRequirement, exception.Message);
         }
         finally
         {
@@ -134,6 +160,18 @@ public class DeveloperAgentTests
 
         Assert.True(outcome.IsValid);
     }
+
+    private static Artifact CreateStructuredRequirement(Guid workflowId) =>
+        StructuredRequirement.Create(
+            new StructuredRequirementPayload(
+                Title: "Employee Daily Meal Allowance",
+                Actors: ["Employee", "Payroll"],
+                Goal: "Provide a fixed daily meal allowance on working days",
+                AcceptanceCriteriaDraft: ["Eligible employees receive a fixed daily allowance"],
+                Constraints: ["On-site working days only"],
+                Priority: "Medium"),
+            workflowId,
+            producer: "BusinessAnalystAgent");
 
     private static DeveloperAgent CreateAgent(FileArtifactStore store, MockLLMProvider llm) =>
         new(
