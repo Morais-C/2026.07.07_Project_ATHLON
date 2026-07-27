@@ -1,7 +1,7 @@
 # Project Athlon — Execution Roadmap
 
 > **Living master plan** for build order (distinct from the VisionScope manuscript).  
-> **Last updated:** 2026-07-24  
+> **Last updated:** 2026-07-27  
 > **Manuscript:** [Project_ATHLON_VisionScope/INDEX.md](./Project_ATHLON_VisionScope/INDEX.md)
 
 ---
@@ -11,8 +11,9 @@
 | Milestone | Status |
 |-----------|--------|
 | **Spike_01 — Artifact Slice** | ✅ Complete (2026-07-15) — **frozen archive** |
-| **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — [checklist](./src/Spike_02/ImplementationPlan.md#12-checklist-tracker) |
-| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
+| **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
+| **Spike_03 — Console publish via artifacts** | ⬜ Next — [Spike_03 checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
+| **Promotion to `Athlon.*`** | ⬜ After Spike_03 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
 Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
@@ -21,13 +22,35 @@ Spike checklists live under each spike; promotion progress lives in [PromotionPl
 
 ## Decision log
 
+### 2026-07-27 — Spike_03 before promotion
+
+**Decision:** Insert **Spike_03** after Spike_02 and **before** promotion / PoC Sprint 1.
+
+**Primary concern:** *Can an artifact chain end in buildable, runnable code on disk?*
+
+**Order:**
+
+```text
+1. Spike_01 (done, frozen) — single agent → artifact
+2. Spike_02 (done, frozen) — BA → StructuredRequirement → Developer → Implementation
+3. Spike_03 (next) — Analyst → Planner → Coder → Publisher → Publish/{workflowId}/
+4. Promote proven code → Athlon.*
+5. PoC Sprint 1 — Athlon.Api + Basic Portal + CI
+```
+
+**Baseline:** Fork by copy from Spike_02 → `src/Spike_03/`. Do not modify Spike_01 or Spike_02.
+
+**Roster lock:** LLM Analyst, Planner, Coder; deterministic Publisher (build/run).  
+**Bounds:** net9 console, read→process→print (0+ ReadLine OK), ≤3 source files; Analyst aborts ASAP if out of scope.  
+Full locks: [Spike_03 ImplementationPlan §2](./src/Spike_03/ImplementationPlan.md#2-pre-locked-decisions-2026-07-27).
+
 ### 2026-07-17 — Spike_02 before promotion
 
 **Decision:** Do **Spike_02 first**; **defer** promotion of spike code into `Athlon.*` and PoC Sprint 1 (API/portal) until Spike_02 succeeds.
 
 **Primary concern:** *Can agents chain through artifacts?*
 
-**Order:**
+**Order (historical — superseded 2026-07-27 for steps after Spike_02):**
 
 ```text
 1. Spike_01 (done, frozen) — single Developer Agent loop
@@ -65,7 +88,7 @@ See [src/Spike_02/ImplementationPlan.md](./src/Spike_02/ImplementationPlan.md) �
 ## Spike_01 (complete) — summary
 
 - Path: Business requirement → workflow → Developer Agent → validated `ImplementationArtifact`
-- Location: [`src/Spike_01/`](./src/Spike_01/) — **do not modify for Spike_02 work**
+- Location: [`src/Spike_01/`](./src/Spike_01/) — **do not modify**
 - Docs: [README](./src/Spike_01/README.md) · [ImplementationPlan](./src/Spike_01/ImplementationPlan.md)
 
 ---
@@ -85,12 +108,26 @@ Success: Developer Agent’s only input is a BA-produced artifact loaded by id �
 
 ---
 
-## After Spike_02 — promotion & Sprint 1
+## Spike_03 (next) — summary
 
-Plan: **[PromotionPlan.md](./PromotionPlan.md)** (stub — refine then execute).
+| Item | Detail |
+|------|--------|
+| **Thesis** | Artifact chain ends in **buildable/runnable** console code under `Publish/` |
+| **Chain** | BusinessRequirement → **Analyst** → **Planner** → **Coder** → **Publisher** (deterministic) |
+| **Host** | Minimal + real LLM; pause after each LLM agent |
+| **Baseline** | Full copy of Spike_02 under [`src/Spike_03/`](./src/Spike_03/) |
+| **Phase progress** | [Checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
+| **Docs** | [README](./src/Spike_03/README.md) · [ImplementationPlan](./src/Spike_03/ImplementationPlan.md) · [AGENTS](./src/Spike_03/AGENTS.md) |
+
+---
+
+## After Spike_03 — promotion & Sprint 1
+
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** (deferred until Spike_03 succeeds).
 
 ```text
-Athlon.Spike.* (from Spike_02)  →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm
+Athlon.Spike.* (from Spike_03 when proven — or Spike_02 if Spike_03 is spike-only)
+        →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm
 Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```
 
@@ -99,9 +136,8 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Read ROADMAP.md and PromotionPlan.md.
-Spike_01 and Spike_02 are complete — do not reopen spike phases.
-Next: promote src/Spike_02 Athlon.Spike.* into Athlon.*.
-Keep Spike_02 intact as reference until promotion tests pass.
-Do not modify src/Spike_01. No portal/API until promotion is done.
+Read ROADMAP.md and src/Spike_03/AGENTS.md.
+Spike_01 and Spike_02 are complete/frozen — do not modify them.
+Next: Spike_03 per src/Spike_03/ImplementationPlan.md (start Phase 0 copy).
+Promotion is deferred until Spike_03 succeeds. No portal/API yet.
 ```

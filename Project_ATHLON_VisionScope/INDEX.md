@@ -5,7 +5,7 @@
 A reference architecture and implementation playbook for Agentic Software Engineering — from vision, through architecture, to a sprint-by-sprint build guide.
 
 **Execution status (build order):** see the living master plan → [ROADMAP.md](../ROADMAP.md)  
-*(Spike_01 + Spike_02 complete · next: [promotion to Athlon.\*](../PromotionPlan.md))*
+*(Spike_01 + Spike_02 complete · next: [Spike_03](../src/Spike_03/README.md) · promotion after Spike_03)*
 
 ---
 

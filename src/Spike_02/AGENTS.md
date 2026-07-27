@@ -5,14 +5,14 @@ Reference instructions for the **completed** Spike_02 archive. Do not re-impleme
 ## Current state
 
 **Spike_02 is complete** (Phases 0–6). Checklist and README success criteria are met.  
-**Next project work:** promote `Athlon.Spike.*` → `Athlon.*` per [ROADMAP.md](../../ROADMAP.md) and [PromotionPlan.md](../../PromotionPlan.md).
+**Next project work:** [Spike_03](../Spike_03/AGENTS.md) (console publish via artifacts), **then** promotion ([PromotionPlan.md](../../PromotionPlan.md)).
 
 ## Start here (reference only)
 
 1. Read [ROADMAP.md](../../ROADMAP.md) for sequencing.
 2. Read [README.md](./README.md) for thesis, demo, and success criteria.
 3. Use [ImplementationPlan.md](./ImplementationPlan.md) as the historical build record (checklist all ✅).
-4. **Do not modify `src/Spike_01/`.** Keep Spike_02 as the proven reference until promotion lands.
+4. **Do not modify this folder** for Spike_03 or promotion feature work — copy forward into Spike_03 instead.
 5. **Do not start new Spike_02 phases** — the spike is closed.
 
 ## What this folder is
@@ -22,8 +22,9 @@ Reference instructions for the **completed** Spike_02 archive. Do not re-impleme
 | Proven reference | BA → StructuredRequirement → Developer → Implementation via artifacts |
 | Demo | `dotnet run --project Athlon.Spike.Console` from `src/Spike_02` |
 | Thesis proof | `ArtifactHandoffThesisTests` — Developer prompt from `LoadAsync(id)` only |
+| Copy source | Baseline for Spike_03 Phase 0 |
 
-## Architecture constraints (still true for promotion)
+## Architecture constraints (still true)
 
 | Rule | Detail |
 |------|--------|
@@ -33,18 +34,11 @@ Reference instructions for the **completed** Spike_02 archive. Do not re-impleme
 | BA rigor | Schema validation + **1 required retry** (same as Developer) |
 | Host (spike) | Hardcoded sample need; no CLI flag parser |
 
-## Conventions
-
-- **Target framework:** `net9.0`
-- **Secrets:** `appsettings.Local.json` gitignored — never commit keys
-- **Progress for Spike_02:** closed — do not reopen the phase checklist except for errata
-
-## Suggested opening prompt (promotion — not Spike_02)
+## Suggested opening prompt (Spike_03 — not Spike_02)
 
 ```text
-Spike_02 is complete. Follow ROADMAP.md and PromotionPlan.md.
-Promote Athlon.Spike.* from src/Spike_02 into Athlon.* namespaces/projects.
-Do not modify src/Spike_01. Keep Spike_02 intact as the reference until promotion is verified.
+Spike_02 is complete/frozen. Implement Spike_03 per src/Spike_03/ImplementationPlan.md.
+Copy from Spike_02 in Phase 0; do not modify src/Spike_02 or src/Spike_01.
 ```
 
 ## Definition of done (Spike_02)

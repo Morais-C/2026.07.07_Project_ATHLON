@@ -91,4 +91,5 @@ Edit the hardcoded sample need in `Program.cs` to try other scenarios.
 
 ## Next after Spike_02
 
-Promote to `Athlon.*` per [PromotionPlan.md](../../PromotionPlan.md), then PoC Sprint 1 (API + portal). See [ROADMAP.md](../../ROADMAP.md).
+**Spike_03** (console publish via artifacts) — see [../Spike_03/README.md](../Spike_03/README.md).  
+Then promote to `Athlon.*` per [PromotionPlan.md](../../PromotionPlan.md). See [ROADMAP.md](../../ROADMAP.md).

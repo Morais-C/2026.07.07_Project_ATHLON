@@ -8,8 +8,10 @@ Instructions for Cursor (or any implementer) working on this spike.
 2. Implement strictly from [ImplementationPlan.md](./ImplementationPlan.md), **one phase at a time** (Phase 0 → 6).
 3. Update the **Checklist tracker** (§11 in the plan) as each phase completes.
 
-**Current state:** Spike_01 complete (**frozen archive**). Spike_02 is also complete.  
-**Next:** promote Spike_02 → `Athlon.*` per [ROADMAP.md](../../ROADMAP.md) and [PromotionPlan.md](../../PromotionPlan.md). **Do not modify this folder** for Spike_02 or promotion feature work.
+**Current state:** Spike_01 complete (**frozen archive**). Spike_02 complete (**frozen**).  
+**Next:** [Spike_03](../Spike_03/AGENTS.md) — console publish via artifacts — **before** promotion.  
+See [ROADMAP.md](../../ROADMAP.md). **Do not modify this folder.**
+
 
 ## Scope rules
 
@@ -61,7 +63,7 @@ Full index: [Project_ATHLON_VisionScope/INDEX.md](../../Project_ATHLON_VisionSco
 
 ```text
 Spike_01 is a frozen archive. Do not implement new Spike_01 phases.
-Next work is promotion of Spike_02 → Athlon.* (see ROADMAP.md and PromotionPlan.md).
+Next work is Spike_03 (see ROADMAP.md and src/Spike_03/AGENTS.md), then promotion.
 ```
 
 ## Definition of done
