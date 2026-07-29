@@ -12,8 +12,9 @@
 |-----------|--------|
 | **Spike_01 — Artifact Slice** | ✅ Complete (2026-07-15) — **frozen archive** |
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
-| **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — [checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
-| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
+| **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
+| **Spike_04 — Change existing console via artifacts** | 🔄 Next — planning ✅; **Phase 0** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
+| **Promotion to `Athlon.*`** | ⬜ After Spike_04 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
 Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
@@ -21,6 +22,26 @@ Spike checklists live under each spike; promotion progress lives in [PromotionPl
 ---
 
 ## Decision log
+
+### 2026-07-29 — Spike_04 before promotion (incremental change)
+
+**Decision:** Insert **Spike_04** after Spike_03 and **before** promotion / PoC Sprint 1.
+
+**Primary concern:** *Can agents change an existing console via artifacts (not chat), ending in a new buildable Publish tree?*
+
+**Order:**
+
+```text
+1. Spike_01 (done, frozen) — single agent → artifact
+2. Spike_02 (done, frozen) — BA → StructuredRequirement → Developer → Implementation
+3. Spike_03 (done, frozen) — Analyst → Planner → Coder → Publisher → Publish/{workflowId}/
+4. Spike_04 (next) — Fixture + ChangeRequest → … → PatchPackage → Applier → Publish/{workflowId}/
+5. Promote proven code → Athlon.*
+6. PoC Sprint 1 — Athlon.Api + Basic Portal + CI
+```
+
+**Locks (summary):** checked-in fixture; ChangeRequest `feature` \| `bugfix` (one shape); CodeContext = all fixture files + caps; PatchPackage = **unified diffs**; new Publish folder per run (branch metaphor); deterministic Applier (build-only); host **fail fast** (no Enter pauses).  
+Full locks: [Spike_04 ImplementationPlan §2](./src/Spike_04/ImplementationPlan.md#2-pre-locked-decisions-2026-07-29).
 
 ### 2026-07-28 — Publisher is build-only (functional tests later)
 
@@ -34,7 +55,7 @@ Amends Spike_03 lock **L10**. Details: [ImplementationPlan §2 L10](./src/Spike_
 
 **Primary concern:** *Can an artifact chain end in buildable, runnable code on disk?*
 
-**Order:**
+**Order (historical — superseded 2026-07-29 for steps after Spike_03):**
 
 ```text
 1. Spike_01 (done, frozen) — single agent → artifact
@@ -129,12 +150,25 @@ Success: demo published `Publish/{workflowId}/` with `buildSucceeded: true`; fun
 
 ---
 
-## After Spike_03 — promotion & Sprint 1
+## Spike_04 (in progress) — summary
 
-Plan: **[PromotionPlan.md](./PromotionPlan.md)** — Spike_03 succeeded; promotion is next.
+| Item | Detail |
+|------|--------|
+| **Thesis** | Agents change an **existing** console via artifacts → new buildable `Publish/{workflowId}/` |
+| **Chain** | Fixture + ChangeRequest → **Analyst** → CodeContext → **Planner** → **Coder** → **Applier** (apply + build) |
+| **Host** | Minimal + real LLM; **fail fast** (no Enter pauses) |
+| **Baseline** | Full copy of Spike_03 under [`src/Spike_04/`](./src/Spike_04/) + checked-in fixture |
+| **Phase progress** | Planning ✅ · **next Phase 0** — [Checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
+| **Docs** | [README](./src/Spike_04/README.md) · [ImplementationPlan](./src/Spike_04/ImplementationPlan.md) · [AGENTS](./src/Spike_04/AGENTS.md) |
+
+---
+
+## After Spike_04 — promotion & Sprint 1
+
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** (deferred until Spike_04 succeeds).
 
 ```text
-Athlon.Spike.* (from Spike_03)
+Athlon.Spike.* (from Spike_04 when proven)
         →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm
 Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```
@@ -144,9 +178,9 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Read ROADMAP.md and PromotionPlan.md.
-Spike_01, Spike_02, and Spike_03 are complete — do not modify Spike_01/Spike_02/Spike_03.
-Spike_03 proven: Analyst → Planner → Coder → Publisher → Publish/{workflowId}/ (build-only L10).
-Next: promote proven Spike_03 stack → Athlon.* per PromotionPlan.md.
-No portal/API until after promotion.
+Read ROADMAP.md and src/Spike_04/AGENTS.md.
+Spike_01–03 are complete/frozen — do not modify them.
+Spike_04 planning is done. Continue at Phase 0 per src/Spike_04/ImplementationPlan.md
+(checklist §9). PatchPackage = unified diffs; Applier build-only; fail fast (no Enter pauses).
+Promotion is deferred until Spike_04 succeeds. No portal/API yet.
 ```
