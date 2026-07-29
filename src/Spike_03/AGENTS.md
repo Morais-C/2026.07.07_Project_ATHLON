@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **only** the [Checklist tracker](./ImplementationPlan.md#9-checklist-tracker) when a phase completes.
 5. **Do not modify `src/Spike_01/` or `src/Spike_02/`.** Spike_03 is a fork/copy; those stay archives.
 
-**Current state:** Phase 4 complete — next is **Phase 5 (thesis + E2E CI tests)**.
+**Current state:** Spike_03 **complete** (Phases 0–6). Prefer freeze; next project step is promotion ([PromotionPlan.md](../../PromotionPlan.md)).
 
 ## Scope rules
 
@@ -54,12 +54,8 @@ Instructions for Cursor (or any implementer) working on this spike.
 ## Suggested opening prompt
 
 ```text
-Finish Spike_03 per src/Spike_03/ImplementationPlan.md.
-
-Read ROADMAP.md, src/Spike_03/AGENTS.md and README.md first.
-Phases 0–4 are done — start at Phase 5 (thesis + E2E tests). Then Phase 6 (demo).
-One phase at a time; update only the checklist.
-Publisher is build-only (L10). Do not modify src/Spike_01 or src/Spike_02. No promotion. No portal/API.
+Spike_03 is complete. Read ROADMAP.md and PromotionPlan.md for the next milestone.
+Do not modify src/Spike_01 or src/Spike_02. Prefer not to reopen Spike_03 unless fixing a proven defect.
 ```
 
 ## Definition of done

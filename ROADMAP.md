@@ -1,7 +1,7 @@
 # Project Athlon — Execution Roadmap
 
 > **Living master plan** for build order (distinct from the VisionScope manuscript).  
-> **Last updated:** 2026-07-28  
+> **Last updated:** 2026-07-29  
 > **Manuscript:** [Project_ATHLON_VisionScope/INDEX.md](./Project_ATHLON_VisionScope/INDEX.md)
 
 ---
@@ -12,8 +12,8 @@
 |-----------|--------|
 | **Spike_01 — Artifact Slice** | ✅ Complete (2026-07-15) — **frozen archive** |
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
-| **Spike_03 — Console publish via artifacts** | 🔄 In progress — Phases 0–4 ✅; **next Phase 5** — [checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
-| **Promotion to `Athlon.*`** | ⬜ After Spike_03 — [PromotionPlan.md](./PromotionPlan.md) |
+| **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — [checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
+| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
 Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
@@ -114,7 +114,7 @@ Success: Developer Agent’s only input is a BA-produced artifact loaded by id �
 
 ---
 
-## Spike_03 (in progress) — summary
+## Spike_03 (complete) — summary
 
 | Item | Detail |
 |------|--------|
@@ -122,17 +122,19 @@ Success: Developer Agent’s only input is a BA-produced artifact loaded by id �
 | **Chain** | BusinessRequirement → **Analyst** → **Planner** → **Coder** → **Publisher** (deterministic build) |
 | **Host** | Minimal + real LLM; pause after each LLM agent |
 | **Baseline** | Full copy of Spike_02 under [`src/Spike_03/`](./src/Spike_03/) |
-| **Phase progress** | 0–4 ✅ · **next Phase 5** — [Checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
+| **Phase progress** | All phases ✅ — [Checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
 | **Docs** | [README](./src/Spike_03/README.md) · [ImplementationPlan](./src/Spike_03/ImplementationPlan.md) · [AGENTS](./src/Spike_03/AGENTS.md) |
+
+Success: demo published `Publish/{workflowId}/` with `buildSucceeded: true`; functional run optional / Tester later.
 
 ---
 
 ## After Spike_03 — promotion & Sprint 1
 
-Plan: **[PromotionPlan.md](./PromotionPlan.md)** (deferred until Spike_03 succeeds).
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** — Spike_03 succeeded; promotion is next.
 
 ```text
-Athlon.Spike.* (from Spike_03 when proven — or Spike_02 if Spike_03 is spike-only)
+Athlon.Spike.* (from Spike_03)
         →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm
 Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```
@@ -142,9 +144,9 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Read ROADMAP.md and src/Spike_03/AGENTS.md.
-Spike_01 and Spike_02 are complete/frozen — do not modify them.
-Spike_03 Phases 0–4 are done. Continue at Phase 5 per src/Spike_03/ImplementationPlan.md
-(checklist §9). Publisher is build-only (L10); functional run checks deferred to Tester.
-Promotion is deferred until Spike_03 succeeds. No portal/API yet.
+Read ROADMAP.md and PromotionPlan.md.
+Spike_01, Spike_02, and Spike_03 are complete — do not modify Spike_01/Spike_02/Spike_03.
+Spike_03 proven: Analyst → Planner → Coder → Publisher → Publish/{workflowId}/ (build-only L10).
+Next: promote proven Spike_03 stack → Athlon.* per PromotionPlan.md.
+No portal/API until after promotion.
 ```

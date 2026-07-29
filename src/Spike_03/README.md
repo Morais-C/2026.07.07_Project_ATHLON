@@ -44,17 +44,52 @@ Promotion, portal, API, SQL, LangGraph, RAG, MCP, editing Spike_01/Spike_02, CLI
 
 ## Prerequisites / config
 
-Same pattern as Spike_02: `appsettings.json` + gitignored `appsettings.Local.json` (after Phase 0 copy).
+Same pattern as Spike_02: `appsettings.json` + gitignored `appsettings.Local.json`.
+
+```bash
+cd src/Spike_03
+cp appsettings.Local.json.example appsettings.Local.json   # then paste your OpenRouter key
+```
+
+`OpenRouter:ApiKey` and `OpenRouter:Model` are both required; the host exits with a hint if either is missing.
+
+## Demo (~5–10 min)
+
+Run everything from `src/Spike_03` so `prompts/`, `schemas/`, `artifacts/`, `Publish/` and `appsettings*.json` resolve.
+
+```bash
+cd src/Spike_03
+dotnet test                                  # 43 tests, no network / no API key needed
+dotnet run --project Athlon.Spike.Console    # real OpenRouter run
+```
+
+The console prints the workflow id, then pauses for Enter after each LLM agent. At each pause, open the
+artifact just written under `artifacts/{workflowId}/` before continuing:
+
+| Pause | Artifact to open | What it shows |
+|-------|------------------|---------------|
+| After Analyst | `StructuredRequirement` | Raw need turned into structured fields; in bounds |
+| After Planner | `ImplementationPlan` | Tasks and acceptance criteria — no source code yet |
+| After Coder | `CodePackage` | `files[]`, `entryProject`, `targetFramework` |
+
+After the final Enter the deterministic Publisher materializes `Publish/{workflowId}/` and runs
+`dotnet build`. Open that folder and `publish-manifest.json` to see `buildSucceeded` and
+`functionalTest: deferred-to-tester-agent` (L10 — functional run belongs to a future Tester agent).
+
+**Optional abort run:** replace the hardcoded `need` in `Program.cs` with something out of bounds
+(e.g. a web portal with a SQL database). The Analyst refuses, prints its reason, pauses so you can read
+it, and exits with code 2 — no StructuredRequirement, no CodePackage, no Publish folder.
 
 ## Success criteria
 
-- [ ] Spike_03 is a copy of Spike_02; Spike_02 untouched
-- [ ] Analyst aborts out-of-bounds needs ASAP (pause to read message; no SR publish)
-- [ ] Planner / Coder hand off by artifact id only (thesis tests)
-- [ ] CodePackage schema-validated; Publisher writes `Publish/{workflowId}/` immutably
-- [ ] `dotnet build` succeeds in Publisher tests (CI-style) and demo; functional run checks deferred to Tester
-- [ ] Slim host: pauses after Analyst/Planner/Coder; progress logs during LLM/build
-- [ ] Demo shows artifacts + Publish folder for a tiny console need
+- [x] Spike_03 is a copy of Spike_02; Spike_02 untouched
+- [x] Analyst aborts out-of-bounds needs ASAP (pause to read message; no SR publish)
+- [x] Planner / Coder hand off by artifact id only (thesis tests)
+- [x] CodePackage schema-validated; Publisher writes `Publish/{workflowId}/` immutably
+- [x] Slim host: pauses after Analyst/Planner/Coder; progress logs during LLM/build
+- [x] `dotnet build` succeeds in Publisher tests (CI-style); functional run checks deferred to Tester
+- [x] `dotnet build` succeeds in a live demo run
+- [x] Demo shows artifacts + Publish folder for a tiny console need
 
 ## Next after Spike_03
 

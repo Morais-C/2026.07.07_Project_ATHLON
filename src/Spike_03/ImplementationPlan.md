@@ -254,8 +254,8 @@ public sealed record CodePackagePayload(
 | 2 — CodePackage + Coder | ✅ Complete |
 | 3 — Publisher (build) | ✅ Complete |
 | 4 — Chain + host UX | ✅ Complete |
-| 5 — Thesis + E2E tests | ⬜ Not started ← **next** |
-| 6 — Demo | ⬜ Not started |
+| 5 — Thesis + E2E tests | ✅ Complete |
+| 6 — Demo | ✅ Complete |
 
 ---
 
