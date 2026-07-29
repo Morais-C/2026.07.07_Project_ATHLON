@@ -1,7 +1,7 @@
 # Project Athlon — Execution Roadmap
 
 > **Living master plan** for build order (distinct from the VisionScope manuscript).  
-> **Last updated:** 2026-07-27  
+> **Last updated:** 2026-07-28  
 > **Manuscript:** [Project_ATHLON_VisionScope/INDEX.md](./Project_ATHLON_VisionScope/INDEX.md)
 
 ---
@@ -12,7 +12,7 @@
 |-----------|--------|
 | **Spike_01 — Artifact Slice** | ✅ Complete (2026-07-15) — **frozen archive** |
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
-| **Spike_03 — Console publish via artifacts** | ⬜ Next — [Spike_03 checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
+| **Spike_03 — Console publish via artifacts** | 🔄 In progress — Phases 0–4 ✅; **next Phase 5** — [checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
 | **Promotion to `Athlon.*`** | ⬜ After Spike_03 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
@@ -21,6 +21,12 @@ Spike checklists live under each spike; promotion progress lives in [PromotionPl
 ---
 
 ## Decision log
+
+### 2026-07-28 — Publisher is build-only (functional tests later)
+
+**Decision:** Spike_03 **Publisher** materializes `Publish/{workflowId}/` and runs `dotnet build` only.  
+**Functional run/output checks** are deferred to a future **Tester** agent (not Coder test data; keeps Publisher deterministic).  
+Amends Spike_03 lock **L10**. Details: [ImplementationPlan §2 L10](./src/Spike_03/ImplementationPlan.md#2-pre-locked-decisions-2026-07-27).
 
 ### 2026-07-27 — Spike_03 before promotion
 
@@ -40,7 +46,7 @@ Spike checklists live under each spike; promotion progress lives in [PromotionPl
 
 **Baseline:** Fork by copy from Spike_02 → `src/Spike_03/`. Do not modify Spike_01 or Spike_02.
 
-**Roster lock:** LLM Analyst, Planner, Coder; deterministic Publisher (build/run).  
+**Roster lock:** LLM Analyst, Planner, Coder; deterministic Publisher (**build**; functional run later via Tester).  
 **Bounds:** net9 console, read→process→print (0+ ReadLine OK), ≤3 source files; Analyst aborts ASAP if out of scope.  
 Full locks: [Spike_03 ImplementationPlan §2](./src/Spike_03/ImplementationPlan.md#2-pre-locked-decisions-2026-07-27).
 
@@ -108,15 +114,15 @@ Success: Developer Agent’s only input is a BA-produced artifact loaded by id �
 
 ---
 
-## Spike_03 (next) — summary
+## Spike_03 (in progress) — summary
 
 | Item | Detail |
 |------|--------|
-| **Thesis** | Artifact chain ends in **buildable/runnable** console code under `Publish/` |
-| **Chain** | BusinessRequirement → **Analyst** → **Planner** → **Coder** → **Publisher** (deterministic) |
+| **Thesis** | Artifact chain ends in **buildable** console code under `Publish/` (functional run → future Tester) |
+| **Chain** | BusinessRequirement → **Analyst** → **Planner** → **Coder** → **Publisher** (deterministic build) |
 | **Host** | Minimal + real LLM; pause after each LLM agent |
 | **Baseline** | Full copy of Spike_02 under [`src/Spike_03/`](./src/Spike_03/) |
-| **Phase progress** | [Checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
+| **Phase progress** | 0–4 ✅ · **next Phase 5** — [Checklist](./src/Spike_03/ImplementationPlan.md#9-checklist-tracker) |
 | **Docs** | [README](./src/Spike_03/README.md) · [ImplementationPlan](./src/Spike_03/ImplementationPlan.md) · [AGENTS](./src/Spike_03/AGENTS.md) |
 
 ---
@@ -138,6 +144,7 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```text
 Read ROADMAP.md and src/Spike_03/AGENTS.md.
 Spike_01 and Spike_02 are complete/frozen — do not modify them.
-Next: Spike_03 per src/Spike_03/ImplementationPlan.md (start Phase 0 copy).
+Spike_03 Phases 0–4 are done. Continue at Phase 5 per src/Spike_03/ImplementationPlan.md
+(checklist §9). Publisher is build-only (L10); functional run checks deferred to Tester.
 Promotion is deferred until Spike_03 succeeds. No portal/API yet.
 ```

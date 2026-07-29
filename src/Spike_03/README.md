@@ -52,7 +52,7 @@ Same pattern as Spike_02: `appsettings.json` + gitignored `appsettings.Local.jso
 - [ ] Analyst aborts out-of-bounds needs ASAP (pause to read message; no SR publish)
 - [ ] Planner / Coder hand off by artifact id only (thesis tests)
 - [ ] CodePackage schema-validated; Publisher writes `Publish/{workflowId}/` immutably
-- [ ] `dotnet build` + run check succeed in tests (CI-style) and demo
+- [ ] `dotnet build` succeeds in Publisher tests (CI-style) and demo; functional run checks deferred to Tester
 - [ ] Slim host: pauses after Analyst/Planner/Coder; progress logs during LLM/build
 - [ ] Demo shows artifacts + Publish folder for a tiny console need
 

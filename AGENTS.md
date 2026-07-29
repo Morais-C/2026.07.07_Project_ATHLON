@@ -15,6 +15,7 @@ Start at **[ROADMAP.md](./ROADMAP.md)** (status + fresh session starter).
 ```text
 Read ROADMAP.md and src/Spike_03/AGENTS.md.
 Spike_01 and Spike_02 are complete/frozen — do not modify them.
-Next: Spike_03 per src/Spike_03/ImplementationPlan.md (start Phase 0 copy from Spike_02).
+Spike_03 Phases 0–4 are done. Continue at Phase 5 per src/Spike_03/ImplementationPlan.md
+(checklist §9). Publisher is build-only (L10); functional run checks deferred to Tester.
 Promotion is deferred until Spike_03 succeeds. No portal/API yet.
 ```

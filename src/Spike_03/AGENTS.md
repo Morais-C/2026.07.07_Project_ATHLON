@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **only** the [Checklist tracker](./ImplementationPlan.md#9-checklist-tracker) when a phase completes.
 5. **Do not modify `src/Spike_01/` or `src/Spike_02/`.** Spike_03 is a fork/copy; those stay archives.
 
-**Current state:** Plan ready — start at **Phase 0 (copy Spike_02 baseline)**.
+**Current state:** Phase 4 complete — next is **Phase 5 (thesis + E2E CI tests)**.
 
 ## Scope rules
 
@@ -30,17 +30,18 @@ Instructions for Cursor (or any implementer) working on this spike.
 | Bounds | Analyst fail ASAP if not read→process→print net9 console (≤3 source files) |
 | LLM access | Agents call `ILLMProvider` only |
 | Host | Hardcoded need; appsettings; Enter pause after Analyst/Planner/Coder |
+| Publisher | Deterministic materialize + `dotnet build` only (L10); no functional run |
 
 ## Required behaviors (easy to skip — don't)
 
 | Behavior | Where |
 |----------|-------|
-| Copy baseline first | Phase 0 |
 | Analyst abort without SR publish | Phase 1 / L7 |
 | Schema + 1 retry on Planner & Coder | Phases 1–2 |
 | CodePackage path safety | Phase 2–3 |
-| Publisher build + run E2E | Phase 3 / 5 |
+| Publisher build (materialize + `dotnet build`) | Phase 3 / 5 |
 | Thesis: LoadAsync-only prompts | Phase 5 |
+| Remove Spike_02 dead ends (legacy workflow/skips) | Phase 4 |
 | No CLI creep | Entire spike |
 
 ## Conventions
@@ -53,13 +54,15 @@ Instructions for Cursor (or any implementer) working on this spike.
 ## Suggested opening prompt
 
 ```text
-Implement Spike_03 per src/Spike_03/ImplementationPlan.md.
+Finish Spike_03 per src/Spike_03/ImplementationPlan.md.
 
 Read ROADMAP.md, src/Spike_03/AGENTS.md and README.md first.
-Start at Phase 0 (copy Spike_02 → Spike_03). One phase at a time; update only the checklist.
-Do not modify src/Spike_01 or src/Spike_02. No promotion. No portal/API.
+Phases 0–4 are done — start at Phase 5 (thesis + E2E tests). Then Phase 6 (demo).
+One phase at a time; update only the checklist.
+Publisher is build-only (L10). Do not modify src/Spike_01 or src/Spike_02. No promotion. No portal/API.
 ```
 
 ## Definition of done
 
-All success criteria in Spike_03 README are checked; thesis + build/run E2E tests pass; demo publishes a working console under `Publish/{workflowId}/`.
+All success criteria in Spike_03 README are checked; thesis + Publisher **build** E2E tests pass;
+demo publishes a console under `Publish/{workflowId}/` (functional run checks deferred to Tester).

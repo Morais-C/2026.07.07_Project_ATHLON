@@ -1,0 +1,6 @@
+artifacts/
+Publish/
+bin/
+obj/
+.env
+appsettings.Local.json

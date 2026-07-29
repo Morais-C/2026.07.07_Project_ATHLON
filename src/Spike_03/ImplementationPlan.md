@@ -33,7 +33,7 @@ Prove Athlon’s next load-bearing question **before promotion**:
 | L7 | **Out of bounds:** Analyst **fails workflow without publishing** StructuredRequirement (fail ASAP). Pause so the human can read the message, then exit. |
 | L8 | **CodePackage** schema: `files[]` `{ path, content }`, `entryProject`, `targetFramework` (`net9.0`), `expectedOutputContains`. |
 | L9 | **Publish:** `src/Spike_03/Publish/{workflowId}/` only; never overwrite; relative paths only (reject `..`, absolute). |
-| L10 | **Success:** files written + `dotnet build` succeeds + run check vs `expectedOutputContains` (CI E2E). |
+| L10 | **Success (amended 2026-07-28):** files written + `dotnet build` succeeds. **Functional run/output checks deferred** to a future Tester agent (keeps Publisher deterministic and Coder free of test data). |
 | L11 | **Host:** slim console, hardcoded need, `appsettings`, no CLI flags; pause after Analyst/Planner/Coder; medium verbosity during LLM/build. |
 | L12 | **Naming:** Planner (not Developer); ImplementationPlan (not Implementation-as-code); Coder; Publisher (deterministic). |
 
@@ -47,7 +47,7 @@ Prove Athlon’s next load-bearing question **before promotion**:
 |------|-------------|
 | Baseline | Copy Spike_02 → Spike_03; rename solution; delete unused Spike_02-only ceremony if it hurts the goal |
 | Agents | Analyst (bounds + StructuredRequirement), Planner (ImplementationPlan), Coder (CodePackage) |
-| Publisher | Deterministic: materialize files, build, run check, write publish manifest / build result |
+| Publisher | Deterministic: materialize files, `dotnet build`, write publish manifest (functional tests later) |
 | Schemas | Keep structured-requirement; add implementation-plan + code-package (and rename as needed) |
 | Tests | Unit/agent mocks; thesis (id-only handoff); E2E build/run against Publish folder |
 | Demo | Hardcoded need → pauses → Publish folder with working console |
@@ -97,7 +97,7 @@ Console (slim) → Agents (Analyst, Planner, Coder) → Llm / Artifacts
 | `ImplementationPlan` | Planner | Plan/tasks — not source files |
 | `CodePackage` | Coder | Schema-validated file set |
 | Publish tree | Publisher | On disk under `Publish/{workflowId}/` |
-| Publish manifest / BuildResult | Publisher | Record paths + build/run outcome |
+| Publish manifest / BuildResult | Publisher | Record paths + **build** outcome (`functionalTest: deferred-to-tester-agent`) |
 
 ### CodePackage payload (minimum)
 
@@ -159,16 +159,18 @@ public sealed record CodePackagePayload(
 
 ### Phase 3 — Publisher (deterministic)
 
-**Goal:** CodePackage id → disk + build + run check.
+**Goal:** CodePackage id → disk + build proof (no functional run).
 
 | Task | Details |
 |------|---------|
 | Materialize | Write under `Publish/{workflowId}/`; fail if exists |
 | Build | `dotnet build` on entry project |
-| Run | Execute app; assert stdout contains `expectedOutputContains` (handle zero-input apps) |
-| Record | Manifest / BuildResult artifact or file next to publish tree |
+| Run / assert | **Deferred** — future Tester agent (not Publisher; not Coder test data) |
+| Record | Manifest next to publish tree (`buildSucceeded`, capped build log) |
 
-**Exit:** Happy-path mock CodePackage builds and passes run check in tests.
+**Exit:** Happy-path mock CodePackage materializes and builds in tests.
+
+**Amendment (2026-07-28):** L10 narrowed to build-only so Read→Process→Print apps do not hang Publisher; functional checks stay out of Coder/Publisher.
 
 ---
 
@@ -188,12 +190,12 @@ public sealed record CodePackagePayload(
 
 ### Phase 5 — Thesis + E2E CI tests
 
-**Goal:** Falsify chat handoff; prove build/run in test suite.
+**Goal:** Falsify chat handoff; prove Publisher **build** in test suite.
 
 | Task | Details |
 |------|---------|
 | Thesis | Coder (and Planner) prompts from LoadAsync only — not prior raw completions |
-| E2E | Fixture or generated CodePackage → Publisher → build/run assert |
+| E2E | Fixture CodePackage → Publisher → **build** assert (run/functional later with Tester) |
 | Bounds test | Out-of-bounds need aborts without CodePackage/Publish |
 
 **Exit:** Tests green in CI-style `dotnet test`.
@@ -224,7 +226,7 @@ public sealed record CodePackagePayload(
 | Analyst bounds | In-scope publishes; out-of-scope fails with no SR artifact |
 | Planner / Coder | Mock LLM; schema retry |
 | Thesis | Recording LLM; marker not in next prompt |
-| Publisher | Deterministic CodePackage fixture → build/run |
+| Publisher | Deterministic CodePackage fixture → build |
 | OpenRouter | Manual smoke via slim console |
 
 ---
@@ -247,12 +249,12 @@ public sealed record CodePackagePayload(
 
 | Phase | Status |
 |-------|--------|
-| 0 — Copy baseline | ⬜ Not started ← **next** |
-| 1 — Rename & Analyst bounds | ⬜ Not started |
-| 2 — CodePackage + Coder | ⬜ Not started |
-| 3 — Publisher (build/run) | ⬜ Not started |
-| 4 — Chain + host UX | ⬜ Not started |
-| 5 — Thesis + E2E tests | ⬜ Not started |
+| 0 — Copy baseline | ✅ Complete |
+| 1 — Rename & Analyst bounds | ✅ Complete |
+| 2 — CodePackage + Coder | ✅ Complete |
+| 3 — Publisher (build) | ✅ Complete |
+| 4 — Chain + host UX | ✅ Complete |
+| 5 — Thesis + E2E tests | ⬜ Not started ← **next** |
 | 6 — Demo | ⬜ Not started |
 
 ---
