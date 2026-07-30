@@ -2,31 +2,30 @@ using Athlon.Spike.Agents;
 using Athlon.Spike.Artifacts;
 using Athlon.Spike.Contracts;
 using Athlon.Spike.Llm;
+using Athlon.Spike.Workflow;
 
 namespace Athlon.Spike.Tests;
 
 public class CoderAgentTests
 {
-    private const string ValidCodePackageJson = """
+    private const string ValidPatchPackageJson = """
         {
-          "files": [
+          "fixtureId": "echo-v1",
+          "changes": [
             {
-              "path": "Calculator/Calculator.csproj",
-              "content": "<Project Sdk=\"Microsoft.NET.Sdk\">\\n  <PropertyGroup>\\n    <OutputType>Exe</OutputType>\\n    <TargetFramework>net9.0</TargetFramework>\\n  </PropertyGroup>\\n</Project>"
-            },
-            {
-              "path": "Calculator/Program.cs",
-              "content": "Console.WriteLine(\\\"Result: 42\\\");"
+              "path": "Echo/Program.cs",
+              "operation": "modify",
+              "unifiedDiff": "--- a/Echo/Program.cs\n+++ b/Echo/Program.cs\n@@ -1,5 +1,5 @@\n-Console.WriteLine(line);\n+Console.WriteLine(line.ToUpperInvariant());\n"
             }
           ],
-          "entryProject": "Calculator/Calculator.csproj",
+          "entryProject": "Echo/Echo.csproj",
           "targetFramework": "net9.0",
-          "expectedOutputContains": "Result: 42"
+          "summary": "Uppercase echoed line"
         }
         """;
 
     [Fact]
-    public async Task Publishes_valid_CodePackage_from_mock_llm_response()
+    public async Task Publishes_valid_PatchPackage_from_mock_llm_response()
     {
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
@@ -34,20 +33,22 @@ public class CoderAgentTests
 
         try
         {
-            var input = CreateImplementationPlan(workflowId);
-            await store.SaveAsync(input);
+            var plan = await SeedImplementationPlanAsync(store, workflowId);
 
-            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidCodePackageJson)));
-            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, input.Id));
+            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidPatchPackageJson)));
+            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, plan.Id));
 
-            Assert.Equal(ArtifactTypes.CodePackage, result.OutputArtifact.Type);
+            Assert.Equal(ArtifactTypes.PatchPackage, result.OutputArtifact.Type);
             Assert.Equal(AgentName, result.OutputArtifact.Producer);
 
-            var package = CodePackage.Parse(result.OutputArtifact);
-            Assert.Equal("Calculator/Calculator.csproj", package.EntryProject);
+            var package = PatchPackage.Parse(result.OutputArtifact);
+            Assert.Equal("echo-v1", package.FixtureId);
+            Assert.Equal("Echo/Echo.csproj", package.EntryProject);
             Assert.Equal("net9.0", package.TargetFramework);
-            Assert.Equal("Result: 42", package.ExpectedOutputContains);
-            Assert.Equal(2, package.Files.Count);
+            Assert.Equal("Uppercase echoed line", package.Summary);
+            Assert.Single(package.Changes);
+            Assert.Equal("modify", package.Changes[0].Operation);
+            Assert.Equal("Echo/Program.cs", package.Changes[0].Path);
             Assert.True(result.Telemetry.TotalTokens > 0);
         }
         finally
@@ -65,16 +66,15 @@ public class CoderAgentTests
 
         try
         {
-            var input = CreateImplementationPlan(workflowId);
-            await store.SaveAsync(input);
+            var plan = await SeedImplementationPlanAsync(store, workflowId);
 
             var agent = CreateAgent(store, new MockLLMProvider(
                 new MockResponse(Content: "not valid json"),
-                new MockResponse(Content: ValidCodePackageJson)));
+                new MockResponse(Content: ValidPatchPackageJson)));
 
-            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, input.Id));
+            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, plan.Id));
 
-            Assert.Equal(ArtifactTypes.CodePackage, result.OutputArtifact.Type);
+            Assert.Equal(ArtifactTypes.PatchPackage, result.OutputArtifact.Type);
             Assert.Equal(200, result.Telemetry.PromptTokens);
             Assert.Equal(100, result.Telemetry.CompletionTokens);
         }
@@ -85,7 +85,7 @@ public class CoderAgentTests
     }
 
     [Fact]
-    public async Task Fails_after_retry_without_publishing_CodePackage()
+    public async Task Fails_after_retry_without_publishing_PatchPackage()
     {
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
@@ -93,20 +93,20 @@ public class CoderAgentTests
 
         try
         {
-            var input = CreateImplementationPlan(workflowId);
-            await store.SaveAsync(input);
+            var plan = await SeedImplementationPlanAsync(store, workflowId);
+            var seedCount = Directory.GetFiles(root, "*.json", SearchOption.AllDirectories).Length;
 
             var agent = CreateAgent(store, new MockLLMProvider(
                 new MockResponse(Content: "still not json"),
-                new MockResponse(Content: """{ "files": [] }""")));
+                new MockResponse(Content: """{ "changes": [] }""")));
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, input.Id)));
+                () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, plan.Id)));
 
             Assert.Contains("after one retry", exception.Message, StringComparison.OrdinalIgnoreCase);
 
             var files = Directory.GetFiles(root, "*.json", SearchOption.AllDirectories);
-            Assert.Single(files);
+            Assert.Equal(seedCount, files.Length);
         }
         finally
         {
@@ -123,34 +123,36 @@ public class CoderAgentTests
 
         const string unsafePackage = """
             {
-              "files": [
+              "fixtureId": "echo-v1",
+              "changes": [
                 {
                   "path": "../evil/Program.cs",
-                  "content": "Console.WriteLine(\"nope\");"
+                  "operation": "modify",
+                  "unifiedDiff": "--- a/../evil/Program.cs\n+++ b/../evil/Program.cs\n@@ -1 +1 @@\n-x\n+y\n"
                 }
               ],
               "entryProject": "../evil/Evil.csproj",
               "targetFramework": "net9.0",
-              "expectedOutputContains": "nope"
+              "summary": "nope"
             }
             """;
 
         try
         {
-            var input = CreateImplementationPlan(workflowId);
-            await store.SaveAsync(input);
+            var plan = await SeedImplementationPlanAsync(store, workflowId);
+            var seedCount = Directory.GetFiles(root, "*.json", SearchOption.AllDirectories).Length;
 
             var agent = CreateAgent(store, new MockLLMProvider(
                 new MockResponse(Content: unsafePackage),
                 new MockResponse(Content: unsafePackage)));
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, input.Id)));
+                () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, plan.Id)));
 
             Assert.Contains("after one retry", exception.Message, StringComparison.OrdinalIgnoreCase);
 
             var files = Directory.GetFiles(root, "*.json", SearchOption.AllDirectories);
-            Assert.Single(files);
+            Assert.Equal(seedCount, files.Length);
         }
         finally
         {
@@ -159,7 +161,7 @@ public class CoderAgentTests
     }
 
     [Fact]
-    public async Task Rejects_StructuredRequirement_input_type()
+    public async Task Rejects_ChangeBundle_input_type()
     {
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
@@ -167,25 +169,18 @@ public class CoderAgentTests
 
         try
         {
-            var wrong = StructuredRequirement.Create(
-                new StructuredRequirementPayload(
-                    Title: "Echo",
-                    Actors: ["User"],
-                    Goal: "Echo input",
-                    AcceptanceCriteriaDraft: ["Prints input"],
-                    Constraints: ["Console only"],
-                    Priority: "Low"),
-                workflowId,
-                producer: AnalystAgent.AgentName);
+            var wrong = ChangeBundle.Create(
+                new ChangeBundlePayload(Guid.NewGuid(), Guid.NewGuid()),
+                workflowId);
             await store.SaveAsync(wrong);
 
-            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidCodePackageJson)));
+            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidPatchPackageJson)));
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, wrong.Id)));
 
             Assert.Contains(ArtifactTypes.ImplementationPlan, exception.Message);
-            Assert.Contains(ArtifactTypes.StructuredRequirement, exception.Message);
+            Assert.Contains(ArtifactTypes.ChangeBundle, exception.Message);
         }
         finally
         {
@@ -193,23 +188,39 @@ public class CoderAgentTests
         }
     }
 
-    private static Artifact CreateImplementationPlan(Guid workflowId) =>
-        ImplementationPlan.Create(
+    private static async Task<Artifact> SeedImplementationPlanAsync(FileArtifactStore store, Guid workflowId)
+    {
+        var builder = new CodeContextBuilder(store);
+        var codeContext = await builder.BuildAndPublishAsync(
+            workflowId,
+            fixtureId: "echo-v1",
+            fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+            entryProject: "Echo/Echo.csproj");
+
+        var plan = ImplementationPlan.Create(
             new ImplementationPlanPayload(
-                Title: "Console Calculator",
-                Summary: "Read two numbers and an operator, print the result",
-                Tasks: [new ImplementationTask("T1", "Implement Program.cs calculator loop", "1h")],
-                AcceptanceCriteria: ["Prints computed result"],
-                TechnicalNotes: "net9 console, no NuGet"),
+                Title: "Uppercase echo",
+                Summary: "Echo typed line in UPPERCASE",
+                Tasks: [new ImplementationTask("T1", "Edit Program.cs", "30m")],
+                AcceptanceCriteria: ["Prints UPPERCASE"],
+                TechnicalNotes: "Minimal diff",
+                IntendedPaths: ["Echo/Program.cs"],
+                FixtureId: "echo-v1",
+                CodeContextArtifactId: codeContext.Id.ToString("D"),
+                EntryProject: "Echo/Echo.csproj",
+                TargetFramework: "net9.0"),
             workflowId,
             producer: PlannerAgent.AgentName);
+        await store.SaveAsync(plan);
+        return plan;
+    }
 
     private static CoderAgent CreateAgent(FileArtifactStore store, MockLLMProvider llm) =>
         new(
             llm,
             store,
             SpikeTestPaths.CoderPromptTemplate,
-            SpikeTestPaths.CodePackageSchema);
+            SpikeTestPaths.PatchPackageSchema);
 
     private static string CreateTempArtifactRoot() =>
         Path.Combine(Path.GetTempPath(), "athlon-spike-tests", Guid.NewGuid().ToString("D"));

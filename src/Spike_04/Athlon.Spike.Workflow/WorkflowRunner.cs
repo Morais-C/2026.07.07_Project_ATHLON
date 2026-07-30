@@ -56,7 +56,29 @@ public sealed class WorkflowRunner
     }
 
     /// <summary>
-    /// Spike_03-era helper — kept for Planner/Coder tests until Phase 2 rewires the chain.
+    /// Compose Planner input: StructuredChange id + CodeContext id → one ChangeBundle artifact (L4).
+    /// </summary>
+    public async Task<Artifact> SaveChangeBundleAsync(
+        Guid workflowInstanceId,
+        Guid structuredChangeId,
+        Guid codeContextId,
+        CancellationToken cancellationToken)
+    {
+        var started = Stopwatch.StartNew();
+        var bundle = ChangeBundle.Create(
+            new ChangeBundlePayload(structuredChangeId, codeContextId),
+            workflowInstanceId,
+            producer: "Workflow");
+
+        await _artifactStore.SaveAsync(bundle, cancellationToken).ConfigureAwait(false);
+        started.Stop();
+
+        _logger.LogStep("save-change-bundle", started.Elapsed, bundle.Id);
+        return bundle;
+    }
+
+    /// <summary>
+    /// Spike_03-era helper — kept for skipped greenfield E2E tests until Phase 4–5 rewire.
     /// </summary>
     public async Task<(WorkflowInstance Instance, Artifact InputArtifact)> StartAndSaveInputAsync(
         string workflowName,

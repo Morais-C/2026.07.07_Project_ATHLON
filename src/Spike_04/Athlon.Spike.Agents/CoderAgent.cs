@@ -4,8 +4,8 @@ using Athlon.Spike.Contracts;
 namespace Athlon.Spike.Agents;
 
 /// <summary>
-/// ImplementationPlan (by id) → validated CodePackage artifact.
-/// Prompt is built from LoadAsync(id) only — never from a Planner completion string.
+/// ImplementationPlan (by id) → LoadAsync CodeContext via plan linkage → validated PatchPackage.
+/// Prompt is built from LoadAsync only — never from a Planner completion string.
 /// </summary>
 public sealed class CoderAgent : IAgent
 {
@@ -36,19 +36,40 @@ public sealed class CoderAgent : IAgent
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var inputArtifact = await _artifactStore.LoadAsync(context.InputArtifactId, cancellationToken)
+        var planArtifact = await _artifactStore.LoadAsync(context.InputArtifactId, cancellationToken)
             .ConfigureAwait(false)
             ?? throw new InvalidOperationException(
                 $"Input artifact '{context.InputArtifactId}' was not found.");
 
-        if (!string.Equals(inputArtifact.Type, ArtifactTypes.ImplementationPlan, StringComparison.Ordinal))
+        if (!string.Equals(planArtifact.Type, ArtifactTypes.ImplementationPlan, StringComparison.Ordinal))
         {
             throw new InvalidOperationException(
-                $"CoderAgent expects an ImplementationPlan artifact, got '{inputArtifact.Type}'.");
+                $"CoderAgent expects an ImplementationPlan artifact, got '{planArtifact.Type}'.");
         }
 
-        var inputArtifactJson = ArtifactJson.Serialize(inputArtifact);
-        var (systemPrompt, userPrompt) = _promptComposer.Compose(inputArtifactJson);
+        var plan = ImplementationPlan.Parse(planArtifact);
+        if (!Guid.TryParse(plan.CodeContextArtifactId, out var codeContextId) || codeContextId == Guid.Empty)
+        {
+            throw new InvalidOperationException(
+                "ImplementationPlan.codeContextArtifactId must be a non-empty GUID.");
+        }
+
+        var codeContextArtifact = await _artifactStore.LoadAsync(codeContextId, cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new InvalidOperationException(
+                $"CodeContext artifact '{codeContextId}' was not found.");
+
+        if (!string.Equals(codeContextArtifact.Type, ArtifactTypes.CodeContext, StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                $"ImplementationPlan.codeContextArtifactId must reference a CodeContext, got '{codeContextArtifact.Type}'.");
+        }
+
+        var (systemPrompt, userPrompt) = _promptComposer.Compose(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["IMPLEMENTATION_PLAN_JSON"] = ArtifactJson.Serialize(planArtifact),
+            ["CODE_CONTEXT_JSON"] = ArtifactJson.Serialize(codeContextArtifact)
+        });
 
         var completions = new List<LlmCompletionResult>();
         var validation = await CompleteAndValidateAsync(systemPrompt, userPrompt, completions, cancellationToken)
@@ -70,7 +91,7 @@ public sealed class CoderAgent : IAgent
 
         var outputArtifact = new Artifact(
             Id: Guid.NewGuid(),
-            Type: ArtifactTypes.CodePackage,
+            Type: ArtifactTypes.PatchPackage,
             Version: 1,
             Producer: AgentName,
             CreatedUtc: DateTime.UtcNow,
@@ -100,24 +121,23 @@ public sealed class CoderAgent : IAgent
             return schemaOutcome;
         }
 
-        // Extra path safety beyond schema pattern (absolute / '..')
-        return ValidateCodePackagePaths(schemaOutcome.NormalizedJson);
+        return ValidatePatchPackagePaths(schemaOutcome.NormalizedJson);
     }
 
-    private static ValidationOutcome ValidateCodePackagePaths(string normalizedJson)
+    private static ValidationOutcome ValidatePatchPackagePaths(string normalizedJson)
     {
         try
         {
-            var payload = JsonSerializer.Deserialize<CodePackagePayload>(
+            var payload = JsonSerializer.Deserialize<PatchPackagePayload>(
                 normalizedJson,
                 new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
             if (payload is null)
             {
-                return ValidationOutcome.Invalid(normalizedJson, ["CodePackage payload is missing or invalid."]);
+                return ValidationOutcome.Invalid(normalizedJson, ["PatchPackage payload is missing or invalid."]);
             }
 
-            var pathErrors = CodePackage.ValidatePaths(payload);
+            var pathErrors = PatchPackage.ValidatePaths(payload);
             if (pathErrors.Count > 0)
             {
                 return ValidationOutcome.Invalid(normalizedJson, pathErrors);

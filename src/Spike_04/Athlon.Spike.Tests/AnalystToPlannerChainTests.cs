@@ -7,143 +7,99 @@ using Athlon.Spike.Workflow;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Analyst → StructuredRequirement → Planner (by id), with mock LLM.
+/// Analyst → StructuredChange → CodeContext → ChangeBundle → Planner (by id), with mock LLM.
 /// </summary>
 public class AnalystToPlannerChainTests
 {
-    private const string ValidStructuredRequirementJson = """
+    private const string ValidStructuredChangeJson = """
         {
-          "title": "Employee Daily Meal Allowance",
-          "actors": ["Employee", "Payroll", "Manager"],
-          "goal": "Provide a fixed daily meal allowance on working days",
-          "acceptanceCriteriaDraft": [
-            "Eligible employees receive a fixed daily allowance on working days"
-          ],
-          "constraints": ["On-site working days only"],
-          "priority": "Medium"
+          "kind": "feature",
+          "title": "Uppercase echo",
+          "summary": "Echo the typed line in uppercase",
+          "acceptanceCriteria": ["Prints the input transformed to UPPERCASE"],
+          "constraints": ["Single .NET 9 console", "Keep read → process → print"],
+          "priority": "Medium",
+          "suspectedPaths": ["Echo/Program.cs"]
         }
         """;
 
     private const string ValidImplementationPlanJson = """
         {
-          "title": "Meal Allowance",
-          "summary": "Daily meal subsidy for employees",
+          "title": "Uppercase echo",
+          "summary": "Echo typed line in UPPERCASE",
           "tasks": [
             {
               "id": "T1",
-              "description": "Add allowance field to payroll",
-              "estimate": "2d"
+              "description": "Change Program.cs to uppercase the input before printing",
+              "estimate": "30m"
             }
           ],
           "acceptanceCriteria": [
-            "Employees receive a daily meal allowance"
+            "Prints the input transformed to UPPERCASE"
           ],
-          "technicalNotes": "Extend payroll module"
+          "technicalNotes": "Minimal edit to Echo/Program.cs",
+          "intendedPaths": ["Echo/Program.cs"]
         }
         """;
 
-    [Fact(Skip = "Spike_04 Phase 2: Planner will consume StructuredChange/ChangeBundle, not StructuredRequirement.")]
-    public async Task Chain_runs_Planner_with_Analyst_artifact_id_only()
+    [Fact]
+    public async Task Chain_runs_Planner_with_ChangeBundle_id_only()
     {
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
         var runner = new WorkflowRunner(store, artifactRoot: root);
+        var builder = new CodeContextBuilder(store);
 
-        // Shared mock queue: first completion = Analyst, second = Planner
         var llm = new MockLLMProvider(
-            new MockResponse(Content: ValidStructuredRequirementJson),
+            new MockResponse(Content: ValidStructuredChangeJson),
             new MockResponse(Content: ValidImplementationPlanJson));
 
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredRequirementSchema);
+            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
         var planner = new PlannerAgent(
             llm, store, SpikeTestPaths.PlannerPromptTemplate, SpikeTestPaths.ImplementationPlanSchema);
 
-        var plannerRan = false;
-        Guid? plannerInputId = null;
-
         try
         {
-            var (instance, inputArtifact) = await runner.StartAndSaveInputAsync(
-                "BusinessNeedToImplementationPlan",
-                "As an employee I want meal allowance",
+            var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
+                "ChangeRequestToPlan",
+                new ChangeRequestPayload(
+                    Kind: ChangeRequest.KindFeature,
+                    Title: "Uppercase echo",
+                    Description: "Print input in UPPERCASE",
+                    SuspectedPaths: ["Echo/Program.cs"]),
                 CancellationToken.None);
 
             var analystResult = await analyst.ExecuteAsync(new AgentExecutionContext(instance.Id, inputArtifact.Id));
-            Assert.Equal(ArtifactTypes.StructuredRequirement, analystResult.OutputArtifact.Type);
+            Assert.Equal(ArtifactTypes.StructuredChange, analystResult.OutputArtifact.Type);
 
-            // Mid-chain gate: Planner must not have run yet
-            Assert.False(plannerRan);
+            var codeContext = await builder.BuildAndPublishAsync(
+                instance.Id,
+                fixtureId: "echo-v1",
+                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                entryProject: "Echo/Echo.csproj");
 
-            plannerInputId = analystResult.OutputArtifact.Id;
+            var bundle = await runner.SaveChangeBundleAsync(
+                instance.Id,
+                analystResult.OutputArtifact.Id,
+                codeContext.Id,
+                CancellationToken.None);
+
             var plannerResult = await planner.ExecuteAsync(
-                new AgentExecutionContext(instance.Id, analystResult.OutputArtifact.Id));
-            plannerRan = true;
+                new AgentExecutionContext(instance.Id, bundle.Id));
 
-            Assert.Equal(analystResult.OutputArtifact.Id, plannerInputId);
             Assert.Equal(ArtifactTypes.ImplementationPlan, plannerResult.OutputArtifact.Type);
-            Assert.Equal("Meal Allowance", ImplementationPlan.Parse(plannerResult.OutputArtifact).Title);
+            Assert.Equal("Uppercase echo", ImplementationPlan.Parse(plannerResult.OutputArtifact).Title);
 
-            // Both artifacts exist on disk under the same workflow instance
             Assert.NotNull(await store.LoadAsync(analystResult.OutputArtifact.Id));
+            Assert.NotNull(await store.LoadAsync(codeContext.Id));
+            Assert.NotNull(await store.LoadAsync(bundle.Id));
             Assert.NotNull(await store.LoadAsync(plannerResult.OutputArtifact.Id));
         }
         finally
         {
             Cleanup(root);
         }
-    }
-
-    [Fact(Skip = "Spike_04 Phase 2: Planner will consume StructuredChange/ChangeBundle, not StructuredRequirement.")]
-    public async Task Pause_callback_runs_before_Planner()
-    {
-        var root = CreateTempArtifactRoot();
-        var store = new FileArtifactStore(root);
-        var runner = new WorkflowRunner(store, artifactRoot: root);
-
-        var llm = new MockLLMProvider(
-            new MockResponse(Content: ValidStructuredRequirementJson),
-            new MockResponse(Content: ValidImplementationPlanJson));
-
-        var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredRequirementSchema);
-        var planner = new PlannerAgent(
-            llm, store, SpikeTestPaths.PlannerPromptTemplate, SpikeTestPaths.ImplementationPlanSchema);
-
-        var steps = new List<string>();
-
-        try
-        {
-            var (instance, inputArtifact) = await runner.StartAndSaveInputAsync(
-                "BusinessNeedToImplementationPlan",
-                "Meal allowance",
-                CancellationToken.None);
-
-            steps.Add("analyst-start");
-            var analystResult = await analyst.ExecuteAsync(new AgentExecutionContext(instance.Id, inputArtifact.Id));
-            steps.Add("analyst-done");
-
-            // Stand-in for Console.ReadLine mid-chain pause
-            await PauseAsync(() => steps.Add("pause"));
-
-            steps.Add("planner-start");
-            await planner.ExecuteAsync(new AgentExecutionContext(instance.Id, analystResult.OutputArtifact.Id));
-            steps.Add("planner-done");
-
-            Assert.Equal(
-                ["analyst-start", "analyst-done", "pause", "planner-start", "planner-done"],
-                steps);
-        }
-        finally
-        {
-            Cleanup(root);
-        }
-    }
-
-    private static Task PauseAsync(Action onPause)
-    {
-        onPause();
-        return Task.CompletedTask;
     }
 
     private static string CreateTempArtifactRoot() =>

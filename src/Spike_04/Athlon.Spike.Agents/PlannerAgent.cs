@@ -3,8 +3,8 @@ using Athlon.Spike.Contracts;
 namespace Athlon.Spike.Agents;
 
 /// <summary>
-/// StructuredRequirement (by id) → validated ImplementationPlan artifact.
-/// Prompt is built from LoadAsync(id) only — never from an Analyst completion string.
+/// ChangeBundle (by id) → LoadAsync StructuredChange + CodeContext → validated ImplementationPlan.
+/// Prompt is built from LoadAsync only — never from prior LLM completion text.
 /// </summary>
 public sealed class PlannerAgent : IAgent
 {
@@ -35,20 +35,48 @@ public sealed class PlannerAgent : IAgent
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        // Handoff is by artifact id — load from store, do not accept Analyst chat text
-        var inputArtifact = await _artifactStore.LoadAsync(context.InputArtifactId, cancellationToken)
+        var bundleArtifact = await _artifactStore.LoadAsync(context.InputArtifactId, cancellationToken)
             .ConfigureAwait(false)
             ?? throw new InvalidOperationException(
                 $"Input artifact '{context.InputArtifactId}' was not found.");
 
-        if (!string.Equals(inputArtifact.Type, ArtifactTypes.StructuredRequirement, StringComparison.Ordinal))
+        if (!string.Equals(bundleArtifact.Type, ArtifactTypes.ChangeBundle, StringComparison.Ordinal))
         {
             throw new InvalidOperationException(
-                $"PlannerAgent expects a StructuredRequirement artifact, got '{inputArtifact.Type}'.");
+                $"PlannerAgent expects a ChangeBundle artifact, got '{bundleArtifact.Type}'.");
         }
 
-        var inputArtifactJson = ArtifactJson.Serialize(inputArtifact);
-        var (systemPrompt, userPrompt) = _promptComposer.Compose(inputArtifactJson);
+        var bundle = ChangeBundle.Parse(bundleArtifact);
+
+        var structuredChange = await _artifactStore.LoadAsync(bundle.StructuredChangeId, cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new InvalidOperationException(
+                $"StructuredChange artifact '{bundle.StructuredChangeId}' was not found.");
+
+        if (!string.Equals(structuredChange.Type, ArtifactTypes.StructuredChange, StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                $"ChangeBundle.structuredChangeId must reference a StructuredChange, got '{structuredChange.Type}'.");
+        }
+
+        var codeContextArtifact = await _artifactStore.LoadAsync(bundle.CodeContextId, cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new InvalidOperationException(
+                $"CodeContext artifact '{bundle.CodeContextId}' was not found.");
+
+        if (!string.Equals(codeContextArtifact.Type, ArtifactTypes.CodeContext, StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                $"ChangeBundle.codeContextId must reference a CodeContext, got '{codeContextArtifact.Type}'.");
+        }
+
+        var codeContext = CodeContext.Parse(codeContextArtifact);
+
+        var (systemPrompt, userPrompt) = _promptComposer.Compose(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["STRUCTURED_CHANGE_JSON"] = ArtifactJson.Serialize(structuredChange),
+            ["CODE_CONTEXT_JSON"] = ArtifactJson.Serialize(codeContextArtifact)
+        });
 
         var completions = new List<LlmCompletionResult>();
         var validation = await CompleteAndValidateAsync(systemPrompt, userPrompt, completions, cancellationToken)
@@ -68,6 +96,14 @@ public sealed class PlannerAgent : IAgent
             }
         }
 
+        // Inject fixture / CodeContext linkage from store — not from LLM text (L4)
+        var payloadJson = ImplementationPlan.MergeLinkage(
+            validation.NormalizedJson,
+            fixtureId: codeContext.FixtureId,
+            codeContextArtifactId: codeContextArtifact.Id,
+            entryProject: codeContext.EntryProject,
+            targetFramework: codeContext.TargetFramework);
+
         var outputArtifact = new Artifact(
             Id: Guid.NewGuid(),
             Type: ArtifactTypes.ImplementationPlan,
@@ -75,7 +111,7 @@ public sealed class PlannerAgent : IAgent
             Producer: AgentName,
             CreatedUtc: DateTime.UtcNow,
             WorkflowInstanceId: context.WorkflowInstanceId,
-            PayloadJson: validation.NormalizedJson);
+            PayloadJson: payloadJson);
 
         await _artifactStore.SaveAsync(outputArtifact, cancellationToken).ConfigureAwait(false);
 

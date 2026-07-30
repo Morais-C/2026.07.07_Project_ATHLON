@@ -16,9 +16,15 @@ public sealed class PromptComposer
         _template = File.ReadAllText(promptTemplatePath);
     }
 
-    public (string SystemPrompt, string UserPrompt) Compose(string inputArtifactJson)
+    public (string SystemPrompt, string UserPrompt) Compose(string inputArtifactJson) =>
+        Compose(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["INPUT_ARTIFACT_JSON"] = inputArtifactJson
+        });
+
+    public (string SystemPrompt, string UserPrompt) Compose(IReadOnlyDictionary<string, string> replacements)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(inputArtifactJson);
+        ArgumentNullException.ThrowIfNull(replacements);
 
         var systemMarker = "=== SYSTEM ===";
         var userMarker = "=== USER ===";
@@ -34,7 +40,14 @@ public sealed class PromptComposer
 
         var systemPrompt = _template[(systemIndex + systemMarker.Length)..userIndex].Trim();
         var userTemplate = _template[(userIndex + userMarker.Length)..].Trim();
-        var userPrompt = userTemplate.Replace("{{INPUT_ARTIFACT_JSON}}", inputArtifactJson, StringComparison.Ordinal);
+        var userPrompt = userTemplate;
+
+        foreach (var (key, value) in replacements)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(key);
+            ArgumentException.ThrowIfNullOrWhiteSpace(value);
+            userPrompt = userPrompt.Replace($"{{{{{key}}}}}", value, StringComparison.Ordinal);
+        }
 
         return (systemPrompt, userPrompt);
     }

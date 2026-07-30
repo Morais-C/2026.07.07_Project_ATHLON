@@ -13,6 +13,10 @@ internal static class SpikeTestPaths
 
     public static string CodePackageSchema => Path.Combine(Root, "schemas", "code-package.schema.json");
 
+    public static string PatchPackageSchema => Path.Combine(Root, "schemas", "patch-package.schema.json");
+
+    public static string ChangeBundleSchema => Path.Combine(Root, "schemas", "change-bundle.schema.json");
+
     public static string CoderPromptTemplate => Path.Combine(Root, "prompts", "coder-v1.txt");
 
     public static string StructuredRequirementSchema =>

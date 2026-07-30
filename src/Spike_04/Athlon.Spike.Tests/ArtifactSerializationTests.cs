@@ -32,7 +32,12 @@ public class ArtifactSerializationTests
                 new ImplementationTask("T1", "Add allowance field to payroll", "2d")
             ],
             AcceptanceCriteria: ["Employees receive daily allowance"],
-            TechnicalNotes: "Extend payroll module");
+            TechnicalNotes: "Extend payroll module",
+            IntendedPaths: ["Echo/Program.cs"],
+            FixtureId: "echo-v1",
+            CodeContextArtifactId: Guid.NewGuid().ToString("D"),
+            EntryProject: "Echo/Echo.csproj",
+            TargetFramework: "net9.0");
 
         var original = ImplementationPlan.Create(
             payload,

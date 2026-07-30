@@ -2,6 +2,7 @@ using Athlon.Spike.Agents;
 using Athlon.Spike.Artifacts;
 using Athlon.Spike.Contracts;
 using Athlon.Spike.Llm;
+using Athlon.Spike.Workflow;
 
 namespace Athlon.Spike.Tests;
 
@@ -9,19 +10,20 @@ public class PlannerAgentTests
 {
     private const string ValidImplementationPlanJson = """
         {
-          "title": "Meal Allowance",
-          "summary": "Daily meal subsidy for employees",
+          "title": "Uppercase echo",
+          "summary": "Echo typed line in UPPERCASE",
           "tasks": [
             {
               "id": "T1",
-              "description": "Add allowance field to payroll",
-              "estimate": "2d"
+              "description": "Change Program.cs to uppercase the input before printing",
+              "estimate": "30m"
             }
           ],
           "acceptanceCriteria": [
-            "Employees receive a daily meal allowance"
+            "Prints the input transformed to UPPERCASE"
           ],
-          "technicalNotes": "Extend payroll module"
+          "technicalNotes": "Minimal edit to Echo/Program.cs",
+          "intendedPaths": ["Echo/Program.cs"]
         }
         """;
 
@@ -34,15 +36,21 @@ public class PlannerAgentTests
 
         try
         {
-            var input = CreateStructuredRequirement(workflowId);
-            await store.SaveAsync(input);
+            var bundle = await SeedChangeBundleAsync(store, workflowId);
 
             var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidImplementationPlanJson)));
-            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, input.Id));
+            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, bundle.Id));
 
             Assert.Equal(ArtifactTypes.ImplementationPlan, result.OutputArtifact.Type);
             Assert.Equal(AgentName, result.OutputArtifact.Producer);
-            Assert.Equal("Meal Allowance", ImplementationPlan.Parse(result.OutputArtifact).Title);
+
+            var plan = ImplementationPlan.Parse(result.OutputArtifact);
+            Assert.Equal("Uppercase echo", plan.Title);
+            Assert.Equal(["Echo/Program.cs"], plan.IntendedPaths);
+            Assert.Equal("echo-v1", plan.FixtureId);
+            Assert.Equal("Echo/Echo.csproj", plan.EntryProject);
+            Assert.Equal("net9.0", plan.TargetFramework);
+            Assert.True(Guid.TryParse(plan.CodeContextArtifactId, out _));
             Assert.True(result.Telemetry.TotalTokens > 0);
 
             var loaded = await store.LoadAsync(result.OutputArtifact.Id);
@@ -63,14 +71,13 @@ public class PlannerAgentTests
 
         try
         {
-            var input = CreateStructuredRequirement(workflowId);
-            await store.SaveAsync(input);
+            var bundle = await SeedChangeBundleAsync(store, workflowId);
 
             var agent = CreateAgent(store, new MockLLMProvider(
                 new MockResponse(Content: "not valid json"),
                 new MockResponse(Content: ValidImplementationPlanJson)));
 
-            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, input.Id));
+            var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, bundle.Id));
 
             Assert.Equal(ArtifactTypes.ImplementationPlan, result.OutputArtifact.Type);
             Assert.Equal(200, result.Telemetry.PromptTokens);
@@ -91,20 +98,20 @@ public class PlannerAgentTests
 
         try
         {
-            var input = CreateStructuredRequirement(workflowId);
-            await store.SaveAsync(input);
+            var bundle = await SeedChangeBundleAsync(store, workflowId);
+            var seedCount = Directory.GetFiles(root, "*.json", SearchOption.AllDirectories).Length;
 
             var agent = CreateAgent(store, new MockLLMProvider(
                 new MockResponse(Content: "still not json"),
                 new MockResponse(Content: "{ \"title\": \"missing required fields\" }")));
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, input.Id)));
+                () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, bundle.Id)));
 
             Assert.Contains("after one retry", exception.Message, StringComparison.OrdinalIgnoreCase);
 
             var files = Directory.GetFiles(root, "*.json", SearchOption.AllDirectories);
-            Assert.Single(files);
+            Assert.Equal(seedCount, files.Length);
         }
         finally
         {
@@ -113,7 +120,7 @@ public class PlannerAgentTests
     }
 
     [Fact]
-    public async Task Rejects_BusinessRequirement_input_type()
+    public async Task Rejects_StructuredChange_input_type_without_ChangeBundle()
     {
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
@@ -121,7 +128,16 @@ public class PlannerAgentTests
 
         try
         {
-            var wrong = BusinessRequirement.FromText("raw need — not structured", workflowId);
+            var wrong = StructuredChange.Create(
+                new StructuredChangePayload(
+                    Kind: ChangeRequest.KindFeature,
+                    Title: "Uppercase echo",
+                    Summary: "Echo UPPERCASE",
+                    AcceptanceCriteria: ["Prints UPPERCASE"],
+                    Constraints: ["Console only"],
+                    Priority: "Medium"),
+                workflowId,
+                producer: AnalystAgent.AgentName);
             await store.SaveAsync(wrong);
 
             var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidImplementationPlanJson)));
@@ -129,8 +145,8 @@ public class PlannerAgentTests
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, wrong.Id)));
 
-            Assert.Contains(ArtifactTypes.StructuredRequirement, exception.Message);
-            Assert.Contains(ArtifactTypes.BusinessRequirement, exception.Message);
+            Assert.Contains(ArtifactTypes.ChangeBundle, exception.Message);
+            Assert.Contains(ArtifactTypes.StructuredChange, exception.Message);
         }
         finally
         {
@@ -144,13 +160,14 @@ public class PlannerAgentTests
         var fenced = """
             ```json
             {
-              "title": "Meal Allowance",
-              "summary": "Daily meal subsidy for employees",
+              "title": "Uppercase echo",
+              "summary": "Echo UPPERCASE",
               "tasks": [
-                { "id": "T1", "description": "Add field", "estimate": "2d" }
+                { "id": "T1", "description": "Edit Program.cs", "estimate": "30m" }
               ],
-              "acceptanceCriteria": ["Employees receive allowance"],
-              "technicalNotes": "Payroll"
+              "acceptanceCriteria": ["Prints UPPERCASE"],
+              "technicalNotes": "Minimal",
+              "intendedPaths": ["Echo/Program.cs"]
             }
             ```
             """;
@@ -161,17 +178,31 @@ public class PlannerAgentTests
         Assert.True(outcome.IsValid);
     }
 
-    private static Artifact CreateStructuredRequirement(Guid workflowId) =>
-        StructuredRequirement.Create(
-            new StructuredRequirementPayload(
-                Title: "Employee Daily Meal Allowance",
-                Actors: ["Employee", "Payroll"],
-                Goal: "Provide a fixed daily meal allowance on working days",
-                AcceptanceCriteriaDraft: ["Eligible employees receive a fixed daily allowance"],
-                Constraints: ["On-site working days only"],
-                Priority: "Medium"),
+    private static async Task<Artifact> SeedChangeBundleAsync(FileArtifactStore store, Guid workflowId)
+    {
+        var structured = StructuredChange.Create(
+            new StructuredChangePayload(
+                Kind: ChangeRequest.KindFeature,
+                Title: "Uppercase echo",
+                Summary: "Echo typed line in UPPERCASE",
+                AcceptanceCriteria: ["Prints the input transformed to UPPERCASE"],
+                Constraints: ["Single .NET 9 console"],
+                Priority: "Medium",
+                SuspectedPaths: ["Echo/Program.cs"]),
             workflowId,
             producer: AnalystAgent.AgentName);
+        await store.SaveAsync(structured);
+
+        var builder = new CodeContextBuilder(store);
+        var codeContext = await builder.BuildAndPublishAsync(
+            workflowId,
+            fixtureId: "echo-v1",
+            fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+            entryProject: "Echo/Echo.csproj");
+
+        var runner = new WorkflowRunner(store);
+        return await runner.SaveChangeBundleAsync(workflowId, structured.Id, codeContext.Id, CancellationToken.None);
+    }
 
     private static PlannerAgent CreateAgent(FileArtifactStore store, MockLLMProvider llm) =>
         new(
