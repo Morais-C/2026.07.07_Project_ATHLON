@@ -1,0 +1,6 @@
+{
+  "OpenRouter": {
+    "ApiKey": "sk-or-v1-REPLACE_ME",
+    "Model": "deepseek/deepseek-v4-flash"
+  }
+}

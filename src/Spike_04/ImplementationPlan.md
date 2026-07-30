@@ -312,9 +312,9 @@ public sealed record PatchPackagePayload(
 
 | Phase | Status |
 |-------|--------|
-| 0 — Copy baseline + fixture | ⬜ Not started ← **next** |
-| 1 — ChangeRequest + Analyst + CodeContext | ⬜ Not started |
-| 2 — Planner + Coder → PatchPackage | ⬜ Not started |
+| 0 — Copy baseline + fixture | ✅ Complete |
+| 1 — ChangeRequest + Analyst + CodeContext | ✅ Complete |
+| 2 — Planner + Coder → PatchPackage | ⬜ Not started ← **next** |
 | 3 — Applier (apply + build) | ⬜ Not started |
 | 4 — Chain + host UX (fail fast) | ⬜ Not started |
 | 5 — Thesis + E2E tests | ⬜ Not started |

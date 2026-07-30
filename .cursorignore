@@ -9,6 +9,7 @@
 # Frozen spike archives — open explicitly if needed; active work is Spike_03
 src/Spike_01/
 src/Spike_02/
+src/Spike_03/
 
 # Local Cursor noise
 **/agent-transcripts/
