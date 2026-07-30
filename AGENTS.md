@@ -16,7 +16,7 @@ Start at **[ROADMAP.md](./ROADMAP.md)** (status + fresh session starter).
 ```text
 Read ROADMAP.md and src/Spike_04/AGENTS.md.
 Spike_01–03 are complete/frozen — do not modify them.
-Spike_04 Phases 0–1 are done. Continue at Phase 2 per src/Spike_04/ImplementationPlan.md
+Spike_04 Phases 0–2 are done. Continue at Phase 3 per src/Spike_04/ImplementationPlan.md
 (checklist §9). PatchPackage = unified diffs; Applier build-only; fail fast (no Enter pauses).
 Promotion is deferred until Spike_04 succeeds. No portal/API yet.
 ```
