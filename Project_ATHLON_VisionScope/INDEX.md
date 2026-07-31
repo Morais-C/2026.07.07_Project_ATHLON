@@ -5,7 +5,7 @@
 A reference architecture and implementation playbook for Agentic Software Engineering — from vision, through architecture, to a sprint-by-sprint build guide.
 
 **Execution status (build order):** see the living master plan → [ROADMAP.md](../ROADMAP.md)  
-*(Spike_01 + Spike_02 complete · next: [Spike_03](../src/Spike_03/README.md) · promotion after Spike_03)*
+*(Spike_01–04 complete · next: [Spike_05](../src/Spike_05/README.md) `console-v1` pack · then Spike_06 `rest-api-v1` · then [Promotion](../PromotionPlan.md) · [Archetype definition](Project_Athlon_Solution_Archetype_Definition.md) · [REST API brief](Project_Athlon_REST_API_Competitive_Positioning.md))*
 
 ---
 
@@ -16,7 +16,7 @@ A reference architecture and implementation playbook for Agentic Software Engine
 | # | Chapter | File |
 |---|---------|------|
 | 1 | The New Era of Software Engineering | [link](Project_Athlon_Book_Chapter_01_The_New_Era_of_Software_Engineering.md) |
-| 2 | Vision of Project Athlon | [link](Project_Athlon_Book_Chapter_02_Vision_of_Project_Athlon.md) |
+| 2 | Vision of Project Athlon | [link](Project_Athlon_Book_Chapter_02_Vision_of_Project_Athlon.md) · [Solution Archetypes §](Project_Athlon_Book_Chapter_02_Vision_of_Project_Athlon.md#solution-archetypes) |
 
 ### Part II — Principles & Vision
 
@@ -61,6 +61,13 @@ A reference architecture and implementation playbook for Agentic Software Engine
 | B | Reference Implementation Guide | [link](Project_Athlon_Book_Chapter_Appendix_B_Reference_Implementation_Guide.md) |
 | C | Project Athlon Pattern Catalog | [link](Project_Athlon_Book_Chapter_Appendix_C_Project_Athlon_Pattern_Catalog.md) |
 | D | The Project Athlon Playbook | [link](Project_Athlon_Book_Chapter_Appendix_D_The_Project_Athlon_Playbook.md) |
+
+### Strategy briefs
+
+| Topic | File |
+|-------|------|
+| **Athlon Solution Archetype — formal definition** | [Project_Athlon_Solution_Archetype_Definition.md](Project_Athlon_Solution_Archetype_Definition.md) |
+| REST API archetype — competitive positioning | [Project_Athlon_REST_API_Competitive_Positioning.md](Project_Athlon_REST_API_Competitive_Positioning.md) |
 
 ---
 

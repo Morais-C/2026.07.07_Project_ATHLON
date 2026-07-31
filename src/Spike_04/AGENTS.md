@@ -4,13 +4,13 @@ Instructions for Cursor (or any implementer) working on this spike.
 
 ## Start here
 
-1. Read project [ROADMAP.md](../../ROADMAP.md) (Spike_04 **before** promotion; locks in ImplementationPlan §2).
+1. Read project [ROADMAP.md](../../ROADMAP.md) (Spike_04 complete, frozen; next is Spike_05 — locks in ImplementationPlan §2).
 2. Read [README.md](./README.md) for thesis and success criteria.
 3. Implement strictly from [ImplementationPlan.md](./ImplementationPlan.md), **one phase at a time**.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes (checklist, AGENTS current state, fresh-session starter) so the next session can start with minimal context.
 5. **Do not modify `src/Spike_01/`, `src/Spike_02/`, or `src/Spike_03/`.** Those stay archives.
 
-**Current state:** Spike_04 **complete** (Phases 0–6 ✅). Spike is **frozen** — do not add features here. Next: promotion per [PromotionPlan.md](../../PromotionPlan.md).
+**Current state:** Spike_04 **complete** (Phases 0–6 ✅). Spike is **frozen** — do not add features here. Next: [Spike_05](../../src/Spike_05/AGENTS.md) (`console-v1` archetype pack); promotion after Spike_06.
 
 ## Scope rules
 
@@ -54,10 +54,8 @@ Instructions for Cursor (or any implementer) working on this spike.
 ## Suggested opening prompt
 
 ```text
-Spike_04 is complete (Phases 0–6). Read ROADMAP.md and PromotionPlan.md.
-Spike_01–04 are frozen archives — do not modify them for promotion features.
-Start promotion of proven Spike_04 code → Athlon.* per PromotionPlan.md.
-No portal/API until after promotion.
+Spike_04 is frozen. Start Spike_05 per src/Spike_05/AGENTS.md (console-v1 archetype pack).
+Do not modify Spike_01–04. No promotion until after Spike_06.
 ```
 
 ## Definition of done

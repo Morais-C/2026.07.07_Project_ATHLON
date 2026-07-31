@@ -61,4 +61,4 @@ Same as Spike_03: `appsettings.json` + gitignored `appsettings.Local.json`.
 
 ## Next after Spike_04
 
-Promote proven stack → `Athlon.*` ([PromotionPlan.md](../../PromotionPlan.md)), then PoC Sprint 1.
+**Spike_05** — formal `console-v1` archetype pack ([plan](../Spike_05/ImplementationPlan.md)) → **Spike_06** `rest-api-v1` → promotion ([PromotionPlan.md](../../PromotionPlan.md)) → PoC Sprint 1.

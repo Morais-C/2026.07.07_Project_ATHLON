@@ -14,14 +14,39 @@
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
 | **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
-| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
+| **Spike_05 — Archetype packs (`console-v1`)** | ⬜ Next — [plan](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
+| **Spike_06 — `rest-api-v1` archetype pack** | ⬜ After Spike_05 |
+| **Promotion to `Athlon.*`** | ⬜ After Spike_06 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
-Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
+Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md) (blocked until Spike_06).
 
 ---
 
 ## Decision log
+
+### 2026-07-31 — Archetype packs before promotion (Spike_05 / Spike_06)
+
+**Decision:** Insert **Spike_05** (formal `console-v1` pack + loader) and **Spike_06** (`rest-api-v1` pack) **before** promotion and PoC Sprint 1.
+
+**Primary concern:** *Can the proven Spike_04 engine run from versioned Athlon Solution Archetype packs, and can a second pack (`rest-api-v1`) reuse the same loader?*
+
+**Order:**
+
+```text
+1. Spike_01–04 (done, frozen) — artifact chain through incremental console change
+2. Spike_05 (next) — archetypes/console-v1/ pack + ArchetypePackLoader; regression = Spike_04 via pack
+3. Spike_06 — archetypes/rest-api-v1/ pack; OpenAPI + build + contract-test proof
+4. Promote engine + pack model → Athlon.*
+5. PoC Sprint 1 — Athlon.Api + Basic Portal + CI
+```
+
+**Why before promotion:** Promotion should lift a **productized archetype model** (packs + loader), not spike-root hardcoded paths. `console-v1` behavior exists in Spike_04; the **pack asset** does not.
+
+**Vision:** [Solution Archetype definition](./Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md) · [REST API positioning](./Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md)
+
+**Locks (summary):** fork Spike_04 → Spike_05; pack at `archetypes/console-v1/`; same chain as Spike_04; 10 pack components required; fail fast.  
+Full locks: [Spike_05 ImplementationPlan §2](./src/Spike_05/ImplementationPlan.md#2-pre-locked-decisions-2026-07-31).
 
 ### 2026-07-29 — Spike_04 before promotion (incremental change)
 
@@ -35,9 +60,11 @@ Spike checklists live under each spike; promotion progress lives in [PromotionPl
 1. Spike_01 (done, frozen) — single agent → artifact
 2. Spike_02 (done, frozen) — BA → StructuredRequirement → Developer → Implementation
 3. Spike_03 (done, frozen) — Analyst → Planner → Coder → Publisher → Publish/{workflowId}/
-4. Spike_04 (next) — Fixture + ChangeRequest → … → PatchPackage → Applier → Publish/{workflowId}/
-5. Promote proven code → Athlon.*
-6. PoC Sprint 1 — Athlon.Api + Basic Portal + CI
+4. Spike_04 (done) — Fixture + ChangeRequest → … → PatchPackage → Applier → Publish/{workflowId}/
+5. Spike_05 — console-v1 archetype pack + loader (superseded 2026-07-31 for steps after Spike_04)
+6. Spike_06 — rest-api-v1 archetype pack
+7. Promote proven code → Athlon.*
+8. PoC Sprint 1 — Athlon.Api + Basic Portal + CI
 ```
 
 **Locks (summary):** checked-in fixture; ChangeRequest `feature` \| `bugfix` (one shape); CodeContext = all fixture files + caps; PatchPackage = **unified diffs**; new Publish folder per run (branch metaphor); deterministic Applier (build-only); host **fail fast** (no Enter pauses).  
@@ -163,15 +190,45 @@ Success: demo published `Publish/{workflowId}/` with `buildSucceeded: true`; fun
 
 Success: demo applies ChangeRequest onto fixture; Applier writes `Publish/{workflowId}/` with `buildSucceeded: true`.
 
+**Note:** Spike_04 proves `console-v1` **behavior**; formal **archetype pack** is Spike_05.
+
 ---
 
-## After Spike_04 — promotion & Sprint 1
+## Spike_05 (next) — summary
 
-Plan: **[PromotionPlan.md](./PromotionPlan.md)** (Spike_04 proven — promotion is next).
+| Item | Detail |
+|------|--------|
+| **Thesis** | Same Spike_04 chain runs from **`archetypes/console-v1/`** pack loaded by id |
+| **Chain** | Unchanged: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier |
+| **Deliverable** | `ArchetypePackLoader` + all [10 pack components](./Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) |
+| **Baseline** | Fork Spike_04 → [`src/Spike_05/`](./src/Spike_05/); fixture `echo-v1` |
+| **Phase progress** | [Checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
+| **Docs** | [README](./src/Spike_05/README.md) · [ImplementationPlan](./src/Spike_05/ImplementationPlan.md) · [AGENTS](./src/Spike_05/AGENTS.md) |
+
+Success: `dotnet test` green via pack paths; live demo matches Spike_04 outcomes.
+
+---
+
+## Spike_06 (planned) — summary
+
+| Item | Detail |
+|------|--------|
+| **Thesis** | Second archetype pack **`rest-api-v1`** reuses Spike_05 loader |
+| **Proof** | `dotnet build` + OpenAPI consistency + contract tests (target) |
+| **Vision** | [REST API competitive positioning](./Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md) |
+| **Baseline** | Fork Spike_05 → `src/Spike_06/` (plan TBD at Spike_05 completion) |
+
+Success: governed ChangeRequest on REST API fixture with artifact chain + deterministic proof gates.
+
+---
+
+## After Spike_06 — promotion & Sprint 1
+
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** (blocked until Spike_06 — promote engine **and** pack model).
 
 ```text
-Athlon.Spike.* (from Spike_04 when proven)
-        →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm
+Athlon.Spike.* (from Spike_06 when proven)
+        →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm / ArchetypePacks
 Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```
 
@@ -180,8 +237,9 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Spike_04 is complete (Phases 0–6). Read ROADMAP.md and PromotionPlan.md.
-Spike_01–04 are frozen archives — do not modify them for promotion features.
-Start promotion of proven Spike_04 code → Athlon.* per PromotionPlan.md.
-No portal/API until after promotion.
+Spike_04 is complete (frozen). Spike_05 is next: formal console-v1 archetype pack.
+Read ROADMAP.md and src/Spike_05/AGENTS.md + ImplementationPlan.md.
+Spike_01–04 are frozen — do not modify them. Fork Spike_04 only inside src/Spike_05/.
+No rest-api-v1 (Spike_06), no promotion, no portal/API until after Spike_06.
+Start Spike_05 Phase 0 per ImplementationPlan.md.
 ```
