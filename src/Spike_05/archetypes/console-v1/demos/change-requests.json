@@ -1,6 +1,7 @@
 {
-  "version": "1.0.0-draft",
-  "description": "Sample in-bounds ChangeRequests for console-v1 demos (Phase 1: migrate from Program.cs)",
+  "version": "1.0.0",
+  "description": "Sample in-bounds ChangeRequests for console-v1 demos (migrated from Spike_04/05 Program.cs)",
+  "defaultDemoId": "uppercase-echo",
   "demos": [
     {
       "id": "uppercase-echo",

@@ -93,7 +93,7 @@ Composition rules:
 
 | Archetype id | Status | Proof (current) | Location |
 |--------------|--------|-----------------|----------|
-| `console-v1` | **Pack in progress** (Spike_05 Phase 0 ✅) · behavior proved (Spike_03/04) | Greenfield publish ([Spike_03](../src/Spike_03/)) + incremental patch + `dotnet build` ([Spike_04](../src/Spike_04/)); formal **pack** → [Spike_05](../src/Spike_05/) |
+| `console-v1` | **Pack content complete** (Spike_05 Phase 1 ✅) · behavior proved (Spike_03/04) | Greenfield publish ([Spike_03](../src/Spike_03/)) + incremental patch + `dotnet build` ([Spike_04](../src/Spike_04/)); formal **pack** → [Spike_05](../src/Spike_05/) |
 | `rest-api-v1` | **Planned** (Spike_06) | OpenAPI + build + contract tests (target) | [Competitive brief](Project_Athlon_REST_API_Competitive_Positioning.md) |
 
 **Distinction:** Spike_04 runs console change with prompts/schemas at spike root (hardcoded paths). Spike_05 delivers the **archetype pack** (`archetypes/console-v1/`) and loader — the productized form of this table’s 10 components.

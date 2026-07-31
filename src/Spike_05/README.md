@@ -26,15 +26,15 @@ Load **`archetypes/console-v1/`** → same ChangeRequest chain → same `echo-v1
 ## Success criteria
 
 - [x] Spike_05 forked from Spike_04; Spike_01–04 untouched
-- [ ] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) *(Phase 0: skeleton only)*
+- [x] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) *(Phase 1 ✅)*
 - [ ] `ArchetypePack` loader resolves prompts, schemas, bounds, proof pipeline by `archetypeId`
 - [ ] Host runs with `archetypeId = console-v1` only (config or manifest)
 - [ ] Regression: Spike_04-equivalent E2E + thesis tests green via pack
-- [ ] Demo ChangeRequests live in pack (`demos/`), not only in `Program.cs`
+- [x] Demo ChangeRequests live in pack (`demos/`), not only in `Program.cs`
 
-## Archetype pack layout (Phase 0)
+## Archetype pack layout (Phase 1)
 
-Fork includes `archetypes/console-v1/` with draft manifest and placeholder components. Runtime still uses spike-root `prompts/` and `schemas/` until Phase 3.
+Fork includes `archetypes/console-v1/` with manifest and all 10 components populated. Runtime still uses spike-root `prompts/` and `schemas/` until Phase 3.
 
 ```text
 src/Spike_05/
@@ -43,13 +43,13 @@ src/Spike_05/
   prompts/ schemas/              # Spike_04 copy — runtime until Phase 3
   archetypes/console-v1/
     archetype.json               # component 1 — identity, paths, caps
-    bounds.md                    # component 2 (placeholder)
-    code-context.md              # component 3 (placeholder)
-    change-request.md            # component 4 (placeholder)
-    schemas/ prompts/            # components 5–6 (empty — Phase 1)
-    patch-apply.md               # component 7 (placeholder)
-    proof/pipeline.json          # component 8 (placeholder)
-    demos/change-requests.json   # component 10 (draft demos)
+    bounds.md                    # component 2
+    code-context.md              # component 3
+    change-request.md            # component 4
+    schemas/ prompts/            # components 5–6 (migrated from Spike_04)
+    patch-apply.md               # component 7
+    proof/pipeline.json          # component 8
+    demos/change-requests.json   # component 10
     README.md
 ```
 

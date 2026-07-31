@@ -1,10 +1,10 @@
 {
   "$schema": "./archetype.schema.json",
   "archetypeId": "console-v1",
-  "version": "1.0.0-draft",
+  "version": "1.0.0",
   "status": "training",
   "displayName": "Console Application v1",
-  "description": "Bounded .NET console change archetype (read → process → print). Spike_05 formal pack — Phase 0 skeleton.",
+  "description": "Bounded .NET console change archetype (read → process → print). Spike_05 formal pack — Phase 1 content complete.",
   "paths": {
     "bounds": "bounds.md",
     "codeContext": "code-context.md",

@@ -1,20 +1,35 @@
 {
-  "version": "1.0.0-draft",
+  "version": "1.0.0",
+  "description": "Deterministic proof gates for console-v1. LLM output alone is never sufficient.",
+  "successRequires": ["applySucceeded", "buildSucceeded"],
+  "manifestPath": "apply-manifest.json",
   "gates": [
     {
       "id": "apply",
       "order": 1,
       "type": "deterministic",
-      "description": "All unified diffs apply cleanly to the copied baseline tree",
-      "successField": "applySucceeded"
+      "producer": "Applier",
+      "description": "All unified diffs apply cleanly to the copied baseline tree under Publish/{workflowId}/",
+      "successField": "applySucceeded",
+      "failureBehavior": "Keep publish tree; set failureMessage; do not mark workflow success"
     },
     {
       "id": "build",
       "order": 2,
       "type": "deterministic",
-      "description": "dotnet build on Publish/{workflowId}/ output",
-      "command": "dotnet build",
-      "successField": "buildSucceeded"
+      "producer": "Applier",
+      "description": "dotnet build on entryProject in the publish directory",
+      "command": "dotnet build \"{entryProject}\" --nologo",
+      "workingDirectory": "Publish/{workflowId}/",
+      "successField": "buildSucceeded",
+      "failureBehavior": "Record buildOutput in manifest; applySucceeded may still be true"
+    }
+  ],
+  "deferred": [
+    {
+      "id": "functional-run",
+      "description": "Console output / behavior verification",
+      "owner": "Tester agent (future)"
     }
   ]
 }
