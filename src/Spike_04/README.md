@@ -51,12 +51,12 @@ Same as Spike_03: `appsettings.json` + gitignored `appsettings.Local.json`.
 
 ## Success criteria
 
-- [ ] Spike_04 forked from Spike_03; Spike_01–03 untouched
-- [ ] Checked-in fixture baseline; ChangeRequest supports feature **and** bugfix (one schema)
-- [ ] CodeContext published (all fixture files) with hard caps; over-cap aborts
+- [x] Spike_04 forked from Spike_03; Spike_01–03 untouched
+- [x] Checked-in fixture baseline; ChangeRequest supports feature **and** bugfix (one schema)
+- [x] CodeContext published (all fixture files) with hard caps; over-cap aborts
 - [ ] Coder emits PatchPackage (unified diffs); handoff by artifact id only (thesis tests)
-- [ ] Applier copies baseline → applies patches → `dotnet build` under new `Publish/{workflowId}/`
-- [ ] Fail fast: any step failure stops the host (no Enter pauses)
+- [x] Applier copies baseline → applies patches → `dotnet build` under new `Publish/{workflowId}/`
+- [x] Fail fast: any step failure stops the host (no Enter pauses)
 - [ ] Demo: hardcoded feature **or** bugfix change request → green build in Publish/
 
 ## Next after Spike_04

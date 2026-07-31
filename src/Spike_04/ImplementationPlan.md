@@ -316,8 +316,8 @@ public sealed record PatchPackagePayload(
 | 1 — ChangeRequest + Analyst + CodeContext | ✅ Complete |
 | 2 — Planner + Coder → PatchPackage | ✅ Complete |
 | 3 — Applier (apply + build) | ✅ Complete |
-| 4 — Chain + host UX (fail fast) | ⬜ Not started ← **next** |
-| 5 — Thesis + E2E tests | ⬜ Not started |
+| 4 — Chain + host UX (fail fast) | ✅ Complete |
+| 5 — Thesis + E2E tests | ⬜ Not started ← **next** |
 | 6 — Demo | ⬜ Not started |
 
 ---

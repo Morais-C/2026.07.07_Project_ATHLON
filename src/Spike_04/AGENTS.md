@@ -7,10 +7,10 @@ Instructions for Cursor (or any implementer) working on this spike.
 1. Read project [ROADMAP.md](../../ROADMAP.md) (Spike_04 **before** promotion; locks in ImplementationPlan §2).
 2. Read [README.md](./README.md) for thesis and success criteria.
 3. Implement strictly from [ImplementationPlan.md](./ImplementationPlan.md), **one phase at a time**.
-4. Update **only** the [Checklist tracker](./ImplementationPlan.md#9-checklist-tracker) when a phase completes.
+4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes (checklist, AGENTS current state, fresh-session starter) so the next session can start with minimal context.
 5. **Do not modify `src/Spike_01/`, `src/Spike_02/`, or `src/Spike_03/`.** Those stay archives.
 
-**Current state:** Phase 3 complete — next is **Phase 4 (chain + host UX, fail fast)**.
+**Current state:** Phase 4 complete — next is **Phase 5 (thesis + E2E CI tests)**.
 
 ## Scope rules
 
@@ -49,17 +49,17 @@ Instructions for Cursor (or any implementer) working on this spike.
 - **Target framework:** `net9.0`
 - **Secrets:** `appsettings.Local.json` gitignored — never commit keys
 - **Stop after each phase** when the user asks for baby steps
-- **Progress:** checklist in ImplementationPlan only
+- **Progress:** checklist in ImplementationPlan + keep ROADMAP / AGENTS / README starter in sync
 
 ## Suggested opening prompt
 
 ```text
-Finish Spike_04 per src/Spike_04/ImplementationPlan.md.
-
-Read ROADMAP.md, src/Spike_04/AGENTS.md and README.md first.
-Phases 0–3 are done — start at Phase 4 (wire full chain in Program.cs; fail fast; no Enter pauses).
-One phase at a time; update only the checklist.
-Do not modify Spike_01–03. No promotion. No portal/API. No Enter pauses.
+Read ROADMAP.md and src/Spike_04/AGENTS.md.
+Spike_01–03 are complete/frozen — do not modify them.
+Spike_04 Phases 0–4 are done. Continue at Phase 5 per src/Spike_04/ImplementationPlan.md
+(checklist §9). PatchPackage = unified diffs; Applier build-only; fail fast (no Enter pauses).
+One phase at a time; update all docs on phase end, so a new session can start (with fresh context to save tokens).
+Promotion is deferred until Spike_04 succeeds. No portal/API yet.
 ```
 
 ## Definition of done
