@@ -33,4 +33,7 @@ internal static class SpikeTestPaths
 
     public static string EchoV1FixtureRoot =>
         Path.Combine(Root, "fixtures", "echo-v1");
+
+    public static string ConsoleV1PackRoot =>
+        Path.Combine(Root, "archetypes", "console-v1");
 }

@@ -27,14 +27,14 @@ Load **`archetypes/console-v1/`** → same ChangeRequest chain → same `echo-v1
 
 - [x] Spike_05 forked from Spike_04; Spike_01–04 untouched
 - [x] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) *(Phase 1 ✅)*
-- [ ] `ArchetypePack` loader resolves prompts, schemas, bounds, proof pipeline by `archetypeId`
+- [x] `ArchetypePack` loader resolves prompts, schemas, bounds, proof pipeline by `archetypeId` *(Phase 2 ✅)*
 - [ ] Host runs with `archetypeId = console-v1` only (config or manifest)
 - [ ] Regression: Spike_04-equivalent E2E + thesis tests green via pack
 - [x] Demo ChangeRequests live in pack (`demos/`), not only in `Program.cs`
 
 ## Archetype pack layout (Phase 1)
 
-Fork includes `archetypes/console-v1/` with manifest and all 10 components populated. Runtime still uses spike-root `prompts/` and `schemas/` until Phase 3.
+Fork includes `archetypes/console-v1/` with manifest and all 10 components populated. **Phase 2:** `ArchetypePackLoader` loads and validates the pack; runtime still uses spike-root `prompts/` and `schemas/` until Phase 3.
 
 ```text
 src/Spike_05/
