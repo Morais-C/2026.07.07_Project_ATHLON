@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **only** the [Checklist tracker](./ImplementationPlan.md#9-checklist-tracker) when a phase completes.
 5. **Do not modify `src/Spike_01/`, `src/Spike_02/`, or `src/Spike_03/`.** Those stay archives.
 
-**Current state:** Phase 2 complete — next is **Phase 3 (Applier: apply + build)**.
+**Current state:** Phase 3 complete — next is **Phase 4 (chain + host UX, fail fast)**.
 
 ## Scope rules
 
@@ -57,7 +57,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 Finish Spike_04 per src/Spike_04/ImplementationPlan.md.
 
 Read ROADMAP.md, src/Spike_04/AGENTS.md and README.md first.
-Phases 0–2 are done — start at Phase 3 (Applier: copy fixture → apply unified diffs → dotnet build).
+Phases 0–3 are done — start at Phase 4 (wire full chain in Program.cs; fail fast; no Enter pauses).
 One phase at a time; update only the checklist.
 Do not modify Spike_01–03. No promotion. No portal/API. No Enter pauses.
 ```

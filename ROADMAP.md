@@ -1,7 +1,7 @@
 # Project Athlon — Execution Roadmap
 
 > **Living master plan** for build order (distinct from the VisionScope manuscript).  
-> **Last updated:** 2026-07-29  
+> **Last updated:** 2026-07-31  
 > **Manuscript:** [Project_ATHLON_VisionScope/INDEX.md](./Project_ATHLON_VisionScope/INDEX.md)
 
 ---
@@ -13,7 +13,7 @@
 | **Spike_01 — Artifact Slice** | ✅ Complete (2026-07-15) — **frozen archive** |
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
-| **Spike_04 — Change existing console via artifacts** | 🔄 In progress — Phase 0–2 ✅; **Phase 3** next — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
+| **Spike_04 — Change existing console via artifacts** | 🔄 In progress — Phase 0–3 ✅; **Phase 4** next — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
 | **Promotion to `Athlon.*`** | ⬜ After Spike_04 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
@@ -158,7 +158,7 @@ Success: demo published `Publish/{workflowId}/` with `buildSucceeded: true`; fun
 | **Chain** | Fixture + ChangeRequest → **Analyst** → CodeContext → **Planner** → **Coder** → **Applier** (apply + build) |
 | **Host** | Minimal + real LLM; **fail fast** (no Enter pauses) |
 | **Baseline** | Full copy of Spike_03 under [`src/Spike_04/`](./src/Spike_04/) + checked-in fixture |
-| **Phase progress** | Phase 0–2 ✅ · **next Phase 3** — [Checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
+| **Phase progress** | Phase 0–3 ✅ · **next Phase 4** — [Checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
 | **Docs** | [README](./src/Spike_04/README.md) · [ImplementationPlan](./src/Spike_04/ImplementationPlan.md) · [AGENTS](./src/Spike_04/AGENTS.md) |
 
 ---
@@ -180,7 +180,7 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```text
 Read ROADMAP.md and src/Spike_04/AGENTS.md.
 Spike_01–03 are complete/frozen — do not modify them.
-Spike_04 Phases 0–2 are done. Continue at Phase 3 per src/Spike_04/ImplementationPlan.md
+Spike_04 Phases 0–3 are done. Continue at Phase 4 per src/Spike_04/ImplementationPlan.md
 (checklist §9). PatchPackage = unified diffs; Applier build-only; fail fast (no Enter pauses).
 Promotion is deferred until Spike_04 succeeds. No portal/API yet.
 ```
