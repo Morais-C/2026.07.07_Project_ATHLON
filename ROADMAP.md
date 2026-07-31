@@ -14,7 +14,7 @@
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
 | **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
-| **Spike_05 — Archetype packs (`console-v1`)** | 🔄 In progress (Phase 0 ✅, Phase 1 ✅, Phase 2 ✅) — [plan](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
+| **Spike_05 — Archetype packs (`console-v1`)** | 🔄 In progress (Phase 0 ✅, Phase 1 ✅, Phase 2 ✅, Phase 3 ✅) — [plan](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
 | **Spike_06 — `rest-api-v1` archetype pack** | ⬜ After Spike_05 |
 | **Promotion to `Athlon.*`** | ⬜ After Spike_06 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
@@ -202,7 +202,7 @@ Success: demo applies ChangeRequest onto fixture; Applier writes `Publish/{workf
 | **Chain** | Unchanged: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier |
 | **Deliverable** | `ArchetypePackLoader` + all [10 pack components](./Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) |
 | **Baseline** | Fork Spike_04 → [`src/Spike_05/`](./src/Spike_05/); fixture `echo-v1` |
-| **Phase progress** | Phase 0 ✅, Phase 1 ✅, Phase 2 ✅ — [Checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
+| **Phase progress** | Phase 0 ✅, Phase 1 ✅, Phase 2 ✅, Phase 3 ✅ — [Checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
 | **Docs** | [README](./src/Spike_05/README.md) · [ImplementationPlan](./src/Spike_05/ImplementationPlan.md) · [AGENTS](./src/Spike_05/AGENTS.md) |
 
 Success: `dotnet test` green via pack paths; live demo matches Spike_04 outcomes.
@@ -237,9 +237,9 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Spike_05 Phase 2 complete (ArchetypePackLoader). Phase 3 next: wire host + agents to pack.
+Spike_05 Phase 3 complete (host + agents wired to pack). Phase 4 next: regression + fail fast.
 Read ROADMAP.md and src/Spike_05/AGENTS.md + ImplementationPlan.md.
 Spike_01–04 are frozen — do not modify them. Work only in src/Spike_05/.
 No rest-api-v1 (Spike_06), no promotion, no portal/API until after Spike_06.
-Start Spike_05 Phase 3 per ImplementationPlan.md.
+Start Spike_05 Phase 4 per ImplementationPlan.md.
 ```

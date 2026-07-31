@@ -10,7 +10,7 @@ public sealed class CodeContextBuilder
 {
     public const string ProducerName = "CodeContextBuilder";
 
-    private static readonly HashSet<string> IncludedExtensions = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> DefaultIncludedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
         ".cs",
         ".csproj"
@@ -26,11 +26,13 @@ public sealed class CodeContextBuilder
     private readonly IArtifactStore _artifactStore;
     private readonly int _maxFilesAllowed;
     private readonly int _maxCharsAllowed;
+    private readonly HashSet<string> _includedExtensions;
 
     public CodeContextBuilder(
         IArtifactStore artifactStore,
         int maxFilesAllowed = CodeContext.DefaultMaxFilesAllowed,
-        int maxCharsAllowed = CodeContext.DefaultMaxCharsAllowed)
+        int maxCharsAllowed = CodeContext.DefaultMaxCharsAllowed,
+        IEnumerable<string>? includeExtensions = null)
     {
         _artifactStore = artifactStore ?? throw new ArgumentNullException(nameof(artifactStore));
         if (maxFilesAllowed < 1)
@@ -45,6 +47,18 @@ public sealed class CodeContextBuilder
 
         _maxFilesAllowed = maxFilesAllowed;
         _maxCharsAllowed = maxCharsAllowed;
+        _includedExtensions = BuildIncludedExtensions(includeExtensions);
+    }
+
+    public static CodeContextBuilder FromArchetypePack(IArtifactStore artifactStore, ArchetypePack pack)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+
+        return new CodeContextBuilder(
+            artifactStore,
+            pack.CodeContext.MaxFilesAllowed,
+            pack.CodeContext.MaxCharsAllowed,
+            pack.CodeContext.IncludeExtensions);
     }
 
     public async Task<Artifact> BuildAndPublishAsync(
@@ -82,7 +96,7 @@ public sealed class CodeContextBuilder
                 entryFull);
         }
 
-        var files = LoadFixtureFiles(rootFull);
+        var files = LoadFixtureFiles(rootFull, _includedExtensions);
         var totalChars = files.Sum(f => f.Content.Length);
 
         if (files.Count > _maxFilesAllowed)
@@ -111,7 +125,25 @@ public sealed class CodeContextBuilder
         return artifact;
     }
 
-    private static IReadOnlyList<CodeContextFile> LoadFixtureFiles(string rootFull)
+    private static HashSet<string> BuildIncludedExtensions(IEnumerable<string>? includeExtensions)
+    {
+        var source = includeExtensions ?? DefaultIncludedExtensions;
+        var extensions = source
+            .Where(e => !string.IsNullOrWhiteSpace(e))
+            .Select(e => e.Trim())
+            .ToList();
+
+        if (extensions.Count == 0)
+        {
+            throw new ArgumentException("At least one include extension is required.", nameof(includeExtensions));
+        }
+
+        return new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static IReadOnlyList<CodeContextFile> LoadFixtureFiles(
+        string rootFull,
+        HashSet<string> includedExtensions)
     {
         var rootWithSep = EnsureTrailingSeparator(rootFull);
         var results = new List<CodeContextFile>();
@@ -125,7 +157,7 @@ public sealed class CodeContextBuilder
             }
 
             var extension = Path.GetExtension(path);
-            if (!IncludedExtensions.Contains(extension))
+            if (!includedExtensions.Contains(extension))
             {
                 continue;
             }

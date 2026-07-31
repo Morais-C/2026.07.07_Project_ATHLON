@@ -16,9 +16,9 @@ Start at **[ROADMAP.md](./ROADMAP.md)** (status + fresh session starter).
 ## Fresh session starter
 
 ```text
-Spike_05 Phase 2 complete (ArchetypePackLoader). Phase 3 next: wire host + agents to pack.
+Spike_05 Phase 3 complete (host + agents wired to pack). Phase 4 next: regression + fail fast.
 Read ROADMAP.md and src/Spike_05/AGENTS.md + ImplementationPlan.md.
 Spike_01–04 are frozen — do not modify them. Work only in src/Spike_05/.
 No rest-api-v1 (Spike_06), no promotion, no portal/API until after Spike_06.
-Start Spike_05 Phase 3 per ImplementationPlan.md.
+Start Spike_05 Phase 4 per ImplementationPlan.md.
 ```

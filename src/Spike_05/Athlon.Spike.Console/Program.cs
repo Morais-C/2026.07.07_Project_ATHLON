@@ -6,41 +6,43 @@ using Athlon.Spike.Llm;
 using Athlon.Spike.Workflow;
 
 // Spike_05 console — full change chain, fail fast (no Enter pauses).
-// Run from src/Spike_05 so ./prompts, ./schemas, ./artifacts, ./fixtures, ./Publish, ./appsettings*.json resolve locally.
-// Phase 0+: archetypes/console-v1/ pack skeleton exists; loader wiring starts Phase 2.
+// Run from src/Spike_05 so ./artifacts, ./Publish, ./appsettings*.json resolve locally.
+// Archetype pack paths come from archetypes/{archetypeId}/ via ArchetypePackLoader.
 // Chain: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier (apply + build).
 
 try
 {
-    // 1) Sample change request against fixtures/echo-v1 (in bounds).
-    // Swap KindFeature ↔ KindBugfix samples as needed for demos.
+    var (archetypeId, spikeRoot) = ArchetypeConfig.Load();
+    ArchetypePack pack;
+    try
+    {
+        pack = ArchetypePackLoader.Load(spikeRoot, archetypeId);
+    }
+    catch (ArchetypePackException ex)
+    {
+        Console.Error.WriteLine($"Archetype pack error: {ex.Message}");
+        return 1;
+    }
+
+    // Sample change request (in bounds for console-v1). Swap KindFeature ↔ KindBugfix for demos.
+    // Demo catalog lives in pack.Paths.Demos; host picks active demo in a later phase.
     var changeRequest = new ChangeRequestPayload(
         Kind: ChangeRequest.KindFeature,
         Title: "Uppercase echo",
         Description: "Change the echo console so it prints the input in UPPERCASE.",
         SuspectedPaths: ["Echo/Program.cs"]);
 
-    // Bugfix alternative (trim whitespace):
-    // var changeRequest = new ChangeRequestPayload(
-    //     Kind: ChangeRequest.KindBugfix,
-    //     Title: "Trim echo input",
-    //     Description: "Echo prints leading/trailing whitespace; it should trim before printing.",
-    //     StepsToReproduce: "Type '  hi  ' and press Enter.",
-    //     ExpectedBehavior: "Console prints: hi",
-    //     ActualBehavior: "Console prints:   hi  (spaces preserved)",
-    //     SuspectedPaths: ["Echo/Program.cs"]);
-
-    const string fixtureId = "echo-v1";
-    const string fixtureRoot = "fixtures/echo-v1";
     const string entryProject = "Echo/Echo.csproj";
     const string artifactsRoot = "artifacts";
     const string publishRoot = "Publish";
 
-    // 2) OpenRouter settings + immutable artifact store
+    var fixtureId = pack.Baseline.FixtureId;
+    var fixtureRoot = pack.Baseline.FixtureRoot;
+
     var (apiKey, model) = OpenRouterConfig.Load();
     var store = new FileArtifactStore(artifactsRoot);
     var runner = new WorkflowRunner(store, artifactRoot: artifactsRoot);
-    var codeContextBuilder = new CodeContextBuilder(store);
+    var codeContextBuilder = CodeContextBuilder.FromArchetypePack(store, pack);
     var applier = new Applier(store, publishRoot: publishRoot);
 
     using var llm = new OpenRouterProvider(apiKey: apiKey, model: model);
@@ -48,33 +50,36 @@ try
     var analyst = new AnalystAgent(
         llm,
         store,
-        promptTemplatePath: Path.Combine("prompts", "analyst-v1.txt"),
-        schemaPath: Path.Combine("schemas", "structured-change.schema.json"));
+        promptTemplatePath: pack.Analyst.PromptPath,
+        schemaPath: pack.Analyst.OutputSchemaPath);
 
     var planner = new PlannerAgent(
         llm,
         store,
-        promptTemplatePath: Path.Combine("prompts", "planner-v1.txt"),
-        schemaPath: Path.Combine("schemas", "implementation-plan.schema.json"));
+        promptTemplatePath: pack.Planner.PromptPath,
+        schemaPath: pack.Planner.OutputSchemaPath);
 
     var coder = new CoderAgent(
         llm,
         store,
-        promptTemplatePath: Path.Combine("prompts", "coder-v1.txt"),
-        schemaPath: Path.Combine("schemas", "patch-package.schema.json"));
+        promptTemplatePath: pack.Coder.PromptPath,
+        schemaPath: pack.Coder.OutputSchemaPath);
 
     Console.WriteLine("=== Spike_05 — ChangeRequest → Analyst → Planner → Coder → Applier ===");
     Console.WriteLine($"Working directory : {Directory.GetCurrentDirectory()}");
+    Console.WriteLine($"Archetype         : {pack.ArchetypeId} v{pack.Version} ({pack.DisplayName})");
+    Console.WriteLine($"Pack root         : {pack.PackRoot}");
     Console.WriteLine($"Artifacts         : {Path.GetFullPath(artifactsRoot)}");
     Console.WriteLine($"Publish root      : {Path.GetFullPath(publishRoot)}");
-    Console.WriteLine($"Fixture           : {fixtureId} ({Path.GetFullPath(fixtureRoot)})");
+    Console.WriteLine($"Fixture           : {fixtureId} ({fixtureRoot})");
+    Console.WriteLine($"CodeContext caps  : {pack.CodeContext.MaxFilesAllowed} files, {pack.CodeContext.MaxCharsAllowed} chars");
     Console.WriteLine($"Model             : {model}");
     Console.WriteLine();
     Console.WriteLine($"Hardcoded ChangeRequest ({changeRequest.Kind}): {changeRequest.Title}");
     Console.WriteLine(changeRequest.Description);
     Console.WriteLine();
 
-    // 3) Persist ChangeRequest, then run the chain (fail fast on any step)
+    // Persist ChangeRequest, then run the chain (fail fast on any step)
     var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
         "ChangeRequestToPublish",
         changeRequest,

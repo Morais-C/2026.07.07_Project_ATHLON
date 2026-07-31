@@ -240,8 +240,8 @@ Pin fixture path in Phase 0: keep `fixtures/echo-v1/` at spike root (Spike_04 la
 | 0 — Fork + pack skeleton | ✅ Complete (2026-07-31) |
 | 1 — Migrate pack contents (`console-v1`) | ✅ Complete (2026-07-31) |
 | 2 — ArchetypePack loader | ✅ Complete (2026-07-31) |
-| 3 — Wire host + agents | ⬜ Not started ← **next** |
-| 4 — Regression + fail fast | ⬜ Not started |
+| 3 — Wire host + agents | ✅ Complete (2026-07-31) |
+| 4 — Regression + fail fast | ⬜ Not started ← **next** |
 | 5 — Thesis + pack tests | ⬜ Not started |
 | 6 — Demo & docs | ⬜ Not started |
 
