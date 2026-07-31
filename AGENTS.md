@@ -16,9 +16,9 @@ Start at **[ROADMAP.md](./ROADMAP.md)** (status + fresh session starter).
 ## Fresh session starter
 
 ```text
-Spike_04 is complete (frozen). Spike_05 is next: formal console-v1 archetype pack.
+Spike_05 Phase 0 complete (fork + console-v1 pack skeleton). Phase 1 next: migrate pack contents from Spike_04.
 Read ROADMAP.md and src/Spike_05/AGENTS.md + ImplementationPlan.md.
-Spike_01–04 are frozen — do not modify them. Fork Spike_04 only inside src/Spike_05/.
+Spike_01–04 are frozen — do not modify them. Work only in src/Spike_05/.
 No rest-api-v1 (Spike_06), no promotion, no portal/API until after Spike_06.
-Start Spike_05 Phase 0 per ImplementationPlan.md.
+Start Spike_05 Phase 1 per ImplementationPlan.md.
 ```

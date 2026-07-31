@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0-draft",
+  "description": "Sample in-bounds ChangeRequests for console-v1 demos (Phase 1: migrate from Program.cs)",
+  "demos": [
+    {
+      "id": "uppercase-echo",
+      "kind": "feature",
+      "title": "Uppercase echo",
+      "description": "Change the echo console so it prints the input in UPPERCASE.",
+      "suspectedPaths": ["Echo/Program.cs"]
+    },
+    {
+      "id": "trim-echo",
+      "kind": "bugfix",
+      "title": "Trim echo input",
+      "description": "Echo prints leading/trailing whitespace; it should trim before printing.",
+      "stepsToReproduce": "Type '  hi  ' and press Enter.",
+      "expectedBehavior": "Console prints: hi",
+      "actualBehavior": "Console prints:   hi  (spaces preserved)",
+      "suspectedPaths": ["Echo/Program.cs"]
+    }
+  ]
+}

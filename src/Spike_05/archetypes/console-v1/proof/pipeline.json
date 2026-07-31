@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0-draft",
+  "gates": [
+    {
+      "id": "apply",
+      "order": 1,
+      "type": "deterministic",
+      "description": "All unified diffs apply cleanly to the copied baseline tree",
+      "successField": "applySucceeded"
+    },
+    {
+      "id": "build",
+      "order": 2,
+      "type": "deterministic",
+      "description": "dotnet build on Publish/{workflowId}/ output",
+      "command": "dotnet build",
+      "successField": "buildSucceeded"
+    }
+  ]
+}

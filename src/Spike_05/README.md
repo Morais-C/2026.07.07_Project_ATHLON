@@ -25,12 +25,35 @@ Load **`archetypes/console-v1/`** → same ChangeRequest chain → same `echo-v1
 
 ## Success criteria
 
-- [ ] Spike_05 forked from Spike_04; Spike_01–04 untouched
-- [ ] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents)
+- [x] Spike_05 forked from Spike_04; Spike_01–04 untouched
+- [ ] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) *(Phase 0: skeleton only)*
 - [ ] `ArchetypePack` loader resolves prompts, schemas, bounds, proof pipeline by `archetypeId`
 - [ ] Host runs with `archetypeId = console-v1` only (config or manifest)
 - [ ] Regression: Spike_04-equivalent E2E + thesis tests green via pack
 - [ ] Demo ChangeRequests live in pack (`demos/`), not only in `Program.cs`
+
+## Archetype pack layout (Phase 0)
+
+Fork includes `archetypes/console-v1/` with draft manifest and placeholder components. Runtime still uses spike-root `prompts/` and `schemas/` until Phase 3.
+
+```text
+src/Spike_05/
+  Spike_05.sln
+  fixtures/echo-v1/              # baseline (component 9)
+  prompts/ schemas/              # Spike_04 copy — runtime until Phase 3
+  archetypes/console-v1/
+    archetype.json               # component 1 — identity, paths, caps
+    bounds.md                    # component 2 (placeholder)
+    code-context.md              # component 3 (placeholder)
+    change-request.md            # component 4 (placeholder)
+    schemas/ prompts/            # components 5–6 (empty — Phase 1)
+    patch-apply.md               # component 7 (placeholder)
+    proof/pipeline.json          # component 8 (placeholder)
+    demos/change-requests.json   # component 10 (draft demos)
+    README.md
+```
+
+See [archetypes/console-v1/README.md](./archetypes/console-v1/README.md) for component checklist.
 
 ## After Spike_05
 

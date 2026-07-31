@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes.
 5. **Do not modify `src/Spike_01/` … `src/Spike_04/`.** Those stay frozen archives.
 
-**Current state:** Spike_05 **not started** — next is **Phase 0** (fork + pack layout).
+**Current state:** Phase 0 ✅ complete — next is **Phase 1** (migrate pack contents from Spike_04).
 
 ## Scope rules
 
@@ -33,8 +33,8 @@ Instructions for Cursor (or any implementer) working on this spike.
 
 ```text
 Read ROADMAP.md and src/Spike_05/AGENTS.md.
-Spike_01–04 are frozen. Start Spike_05 Phase 0 per src/Spike_05/ImplementationPlan.md.
-Goal: formal console-v1 archetype pack + loader; regression parity with Spike_04.
+Spike_01–04 are frozen. Start Spike_05 Phase 1 per src/Spike_05/ImplementationPlan.md.
+Goal: migrate prompts/schemas/bounds/demos into archetypes/console-v1/ (all 10 components).
 No rest-api-v1. No promotion. One phase at a time; update docs on phase end.
 ```
 
