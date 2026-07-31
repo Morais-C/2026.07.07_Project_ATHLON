@@ -3,7 +3,7 @@
 > **Depends on:** Spike_03 complete (frozen at [`../Spike_03/`](../Spike_03/))  
 > **Decision:** [ROADMAP.md](../../ROADMAP.md) — Spike_04 **before** promotion  
 > **Host:** Minimal console + real OpenRouter LLM; **fail fast** (no Enter pauses)  
-> **Phase progress:** [ImplementationPlan.md §9 Checklist](./ImplementationPlan.md#9-checklist-tracker)
+> **Phase progress:** All phases ✅ — [ImplementationPlan.md §9 Checklist](./ImplementationPlan.md#9-checklist-tracker)
 
 ## Purpose
 
@@ -57,7 +57,7 @@ Same as Spike_03: `appsettings.json` + gitignored `appsettings.Local.json`.
 - [x] Coder emits PatchPackage (unified diffs); handoff by artifact id only (thesis tests)
 - [x] Applier copies baseline → applies patches → `dotnet build` under new `Publish/{workflowId}/`
 - [x] Fail fast: any step failure stops the host (no Enter pauses)
-- [ ] Demo: hardcoded feature **or** bugfix change request → green build in Publish/
+- [x] Demo: hardcoded feature **or** bugfix change request → green build in Publish/
 
 ## Next after Spike_04
 

@@ -16,6 +16,18 @@ UNIFIED DIFF CONVENTIONS (required):
 - operation "delete": --- a/{path} then +++ /dev/null removing all lines (never empty unifiedDiff)
 - Paths in the diff headers must match the "path" field
 - Use \\n for newlines inside the JSON string
+- Hunk header @@ -oldStart,oldCount +newStart,newCount @@ MUST match the number of context/' '/'-' lines (oldCount) and context/' '/'+' lines (newCount) in that hunk — count carefully
+- Include enough unchanged context lines so the hunk applies cleanly to the exact CodeContext file content
+
+EXAMPLE modify (illustrative — use real CodeContext content, not this snippet):
+--- a/Echo/Program.cs
++++ b/Echo/Program.cs
+@@ -1,4 +1,4 @@
+ // comment line from baseline
+ Console.Write("Enter text: ");
+ var input = Console.ReadLine() ?? string.Empty;
+-Console.WriteLine(input);
++Console.WriteLine(input.ToUpperInvariant());
 
 === USER ===
 ImplementationPlan artifact (JSON):

@@ -1,9 +1,8 @@
 # PromotionPlan — Spike → `Athlon.*`
 
-> **Status:** Stub — **deferred until Spike_04 succeeds**.  
+> **Status:** Ready — **Spike_04 complete** (2026-07-31); promotion is **next**.  
 > **Source of truth for sequencing:** [ROADMAP.md](./ROADMAP.md)  
-> **Current next milestone:** [Spike_04](./src/Spike_04/AGENTS.md)  
-> **Likely promotion input:** [`src/Spike_04/`](./src/Spike_04/) once complete (else Spike_03)
+> **Promotion input:** [`src/Spike_04/`](./src/Spike_04/) (proven; Spike_01–03 remain frozen reference)
 
 ## Goal
 
@@ -18,11 +17,11 @@ Athlon.Contracts / Artifacts / Llm / Agents / Workflow
 
 ## Non-goals (this milestone)
 
-- Starting before Spike_04 is done (see ROADMAP 2026-07-29)
+- Reopening Spike_01–04 spike phases (archives — reference only)
 - Portal / API / SQL / LangGraph / RAG / MCP (Sprint 1+)
-- Editing `src/Spike_01/` / `src/Spike_02/` / `src/Spike_03/`
+- Editing `src/Spike_01/` / `src/Spike_02/` / `src/Spike_03/` / `src/Spike_04/` for product features (copy from Spike_04 into `Athlon.*` instead)
 
-## Suggested phases (draft — refine after Spike_04)
+## Suggested phases (draft — refine at P0)
 
 | Phase | Intent | Exit sketch |
 |-------|--------|-------------|
@@ -43,21 +42,20 @@ Athlon.Contracts / Artifacts / Llm / Agents / Workflow
 | Deterministic Publisher/Applier for disk/build | Don’t pretend build/apply is an LLM job |
 | Secrets via `appsettings.Local.json` — never commit keys | Safety |
 
-## Fresh session starter (only after Spike_04 ✅)
+## Fresh session starter
 
 ```text
-Read ROADMAP.md and PromotionPlan.md.
-Spikes are complete — do not reopen spike phases.
-Promote Athlon.Spike.* into Athlon.* (prefer Spike_04 as input).
-Keep spike folders intact as reference until promotion tests pass.
-Do not modify src/Spike_01–03. No portal/API until promotion is done.
+Spike_04 is complete (Phases 0–6). Read ROADMAP.md and PromotionPlan.md.
+Spike_01–04 are frozen archives — do not modify them for promotion features.
+Start promotion of proven Spike_04 code → Athlon.* per PromotionPlan.md.
+No portal/API until after promotion.
 ```
 
 ## Checklist tracker
 
 | Phase | Status |
 |-------|--------|
-| P0 — Inventory & mapping | ⬜ Blocked on Spike_04 |
+| P0 — Inventory & mapping | ⬜ Not started ← **next** |
 | P1 — Athlon.* projects + rename | ⬜ Not started |
 | P2 — Tests / thesis green | ⬜ Not started |
 | P3 — Host / smoke path | ⬜ Not started |

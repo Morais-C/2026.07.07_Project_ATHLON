@@ -318,7 +318,7 @@ public sealed record PatchPackagePayload(
 | 3 — Applier (apply + build) | ✅ Complete |
 | 4 — Chain + host UX (fail fast) | ✅ Complete |
 | 5 — Thesis + E2E tests | ✅ Complete |
-| 6 — Demo | ⬜ Not started ← **next** |
+| 6 — Demo | ✅ Complete |
 
 ---
 

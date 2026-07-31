@@ -13,8 +13,8 @@
 | **Spike_01 — Artifact Slice** | ✅ Complete (2026-07-15) — **frozen archive** |
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
-| **Spike_04 — Change existing console via artifacts** | 🔄 In progress — Phase 0–5 ✅; **Phase 6** next — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
-| **Promotion to `Athlon.*`** | ⬜ After Spike_04 — [PromotionPlan.md](./PromotionPlan.md) |
+| **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
+| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
 Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
@@ -150,7 +150,7 @@ Success: demo published `Publish/{workflowId}/` with `buildSucceeded: true`; fun
 
 ---
 
-## Spike_04 (in progress) — summary
+## Spike_04 (complete) — summary
 
 | Item | Detail |
 |------|--------|
@@ -158,14 +158,16 @@ Success: demo published `Publish/{workflowId}/` with `buildSucceeded: true`; fun
 | **Chain** | Fixture + ChangeRequest → **Analyst** → CodeContext → **Planner** → **Coder** → **Applier** (apply + build) |
 | **Host** | Minimal + real LLM; **fail fast** (no Enter pauses) |
 | **Baseline** | Full copy of Spike_03 under [`src/Spike_04/`](./src/Spike_04/) + checked-in fixture |
-| **Phase progress** | Phase 0–5 ✅ · **next Phase 6** — [Checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
+| **Phase progress** | All phases ✅ — [Checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
 | **Docs** | [README](./src/Spike_04/README.md) · [ImplementationPlan](./src/Spike_04/ImplementationPlan.md) · [AGENTS](./src/Spike_04/AGENTS.md) |
+
+Success: demo applies ChangeRequest onto fixture; Applier writes `Publish/{workflowId}/` with `buildSucceeded: true`.
 
 ---
 
 ## After Spike_04 — promotion & Sprint 1
 
-Plan: **[PromotionPlan.md](./PromotionPlan.md)** (deferred until Spike_04 succeeds).
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** (Spike_04 proven — promotion is next).
 
 ```text
 Athlon.Spike.* (from Spike_04 when proven)
@@ -178,10 +180,8 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Read ROADMAP.md and src/Spike_04/AGENTS.md.
-Spike_01–03 are complete/frozen — do not modify them.
-Spike_04 Phases 0–5 are done. Continue at Phase 6 per src/Spike_04/ImplementationPlan.md
-(checklist §9). PatchPackage = unified diffs; Applier build-only; fail fast (no Enter pauses).
-One phase at a time; update all docs on phase end, so a new session can start (with fresh context to save tokens).
-Promotion is deferred until Spike_04 succeeds. No portal/API yet.
+Spike_04 is complete (Phases 0–6). Read ROADMAP.md and PromotionPlan.md.
+Spike_01–04 are frozen archives — do not modify them for promotion features.
+Start promotion of proven Spike_04 code → Athlon.* per PromotionPlan.md.
+No portal/API until after promotion.
 ```

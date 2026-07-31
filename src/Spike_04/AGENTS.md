@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes (checklist, AGENTS current state, fresh-session starter) so the next session can start with minimal context.
 5. **Do not modify `src/Spike_01/`, `src/Spike_02/`, or `src/Spike_03/`.** Those stay archives.
 
-**Current state:** Phase 5 complete — next is **Phase 6 (demo & success criteria)**.
+**Current state:** Spike_04 **complete** (Phases 0–6 ✅). Spike is **frozen** — do not add features here. Next: promotion per [PromotionPlan.md](../../PromotionPlan.md).
 
 ## Scope rules
 
@@ -54,12 +54,10 @@ Instructions for Cursor (or any implementer) working on this spike.
 ## Suggested opening prompt
 
 ```text
-Read ROADMAP.md and src/Spike_04/AGENTS.md.
-Spike_01–03 are complete/frozen — do not modify them.
-Spike_04 Phases 0–5 are done. Continue at Phase 6 per src/Spike_04/ImplementationPlan.md
-(checklist §9). PatchPackage = unified diffs; Applier build-only; fail fast (no Enter pauses).
-One phase at a time; update all docs on phase end, so a new session can start (with fresh context to save tokens).
-Promotion is deferred until Spike_04 succeeds. No portal/API yet.
+Spike_04 is complete (Phases 0–6). Read ROADMAP.md and PromotionPlan.md.
+Spike_01–04 are frozen archives — do not modify them for promotion features.
+Start promotion of proven Spike_04 code → Athlon.* per PromotionPlan.md.
+No portal/API until after promotion.
 ```
 
 ## Definition of done

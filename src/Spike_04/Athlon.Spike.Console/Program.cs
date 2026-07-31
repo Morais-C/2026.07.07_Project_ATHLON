@@ -11,12 +11,23 @@ using Athlon.Spike.Workflow;
 
 try
 {
-    // 1) Sample change request against fixtures/echo-v1 (in bounds)
+    // 1) Sample change request against fixtures/echo-v1 (in bounds).
+    // Swap KindFeature ↔ KindBugfix samples as needed for demos.
     var changeRequest = new ChangeRequestPayload(
         Kind: ChangeRequest.KindFeature,
         Title: "Uppercase echo",
         Description: "Change the echo console so it prints the input in UPPERCASE.",
         SuspectedPaths: ["Echo/Program.cs"]);
+
+    // Bugfix alternative (trim whitespace):
+    // var changeRequest = new ChangeRequestPayload(
+    //     Kind: ChangeRequest.KindBugfix,
+    //     Title: "Trim echo input",
+    //     Description: "Echo prints leading/trailing whitespace; it should trim before printing.",
+    //     StepsToReproduce: "Type '  hi  ' and press Enter.",
+    //     ExpectedBehavior: "Console prints: hi",
+    //     ActualBehavior: "Console prints:   hi  (spaces preserved)",
+    //     SuspectedPaths: ["Echo/Program.cs"]);
 
     const string fixtureId = "echo-v1";
     const string fixtureRoot = "fixtures/echo-v1";
