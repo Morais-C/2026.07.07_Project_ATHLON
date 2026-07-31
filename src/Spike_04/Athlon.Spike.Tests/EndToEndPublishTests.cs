@@ -8,90 +8,135 @@ using Athlon.Spike.Workflow;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Spike_03 thesis end to end: raw need → Analyst → Planner → Coder → Publisher,
-/// ending in a Publish folder that compiles. Functional run checks belong to a future Tester agent (L10).
+/// Spike_04 thesis end to end: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier,
+/// ending in a Publish folder that compiles. Functional run checks belong to a future Tester agent (L11).
 /// </summary>
 public class EndToEndPublishTests
 {
-    private const string ValidStructuredRequirementJson = """
+    private const string ValidStructuredChangeJson = """
         {
-          "title": "Console Greeter",
-          "actors": ["User"],
-          "goal": "Print a greeting for a name typed by the user",
-          "acceptanceCriteriaDraft": ["Prints a greeting containing the typed name"],
-          "constraints": ["Single .NET 9 console app"],
-          "priority": "Low"
+          "kind": "feature",
+          "title": "Uppercase echo",
+          "summary": "Echo the typed line in uppercase",
+          "acceptanceCriteria": ["Prints the input transformed to UPPERCASE"],
+          "constraints": ["Single .NET 9 console", "Keep read → process → print"],
+          "priority": "Medium",
+          "suspectedPaths": ["Echo/Program.cs"]
         }
         """;
 
     private const string ValidImplementationPlanJson = """
         {
-          "title": "Console Greeter",
-          "summary": "Read a name, print a greeting",
+          "title": "Uppercase echo",
+          "summary": "Echo typed line in UPPERCASE",
           "tasks": [
             {
               "id": "T1",
-              "description": "Read a line and print a greeting",
+              "description": "Change Program.cs to uppercase the input before printing",
               "estimate": "30m"
             }
           ],
-          "acceptanceCriteria": ["Prints a greeting containing the typed name"],
-          "technicalNotes": "net9.0 console, no NuGet packages"
+          "acceptanceCriteria": [
+            "Prints the input transformed to UPPERCASE"
+          ],
+          "technicalNotes": "Minimal edit to Echo/Program.cs",
+          "intendedPaths": ["Echo/Program.cs"]
         }
         """;
 
-    [Fact(Skip = "Spike_04 Phase 4–5: full change chain → Applier Publish E2E.")]
-    public async Task Business_need_reaches_a_Publish_folder_that_builds()
+    /// <summary>
+    /// Exact unified diff against checked-in fixtures/echo-v1/Echo/Program.cs.
+    /// </summary>
+    private const string UppercaseEchoDiff =
+        """
+        --- a/Echo/Program.cs
+        +++ b/Echo/Program.cs
+        @@ -1,4 +1,4 @@
+         // Spike_04 fixture baseline: read a line, echo it back (read → process → print).
+         Console.Write("Enter text: ");
+         var input = Console.ReadLine() ?? string.Empty;
+        -Console.WriteLine(input);
+        +Console.WriteLine(input.ToUpperInvariant());
+        """;
+
+    [Fact]
+    public async Task ChangeRequest_reaches_a_Publish_folder_that_builds()
     {
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
         var store = new FileArtifactStore(artifactRoot);
         var runner = new WorkflowRunner(store, artifactRoot: artifactRoot);
+        var builder = new CodeContextBuilder(store);
 
         var llm = new MockLLMProvider(
-            new MockResponse(Content: ValidStructuredRequirementJson),
+            new MockResponse(Content: ValidStructuredChangeJson),
             new MockResponse(Content: ValidImplementationPlanJson),
-            new MockResponse(Content: GreeterCodePackageJson()));
+            new MockResponse(Content: UppercasePatchPackageJson()));
 
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredRequirementSchema);
+            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
         var planner = new PlannerAgent(
             llm, store, SpikeTestPaths.PlannerPromptTemplate, SpikeTestPaths.ImplementationPlanSchema);
         var coder = new CoderAgent(
-            llm, store, SpikeTestPaths.CoderPromptTemplate, SpikeTestPaths.CodePackageSchema);
-        var publisher = new Publisher(store, publishRoot: publishRoot);
+            llm, store, SpikeTestPaths.CoderPromptTemplate, SpikeTestPaths.PatchPackageSchema);
+        var applier = new Applier(store, publishRoot: publishRoot);
 
         try
         {
-            var (instance, inputArtifact) = await runner.StartAndSaveInputAsync(
-                "BusinessNeedToPublish",
-                "I want a console app that greets a person by the name they type",
+            var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
+                "ChangeRequestToPublish",
+                new ChangeRequestPayload(
+                    Kind: ChangeRequest.KindFeature,
+                    Title: "Uppercase echo",
+                    Description: "Print input in UPPERCASE",
+                    SuspectedPaths: ["Echo/Program.cs"]),
                 CancellationToken.None);
 
             var structured = (await analyst.ExecuteAsync(
                 new AgentExecutionContext(instance.Id, inputArtifact.Id))).OutputArtifact;
+
+            var codeContext = await builder.BuildAndPublishAsync(
+                instance.Id,
+                fixtureId: "echo-v1",
+                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                entryProject: "Echo/Echo.csproj");
+
+            var bundle = await runner.SaveChangeBundleAsync(
+                instance.Id, structured.Id, codeContext.Id, CancellationToken.None);
+
             var plan = (await planner.ExecuteAsync(
-                new AgentExecutionContext(instance.Id, structured.Id))).OutputArtifact;
-            var codePackage = (await coder.ExecuteAsync(
+                new AgentExecutionContext(instance.Id, bundle.Id))).OutputArtifact;
+            var patchPackage = (await coder.ExecuteAsync(
                 new AgentExecutionContext(instance.Id, plan.Id))).OutputArtifact;
 
-            Assert.Equal(ArtifactTypes.StructuredRequirement, structured.Type);
+            Assert.Equal(ArtifactTypes.StructuredChange, structured.Type);
+            Assert.Equal(ArtifactTypes.CodeContext, codeContext.Type);
+            Assert.Equal(ArtifactTypes.ChangeBundle, bundle.Type);
             Assert.Equal(ArtifactTypes.ImplementationPlan, plan.Type);
-            Assert.Equal(ArtifactTypes.CodePackage, codePackage.Type);
+            Assert.Equal(ArtifactTypes.PatchPackage, patchPackage.Type);
 
-            var result = await publisher.PublishAsync(instance.Id, codePackage.Id);
+            var result = await applier.ApplyAsync(
+                instance.Id,
+                patchPackage.Id,
+                expectedFixtureId: "echo-v1",
+                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot);
 
+            Assert.True(result.ApplySucceeded, result.FailureMessage);
             Assert.True(result.BuildSucceeded, result.BuildOutput);
             Assert.True(result.Succeeded, result.FailureMessage);
             Assert.Equal(
                 Path.TrimEndingDirectorySeparator(Path.GetFullPath(Path.Combine(publishRoot, instance.Id.ToString("D")))),
                 Path.TrimEndingDirectorySeparator(Path.GetFullPath(result.PublishDirectory)));
-            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "Greeter", "Greeter.csproj")));
-            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "Greeter", "Program.cs")));
+            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "Echo", "Echo.csproj")));
+            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "Echo", "Program.cs")));
+
+            var publishedProgram = await File.ReadAllTextAsync(
+                Path.Combine(result.PublishDirectory, "Echo", "Program.cs"));
+            Assert.Contains("ToUpperInvariant()", publishedProgram, StringComparison.Ordinal);
 
             var manifest = await File.ReadAllTextAsync(result.ManifestPath);
             Assert.Contains("deferred-to-tester-agent", manifest, StringComparison.Ordinal);
-            Assert.Contains(codePackage.Id.ToString("D"), manifest, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains(patchPackage.Id.ToString("D"), manifest, StringComparison.OrdinalIgnoreCase);
         }
         finally
         {
@@ -100,8 +145,8 @@ public class EndToEndPublishTests
         }
     }
 
-    [Fact(Skip = "Spike_04 Phase 4–5: OOB abort covered by AnalystAgentTests / Phase1ChangeChainTests.")]
-    public async Task Out_of_bounds_need_aborts_before_any_CodePackage_or_Publish_folder()
+    [Fact]
+    public async Task Out_of_bounds_ChangeRequest_aborts_before_any_PatchPackage_or_Publish_folder()
     {
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
@@ -116,24 +161,27 @@ public class EndToEndPublishTests
             """));
 
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredRequirementSchema);
+            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
 
         try
         {
-            var (instance, inputArtifact) = await runner.StartAndSaveInputAsync(
-                "BusinessNeedToPublish",
-                "Build a multi-tenant SaaS web portal with SQL and OAuth",
+            var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
+                "ChangeRequestToPublish",
+                new ChangeRequestPayload(
+                    Kind: ChangeRequest.KindFeature,
+                    Title: "SaaS portal",
+                    Description: "Build a multi-tenant SaaS web portal with SQL and OAuth"),
                 CancellationToken.None);
 
             await Assert.ThrowsAsync<OutOfBoundsException>(
                 () => analyst.ExecuteAsync(new AgentExecutionContext(instance.Id, inputArtifact.Id)));
 
-            // Chain stops at the Analyst: only the raw need was ever published
+            // Chain stops at the Analyst: only the ChangeRequest was ever published
             var artifactFiles = Directory.GetFiles(artifactRoot, "*.json", SearchOption.AllDirectories);
             Assert.Single(artifactFiles);
             var onlyArtifact = await store.LoadAsync(inputArtifact.Id);
             Assert.NotNull(onlyArtifact);
-            Assert.Equal(ArtifactTypes.BusinessRequirement, onlyArtifact.Type);
+            Assert.Equal(ArtifactTypes.ChangeRequest, onlyArtifact.Type);
 
             Assert.False(Directory.Exists(Path.Combine(publishRoot, instance.Id.ToString("D"))));
         }
@@ -144,35 +192,63 @@ public class EndToEndPublishTests
         }
     }
 
-    // Built as JSON from the payload record so the C# source below stays readable
-    private static string GreeterCodePackageJson()
+    [Fact]
+    public async Task Over_cap_CodeContext_aborts_without_Publish_folder()
     {
-        var payload = new CodePackagePayload(
-            Files:
+        var artifactRoot = CreateTempDir("artifacts");
+        var publishRoot = CreateTempDir("publish");
+        var store = new FileArtifactStore(artifactRoot);
+        var runner = new WorkflowRunner(store, artifactRoot: artifactRoot);
+        // echo-v1 has 2 source files — cap at 1 to force abort
+        var builder = new CodeContextBuilder(store, maxFilesAllowed: 1);
+
+        var llm = new MockLLMProvider(new MockResponse(Content: ValidStructuredChangeJson));
+        var analyst = new AnalystAgent(
+            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
+
+        try
+        {
+            var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
+                "ChangeRequestToPublish",
+                new ChangeRequestPayload(
+                    Kind: ChangeRequest.KindFeature,
+                    Title: "Uppercase echo",
+                    Description: "Print input in UPPERCASE"),
+                CancellationToken.None);
+
+            await analyst.ExecuteAsync(new AgentExecutionContext(instance.Id, inputArtifact.Id));
+
+            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                builder.BuildAndPublishAsync(
+                    instance.Id,
+                    fixtureId: "echo-v1",
+                    fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                    entryProject: "Echo/Echo.csproj"));
+
+            Assert.Contains("file cap", ex.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.False(Directory.Exists(Path.Combine(publishRoot, instance.Id.ToString("D"))));
+        }
+        finally
+        {
+            Cleanup(artifactRoot);
+            Cleanup(publishRoot);
+        }
+    }
+
+    private static string UppercasePatchPackageJson()
+    {
+        var payload = new PatchPackagePayload(
+            FixtureId: "echo-v1",
+            Changes:
             [
-                new CodePackageFile(
-                    "Greeter/Greeter.csproj",
-                    """
-                    <Project Sdk="Microsoft.NET.Sdk">
-                      <PropertyGroup>
-                        <OutputType>Exe</OutputType>
-                        <TargetFramework>net9.0</TargetFramework>
-                        <ImplicitUsings>enable</ImplicitUsings>
-                        <Nullable>enable</Nullable>
-                      </PropertyGroup>
-                    </Project>
-                    """),
-                new CodePackageFile(
-                    "Greeter/Program.cs",
-                    """
-                    Console.Write("Name: ");
-                    var name = Console.ReadLine();
-                    Console.WriteLine($"Hello, {(string.IsNullOrWhiteSpace(name) ? "stranger" : name)}!");
-                    """)
+                new PatchFileChange(
+                    "Echo/Program.cs",
+                    PatchPackage.OperationModify,
+                    UppercaseEchoDiff.Replace("\r\n", "\n"))
             ],
-            EntryProject: "Greeter/Greeter.csproj",
+            EntryProject: "Echo/Echo.csproj",
             TargetFramework: "net9.0",
-            ExpectedOutputContains: "Hello,");
+            Summary: "Uppercase echoed line");
 
         return JsonSerializer.Serialize(
             payload,

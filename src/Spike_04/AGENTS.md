@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes (checklist, AGENTS current state, fresh-session starter) so the next session can start with minimal context.
 5. **Do not modify `src/Spike_01/`, `src/Spike_02/`, or `src/Spike_03/`.** Those stay archives.
 
-**Current state:** Phase 4 complete — next is **Phase 5 (thesis + E2E CI tests)**.
+**Current state:** Phase 5 complete — next is **Phase 6 (demo & success criteria)**.
 
 ## Scope rules
 
@@ -56,7 +56,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 ```text
 Read ROADMAP.md and src/Spike_04/AGENTS.md.
 Spike_01–03 are complete/frozen — do not modify them.
-Spike_04 Phases 0–4 are done. Continue at Phase 5 per src/Spike_04/ImplementationPlan.md
+Spike_04 Phases 0–5 are done. Continue at Phase 6 per src/Spike_04/ImplementationPlan.md
 (checklist §9). PatchPackage = unified diffs; Applier build-only; fail fast (no Enter pauses).
 One phase at a time; update all docs on phase end, so a new session can start (with fresh context to save tokens).
 Promotion is deferred until Spike_04 succeeds. No portal/API yet.
