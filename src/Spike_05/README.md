@@ -31,10 +31,11 @@ Load **`archetypes/console-v1/`** → same ChangeRequest chain → same `echo-v1
 - [x] Host runs with `archetypeId = console-v1` only (config or manifest) *(Phase 3 ✅)*
 - [x] Regression: Spike_04-equivalent E2E + thesis tests green via pack *(Phase 4 ✅)*
 - [x] Demo ChangeRequests live in pack (`demos/`), not only in `Program.cs`
+- [x] Thesis: LoadAsync-only handoff + agent prompt/schema paths from pack manifest *(Phase 5 ✅)*
 
-## Archetype pack layout (Phase 4)
+## Archetype pack layout (Phase 5)
 
-Fork includes `archetypes/console-v1/` with manifest and all 10 components. Host and tests load the pack via `ArchetypePackLoader`; agents and CodeContextBuilder resolve paths/caps from the pack. Spike-root `prompts/` and `schemas/` **removed** (pack is sole source).
+Fork includes `archetypes/console-v1/` with manifest and all 10 components. Host and tests load the pack via `ArchetypePackLoader`; agents and CodeContextBuilder resolve paths/caps from the pack. Spike-root `prompts/` and `schemas/` **removed** (pack is sole source). Phase 5 proves manifest fields drive resolved agent paths (including switch-path thesis).
 
 ```text
 src/Spike_05/

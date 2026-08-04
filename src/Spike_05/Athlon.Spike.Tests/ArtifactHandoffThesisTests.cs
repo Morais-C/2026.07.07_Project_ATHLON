@@ -7,7 +7,8 @@ using Athlon.Spike.Workflow;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Thesis: Planner and Coder prompts are built from LoadAsync(id) only — not from prior chat text.
+/// Phase 5 thesis (unchanged intent): Planner and Coder prompts are built from LoadAsync(id) only —
+/// not from prior chat text. Pack path wiring is covered by <see cref="PackResolutionThesisTests"/>.
 /// </summary>
 public class ArtifactHandoffThesisTests
 {

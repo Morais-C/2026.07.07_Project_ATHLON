@@ -177,11 +177,11 @@ Pin fixture path in Phase 0: keep `fixtures/echo-v1/` at spike root (Spike_04 la
 
 | Task | Output |
 |------|--------|
-| Thesis tests unchanged in intent | Handoff by artifact id |
-| Test: agent prompt paths come from pack manifest | Not from hardcoded constants |
-| Test: switching manifest path changes prompt file used | Optional |
+| Thesis tests unchanged in intent | Handoff by artifact id (`ArtifactHandoffThesisTests`) |
+| Test: agent prompt paths come from pack manifest | `PackResolutionThesisTests` — paths match `agents.*` fields |
+| Test: switching manifest path changes prompt file used | Included — rewrite Analyst prompt in temp pack → new file resolved |
 
-**Exit:** `dotnet test` green including new pack tests.
+**Exit:** `dotnet test` green including new pack tests. *(✅ 2026-08-04)*
 
 ---
 
@@ -242,8 +242,8 @@ Pin fixture path in Phase 0: keep `fixtures/echo-v1/` at spike root (Spike_04 la
 | 2 — ArchetypePack loader | ✅ Complete (2026-07-31) |
 | 3 — Wire host + agents | ✅ Complete (2026-07-31) |
 | 4 — Regression + fail fast | ✅ Complete (2026-08-04) |
-| 5 — Thesis + pack tests | ⬜ Not started ← **next** |
-| 6 — Demo & docs | ⬜ Not started |
+| 5 — Thesis + pack tests | ✅ Complete (2026-08-04) |
+| 6 — Demo & docs | ⬜ Not started ← **next** |
 
 ---
 

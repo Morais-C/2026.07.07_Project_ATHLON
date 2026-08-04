@@ -16,9 +16,9 @@ Start at **[ROADMAP.md](./ROADMAP.md)** (status + fresh session starter).
 ## Fresh session starter
 
 ```text
-Spike_05 Phase 4 complete (regression via pack + fail fast). Phase 5 next: thesis + pack tests.
+Spike_05 Phase 5 complete (LoadAsync thesis + pack-manifest path resolution). Phase 6 next: demo & docs.
 Read ROADMAP.md and src/Spike_05/AGENTS.md + ImplementationPlan.md.
 Spike_01–04 are frozen — do not modify them. Work only in src/Spike_05/.
 No rest-api-v1 (Spike_06), no promotion, no portal/API until after Spike_06.
-Start Spike_05 Phase 5 per ImplementationPlan.md.
+Start Spike_05 Phase 6 per ImplementationPlan.md.
 ```
