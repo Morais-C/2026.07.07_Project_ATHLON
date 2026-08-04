@@ -29,24 +29,23 @@ Load **`archetypes/console-v1/`** → same ChangeRequest chain → same `echo-v1
 - [x] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) *(Phase 1 ✅)*
 - [x] `ArchetypePack` loader resolves prompts, schemas, bounds, proof pipeline by `archetypeId` *(Phase 2 ✅)*
 - [x] Host runs with `archetypeId = console-v1` only (config or manifest) *(Phase 3 ✅)*
-- [ ] Regression: Spike_04-equivalent E2E + thesis tests green via pack
+- [x] Regression: Spike_04-equivalent E2E + thesis tests green via pack *(Phase 4 ✅)*
 - [x] Demo ChangeRequests live in pack (`demos/`), not only in `Program.cs`
 
-## Archetype pack layout (Phase 1)
+## Archetype pack layout (Phase 4)
 
-Fork includes `archetypes/console-v1/` with manifest and all 10 components populated. **Phase 3:** host loads pack via `ArchetypePackLoader`; agents and CodeContextBuilder resolve paths/caps from the pack. Spike-root `prompts/` and `schemas/` remain as deprecated copies until Phase 4 cleanup.
+Fork includes `archetypes/console-v1/` with manifest and all 10 components. Host and tests load the pack via `ArchetypePackLoader`; agents and CodeContextBuilder resolve paths/caps from the pack. Spike-root `prompts/` and `schemas/` **removed** (pack is sole source).
 
 ```text
 src/Spike_05/
   Spike_05.sln
   fixtures/echo-v1/              # baseline (component 9)
-  prompts/ schemas/              # Spike_04 copy — deprecated; runtime uses pack (Phase 3+)
   archetypes/console-v1/
     archetype.json               # component 1 — identity, paths, caps
     bounds.md                    # component 2
     code-context.md              # component 3
     change-request.md            # component 4
-    schemas/ prompts/            # components 5–6 (migrated from Spike_04)
+    schemas/ prompts/            # components 5–6 (sole runtime source)
     patch-apply.md               # component 7
     proof/pipeline.json          # component 8
     demos/change-requests.json   # component 10

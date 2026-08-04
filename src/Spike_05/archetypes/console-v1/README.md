@@ -1,6 +1,6 @@
 # console-v1 — Athlon Solution Archetype pack
 
-> **Status:** Phase 1 complete (Spike_05) — all 10 components populated. Loader wiring in Phases 2–3.
+> **Status:** Phase 4 complete (Spike_05) — pack is the sole runtime source for prompts/schemas; regression green via pack loader.
 
 Formal pack for the `console-v1` archetype. See [Solution Archetype definition](../../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md).
 
@@ -34,7 +34,7 @@ Default fixture: **`echo-v1`** at `src/Spike_05/fixtures/echo-v1/` (referenced f
 
 ## Runtime note
 
-Until Phase 3, spike-root `prompts/` and `schemas/` remain the **runtime** source (Spike_04 parity). This pack is the **source of truth** for archetype content after Phase 1.
+**Phase 4:** host + tests resolve prompts/schemas **only** from this pack via `ArchetypePackLoader`. Spike-root `prompts/` and `schemas/` duplicates were removed.
 
 ## Demo ChangeRequests
 
@@ -43,4 +43,4 @@ Until Phase 3, spike-root `prompts/` and `schemas/` remain the **runtime** sourc
 | `uppercase-echo` | feature | Uppercase echo |
 | `trim-echo` | bugfix | Trim echo input |
 
-Host may load from `demos/change-requests.json` starting Phase 4; Phase 1–3 may still hardcode equivalent payloads in `Program.cs`.
+Host may still hardcode the active demo in `Program.cs`; catalog lives here for Spike_05/06 handoff.

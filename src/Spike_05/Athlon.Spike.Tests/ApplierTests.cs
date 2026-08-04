@@ -5,11 +5,14 @@ using Athlon.Spike.Workflow;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Phase 3 exit: hand-written PatchPackage on echo-v1 fixture → Applier → build.
+/// Hand-written PatchPackage on console-v1 pack baseline (echo-v1) → Applier → build.
 /// </summary>
 public class ApplierTests
 {
-    private const string FixtureId = "echo-v1";
+    private static string FixtureId => SpikeTestPaths.ConsoleV1Pack.Baseline.FixtureId;
+
+    private static string FixtureRoot => SpikeTestPaths.ConsoleV1Pack.Baseline.FixtureRoot;
+
     private const string EntryProject = "Echo/Echo.csproj";
 
     /// <summary>
@@ -70,7 +73,7 @@ public class ApplierTests
                 workflowId,
                 patch.Id,
                 expectedFixtureId: FixtureId,
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot);
+                fixtureRoot: FixtureRoot);
 
             Assert.True(result.ApplySucceeded, result.FailureMessage);
             Assert.True(result.BuildSucceeded, result.BuildOutput);
@@ -89,7 +92,7 @@ public class ApplierTests
 
             // Fixture baseline must remain untouched
             var fixtureProgram = await File.ReadAllTextAsync(
-                Path.Combine(SpikeTestPaths.EchoV1FixtureRoot, "Echo", "Program.cs"));
+                Path.Combine(FixtureRoot, "Echo", "Program.cs"));
             Assert.DoesNotContain("ToUpperInvariant()", fixtureProgram, StringComparison.Ordinal);
 
             var manifest = await File.ReadAllTextAsync(result.ManifestPath);
@@ -122,7 +125,7 @@ public class ApplierTests
                     workflowId,
                     patch.Id,
                     expectedFixtureId: FixtureId,
-                    fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot));
+                    fixtureRoot: FixtureRoot));
 
             Assert.Contains("already exists", ex.Message, StringComparison.OrdinalIgnoreCase);
         }
@@ -164,7 +167,7 @@ public class ApplierTests
                 workflowId,
                 patch.Id,
                 expectedFixtureId: FixtureId,
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot);
+                fixtureRoot: FixtureRoot);
 
             Assert.False(result.ApplySucceeded);
             Assert.False(result.BuildSucceeded);
@@ -202,7 +205,7 @@ public class ApplierTests
                     workflowId,
                     patch.Id,
                     expectedFixtureId: "other-fixture",
-                    fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot));
+                    fixtureRoot: FixtureRoot));
 
             Assert.Contains("fixtureId", ex.Message, StringComparison.OrdinalIgnoreCase);
             Assert.False(Directory.Exists(Path.Combine(publishRoot, workflowId.ToString("D"))));
@@ -263,13 +266,13 @@ public class ApplierTests
                 createWorkflowId,
                 createPatch.Id,
                 expectedFixtureId: FixtureId,
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot);
+                fixtureRoot: FixtureRoot);
 
             Assert.True(createResult.Succeeded, createResult.FailureMessage ?? createResult.BuildOutput);
             Assert.True(File.Exists(Path.Combine(createResult.PublishDirectory, "Echo", "Notes.txt")));
 
-            // Temp fixture = echo-v1 + Notes.txt (no prior apply-manifest).
-            CopyDirectory(SpikeTestPaths.EchoV1FixtureRoot, fixtureWithNote);
+            // Temp fixture = pack baseline + Notes.txt (no prior apply-manifest).
+            CopyDirectory(FixtureRoot, fixtureWithNote);
             Directory.CreateDirectory(Path.Combine(fixtureWithNote, "Echo"));
             await File.WriteAllTextAsync(
                 Path.Combine(fixtureWithNote, "Echo", "Notes.txt"),

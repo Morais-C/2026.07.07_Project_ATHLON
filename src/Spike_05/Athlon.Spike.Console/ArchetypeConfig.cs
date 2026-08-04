@@ -1,9 +1,11 @@
+using Athlon.Spike.Contracts;
 using Microsoft.Extensions.Configuration;
 
 namespace Athlon.Spike.ConsoleHost;
 
 /// <summary>
 /// Loads Athlon host settings (archetype id, optional spike root) from appsettings.
+/// Missing/blank archetype id fails fast via <see cref="ArchetypePackException"/>.
 /// </summary>
 internal static class ArchetypeConfig
 {
@@ -16,12 +18,7 @@ internal static class ArchetypeConfig
             .AddEnvironmentVariables()
             .Build();
 
-        var archetypeId = config["Athlon:ArchetypeId"];
-        if (string.IsNullOrWhiteSpace(archetypeId))
-        {
-            throw new InvalidOperationException(
-                "Set Athlon:ArchetypeId in appsettings.json (e.g. \"console-v1\").");
-        }
+        var archetypeId = ArchetypePackLoader.RequireArchetypeId(config["Athlon:ArchetypeId"]);
 
         var spikeRoot = config["Athlon:SpikeRoot"];
         if (string.IsNullOrWhiteSpace(spikeRoot))
@@ -29,6 +26,6 @@ internal static class ArchetypeConfig
             spikeRoot = Directory.GetCurrentDirectory();
         }
 
-        return (archetypeId.Trim(), Path.GetFullPath(spikeRoot));
+        return (archetypeId, Path.GetFullPath(spikeRoot));
     }
 }

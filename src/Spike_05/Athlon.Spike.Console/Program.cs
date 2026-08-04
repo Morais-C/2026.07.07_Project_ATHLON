@@ -12,10 +12,10 @@ using Athlon.Spike.Workflow;
 
 try
 {
-    var (archetypeId, spikeRoot) = ArchetypeConfig.Load();
     ArchetypePack pack;
     try
     {
+        var (archetypeId, spikeRoot) = ArchetypeConfig.Load();
         pack = ArchetypePackLoader.Load(spikeRoot, archetypeId);
     }
     catch (ArchetypePackException ex)

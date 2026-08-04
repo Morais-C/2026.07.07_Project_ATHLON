@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes.
 5. **Do not modify `src/Spike_01/` … `src/Spike_04/`.** Those stay frozen archives.
 
-**Current state:** Phase 3 ✅ complete — next is **Phase 4** (regression + fail fast).
+**Current state:** Phase 4 ✅ complete — next is **Phase 5** (thesis + pack tests).
 
 ## Scope rules
 
@@ -33,8 +33,8 @@ Instructions for Cursor (or any implementer) working on this spike.
 
 ```text
 Read ROADMAP.md and src/Spike_05/AGENTS.md.
-Spike_01–04 are frozen. Start Spike_05 Phase 4 per src/Spike_05/ImplementationPlan.md.
-Goal: port E2E/thesis tests to pack paths; fail fast on bad archetypeId.
+Spike_01–04 are frozen. Start Spike_05 Phase 5 per src/Spike_05/ImplementationPlan.md.
+Goal: thesis tests + prove agent prompt paths come from pack manifest.
 No rest-api-v1. No promotion. One phase at a time; update docs on phase end.
 ```
 

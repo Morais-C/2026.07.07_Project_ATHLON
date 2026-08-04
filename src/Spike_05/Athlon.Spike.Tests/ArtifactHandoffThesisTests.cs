@@ -75,10 +75,11 @@ public class ArtifactHandoffThesisTests
     [Fact]
     public async Task Planner_prompt_comes_from_store_not_Analyst_raw_completion()
     {
+        var pack = SpikeTestPaths.ConsoleV1Pack;
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
         var runner = new WorkflowRunner(store, artifactRoot: root);
-        var builder = new CodeContextBuilder(store);
+        var builder = CodeContextBuilder.FromArchetypePack(store, pack);
 
         // Analyst mock: chat marker + valid JSON. Validator publishes JSON only (marker dropped).
         var analystRawCompletion =
@@ -92,9 +93,9 @@ public class ArtifactHandoffThesisTests
             new MockResponse(Content: ValidImplementationPlanJson));
 
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
+            llm, store, pack.Analyst.PromptPath, pack.Analyst.OutputSchemaPath);
         var planner = new PlannerAgent(
-            llm, store, SpikeTestPaths.PlannerPromptTemplate, SpikeTestPaths.ImplementationPlanSchema);
+            llm, store, pack.Planner.PromptPath, pack.Planner.OutputSchemaPath);
 
         try
         {
@@ -117,8 +118,8 @@ public class ArtifactHandoffThesisTests
 
             var codeContext = await builder.BuildAndPublishAsync(
                 instance.Id,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                fixtureId: pack.Baseline.FixtureId,
+                fixtureRoot: pack.Baseline.FixtureRoot,
                 entryProject: "Echo/Echo.csproj");
 
             var bundle = await runner.SaveChangeBundleAsync(
@@ -151,10 +152,11 @@ public class ArtifactHandoffThesisTests
     [Fact]
     public async Task Coder_prompt_comes_from_store_not_Planner_raw_completion()
     {
+        var pack = SpikeTestPaths.ConsoleV1Pack;
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
         var runner = new WorkflowRunner(store, artifactRoot: root);
-        var builder = new CodeContextBuilder(store);
+        var builder = CodeContextBuilder.FromArchetypePack(store, pack);
 
         // Each LLM step returns chat noise + valid JSON; only the JSON is published.
         var analystRawCompletion =
@@ -175,11 +177,11 @@ public class ArtifactHandoffThesisTests
             new MockResponse(Content: ValidPatchPackageJson));
 
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
+            llm, store, pack.Analyst.PromptPath, pack.Analyst.OutputSchemaPath);
         var planner = new PlannerAgent(
-            llm, store, SpikeTestPaths.PlannerPromptTemplate, SpikeTestPaths.ImplementationPlanSchema);
+            llm, store, pack.Planner.PromptPath, pack.Planner.OutputSchemaPath);
         var coder = new CoderAgent(
-            llm, store, SpikeTestPaths.CoderPromptTemplate, SpikeTestPaths.PatchPackageSchema);
+            llm, store, pack.Coder.PromptPath, pack.Coder.OutputSchemaPath);
 
         try
         {
@@ -196,8 +198,8 @@ public class ArtifactHandoffThesisTests
                 new AgentExecutionContext(instance.Id, inputArtifact.Id));
             var codeContext = await builder.BuildAndPublishAsync(
                 instance.Id,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                fixtureId: pack.Baseline.FixtureId,
+                fixtureRoot: pack.Baseline.FixtureRoot,
                 entryProject: "Echo/Echo.csproj");
             var bundle = await runner.SaveChangeBundleAsync(
                 instance.Id,

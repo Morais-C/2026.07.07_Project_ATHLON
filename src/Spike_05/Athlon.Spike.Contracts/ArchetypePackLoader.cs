@@ -17,6 +17,17 @@ public static class ArchetypePackLoader
         AllowTrailingCommas = true
     };
 
+    public static string RequireArchetypeId(string? archetypeId)
+    {
+        if (string.IsNullOrWhiteSpace(archetypeId))
+        {
+            throw new ArchetypePackException(
+                "Set Athlon:ArchetypeId in appsettings.json (e.g. \"console-v1\").");
+        }
+
+        return archetypeId.Trim();
+    }
+
     public static ArchetypePack Load(string spikeRoot, string archetypeId)
     {
         if (string.IsNullOrWhiteSpace(spikeRoot))
@@ -24,10 +35,7 @@ public static class ArchetypePackLoader
             throw new ArgumentException("Spike root is required.", nameof(spikeRoot));
         }
 
-        if (string.IsNullOrWhiteSpace(archetypeId))
-        {
-            throw new ArgumentException("Archetype id is required.", nameof(archetypeId));
-        }
+        archetypeId = RequireArchetypeId(archetypeId);
 
         var normalizedSpikeRoot = Path.GetFullPath(spikeRoot);
         var packRoot = Path.GetFullPath(Path.Combine(normalizedSpikeRoot, "archetypes", archetypeId));

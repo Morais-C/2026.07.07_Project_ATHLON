@@ -9,32 +9,33 @@ public class CodeContextBuilderTests
     [Fact]
     public async Task Publishes_CodeContext_from_echo_v1_fixture()
     {
+        var pack = SpikeTestPaths.ConsoleV1Pack;
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
         var workflowId = Guid.NewGuid();
-        var builder = new CodeContextBuilder(store);
+        var builder = CodeContextBuilder.FromArchetypePack(store, pack);
 
         try
         {
             var artifact = await builder.BuildAndPublishAsync(
                 workflowId,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                fixtureId: pack.Baseline.FixtureId,
+                fixtureRoot: pack.Baseline.FixtureRoot,
                 entryProject: "Echo/Echo.csproj");
 
             Assert.Equal(ArtifactTypes.CodeContext, artifact.Type);
             Assert.Equal(CodeContextBuilder.ProducerName, artifact.Producer);
 
             var payload = CodeContext.Parse(artifact);
-            Assert.Equal("echo-v1", payload.FixtureId);
+            Assert.Equal(pack.Baseline.FixtureId, payload.FixtureId);
             Assert.Equal("Echo/Echo.csproj", payload.EntryProject);
             Assert.Equal("net9.0", payload.TargetFramework);
             Assert.Equal(2, payload.Files.Count);
             Assert.Contains(payload.Files, f => f.Path == "Echo/Echo.csproj");
             Assert.Contains(payload.Files, f => f.Path == "Echo/Program.cs");
             Assert.True(payload.TotalChars > 0);
-            Assert.Equal(CodeContext.DefaultMaxFilesAllowed, payload.MaxFilesAllowed);
-            Assert.Equal(CodeContext.DefaultMaxCharsAllowed, payload.MaxCharsAllowed);
+            Assert.Equal(pack.CodeContext.MaxFilesAllowed, payload.MaxFilesAllowed);
+            Assert.Equal(pack.CodeContext.MaxCharsAllowed, payload.MaxCharsAllowed);
 
             foreach (var file in payload.Files)
             {

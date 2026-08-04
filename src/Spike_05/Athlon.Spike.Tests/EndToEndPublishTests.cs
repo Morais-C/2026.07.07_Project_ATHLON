@@ -8,7 +8,7 @@ using Athlon.Spike.Workflow;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Spike_04 thesis end to end: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier,
+/// Spike_05 thesis end to end via console-v1 pack: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier,
 /// ending in a Publish folder that compiles. Functional run checks belong to a future Tester agent (L11).
 /// </summary>
 public class EndToEndPublishTests
@@ -62,11 +62,12 @@ public class EndToEndPublishTests
     [Fact]
     public async Task ChangeRequest_reaches_a_Publish_folder_that_builds()
     {
+        var pack = SpikeTestPaths.ConsoleV1Pack;
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
         var store = new FileArtifactStore(artifactRoot);
         var runner = new WorkflowRunner(store, artifactRoot: artifactRoot);
-        var builder = new CodeContextBuilder(store);
+        var builder = CodeContextBuilder.FromArchetypePack(store, pack);
 
         var llm = new MockLLMProvider(
             new MockResponse(Content: ValidStructuredChangeJson),
@@ -74,11 +75,11 @@ public class EndToEndPublishTests
             new MockResponse(Content: UppercasePatchPackageJson()));
 
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
+            llm, store, pack.Analyst.PromptPath, pack.Analyst.OutputSchemaPath);
         var planner = new PlannerAgent(
-            llm, store, SpikeTestPaths.PlannerPromptTemplate, SpikeTestPaths.ImplementationPlanSchema);
+            llm, store, pack.Planner.PromptPath, pack.Planner.OutputSchemaPath);
         var coder = new CoderAgent(
-            llm, store, SpikeTestPaths.CoderPromptTemplate, SpikeTestPaths.PatchPackageSchema);
+            llm, store, pack.Coder.PromptPath, pack.Coder.OutputSchemaPath);
         var applier = new Applier(store, publishRoot: publishRoot);
 
         try
@@ -97,8 +98,8 @@ public class EndToEndPublishTests
 
             var codeContext = await builder.BuildAndPublishAsync(
                 instance.Id,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                fixtureId: pack.Baseline.FixtureId,
+                fixtureRoot: pack.Baseline.FixtureRoot,
                 entryProject: "Echo/Echo.csproj");
 
             var bundle = await runner.SaveChangeBundleAsync(
@@ -115,11 +116,16 @@ public class EndToEndPublishTests
             Assert.Equal(ArtifactTypes.ImplementationPlan, plan.Type);
             Assert.Equal(ArtifactTypes.PatchPackage, patchPackage.Type);
 
+            // Prompt/schema paths must come from the pack, not spike-root duplicates
+            Assert.StartsWith(pack.PackRoot, pack.Analyst.PromptPath, StringComparison.OrdinalIgnoreCase);
+            Assert.StartsWith(pack.PackRoot, pack.Planner.PromptPath, StringComparison.OrdinalIgnoreCase);
+            Assert.StartsWith(pack.PackRoot, pack.Coder.PromptPath, StringComparison.OrdinalIgnoreCase);
+
             var result = await applier.ApplyAsync(
                 instance.Id,
                 patchPackage.Id,
-                expectedFixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot);
+                expectedFixtureId: pack.Baseline.FixtureId,
+                fixtureRoot: pack.Baseline.FixtureRoot);
 
             Assert.True(result.ApplySucceeded, result.FailureMessage);
             Assert.True(result.BuildSucceeded, result.BuildOutput);
@@ -148,6 +154,7 @@ public class EndToEndPublishTests
     [Fact]
     public async Task Out_of_bounds_ChangeRequest_aborts_before_any_PatchPackage_or_Publish_folder()
     {
+        var pack = SpikeTestPaths.ConsoleV1Pack;
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
         var store = new FileArtifactStore(artifactRoot);
@@ -161,7 +168,7 @@ public class EndToEndPublishTests
             """));
 
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
+            llm, store, pack.Analyst.PromptPath, pack.Analyst.OutputSchemaPath);
 
         try
         {
@@ -195,16 +202,17 @@ public class EndToEndPublishTests
     [Fact]
     public async Task Over_cap_CodeContext_aborts_without_Publish_folder()
     {
+        var pack = SpikeTestPaths.ConsoleV1Pack;
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
         var store = new FileArtifactStore(artifactRoot);
         var runner = new WorkflowRunner(store, artifactRoot: artifactRoot);
-        // echo-v1 has 2 source files — cap at 1 to force abort
+        // echo-v1 has 2 source files — cap at 1 to force abort (below pack default)
         var builder = new CodeContextBuilder(store, maxFilesAllowed: 1);
 
         var llm = new MockLLMProvider(new MockResponse(Content: ValidStructuredChangeJson));
         var analyst = new AnalystAgent(
-            llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
+            llm, store, pack.Analyst.PromptPath, pack.Analyst.OutputSchemaPath);
 
         try
         {
@@ -221,8 +229,8 @@ public class EndToEndPublishTests
             var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 builder.BuildAndPublishAsync(
                     instance.Id,
-                    fixtureId: "echo-v1",
-                    fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
+                    fixtureId: pack.Baseline.FixtureId,
+                    fixtureRoot: pack.Baseline.FixtureRoot,
                     entryProject: "Echo/Echo.csproj"));
 
             Assert.Contains("file cap", ex.Message, StringComparison.OrdinalIgnoreCase);
