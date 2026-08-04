@@ -1,5 +1,6 @@
 # Spike_05 — Athlon Archetype packs (`console-v1`)
 
+> **Status:** ✅ Complete (2026-08-04) — **frozen archive**  
 > **Depends on:** Spike_04 complete (frozen at [`../Spike_04/`](../Spike_04/))  
 > **Decision:** [ROADMAP.md](../../ROADMAP.md) — archetype packs **before** `rest-api-v1` and promotion  
 > **Vision:** [Solution Archetype definition](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md)  
@@ -26,16 +27,42 @@ Load **`archetypes/console-v1/`** → same ChangeRequest chain → same `echo-v1
 ## Success criteria
 
 - [x] Spike_05 forked from Spike_04; Spike_01–04 untouched
-- [x] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) *(Phase 1 ✅)*
-- [x] `ArchetypePack` loader resolves prompts, schemas, bounds, proof pipeline by `archetypeId` *(Phase 2 ✅)*
-- [x] Host runs with `archetypeId = console-v1` only (config or manifest) *(Phase 3 ✅)*
-- [x] Regression: Spike_04-equivalent E2E + thesis tests green via pack *(Phase 4 ✅)*
+- [x] `archetypes/console-v1/` pack with all [10 pack components](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents)
+- [x] `ArchetypePack` loader resolves prompts, schemas, bounds, proof pipeline by `archetypeId`
+- [x] Host runs with `archetypeId = console-v1` only (config or manifest)
+- [x] Regression: Spike_04-equivalent E2E + thesis tests green via pack
 - [x] Demo ChangeRequests live in pack (`demos/`), not only in `Program.cs`
-- [x] Thesis: LoadAsync-only handoff + agent prompt/schema paths from pack manifest *(Phase 5 ✅)*
+- [x] Thesis: LoadAsync-only handoff + agent prompt/schema paths from pack manifest
+- [x] Live demo via pack: apply OK + `dotnet build` OK under `Publish/{workflowId}/`
 
-## Archetype pack layout (Phase 5)
+## How to run
 
-Fork includes `archetypes/console-v1/` with manifest and all 10 components. Host and tests load the pack via `ArchetypePackLoader`; agents and CodeContextBuilder resolve paths/caps from the pack. Spike-root `prompts/` and `schemas/` **removed** (pack is sole source). Phase 5 proves manifest fields drive resolved agent paths (including switch-path thesis).
+From `src/Spike_05/` (so `./artifacts`, `./Publish`, `./appsettings*.json`, and `./archetypes/` resolve):
+
+```powershell
+# Tests (no LLM)
+dotnet test Spike_05.sln
+
+# Live demo (OpenRouter) — default ChangeRequest: uppercase-echo feature
+# Copy appsettings.Local.json.example → appsettings.Local.json and set ApiKey
+dotnet run --project Athlon.Spike.Console --no-launch-profile
+```
+
+Config: `Athlon:ArchetypeId` = `console-v1` in `appsettings.json`. Pack catalog: `archetypes/console-v1/demos/change-requests.json` (host currently hardcodes the active demo matching `uppercase-echo`).
+
+## Live demo (2026-08-04)
+
+| Item | Result |
+|------|--------|
+| Archetype | `console-v1` v1.0.0 via `ArchetypePackLoader` |
+| Demo | feature — Uppercase echo |
+| Chain | ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier |
+| Apply | OK |
+| Build | OK (`Echo/Echo.csproj`) |
+| Publish | `Publish/{workflowId}/` with `ToUpperInvariant()` on echo |
+| Tests | `dotnet test` — 79 passed |
+
+## Archetype pack layout
 
 ```text
 src/Spike_05/
@@ -57,5 +84,5 @@ See [archetypes/console-v1/README.md](./archetypes/console-v1/README.md) for com
 
 ## After Spike_05
 
-**Spike_06** — `rest-api-v1` archetype pack (OpenAPI + contract-test proof).  
+**Spike_06** — `rest-api-v1` archetype pack (OpenAPI + contract-test proof), same loader.  
 Then **promotion** — lift engine + pack model → `Athlon.*`.

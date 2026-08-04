@@ -195,7 +195,7 @@ Pin fixture path in Phase 0: keep `fixtures/echo-v1/` at spike root (Spike_04 la
 | Update ROADMAP, VisionScope archetype table | `console-v1` = **proved (pack)** |
 | Fresh-session starter for Spike_06 | In ROADMAP + AGENTS |
 
-**Exit:** README success criteria all checked.
+**Exit:** README success criteria all checked. *(✅ 2026-08-04 — 79 tests green; live uppercase-echo demo apply+build OK)*
 
 ---
 
@@ -243,7 +243,7 @@ Pin fixture path in Phase 0: keep `fixtures/echo-v1/` at spike root (Spike_04 la
 | 3 — Wire host + agents | ✅ Complete (2026-07-31) |
 | 4 — Regression + fail fast | ✅ Complete (2026-08-04) |
 | 5 — Thesis + pack tests | ✅ Complete (2026-08-04) |
-| 6 — Demo & docs | ⬜ Not started ← **next** |
+| 6 — Demo & docs | ✅ Complete (2026-08-04) |
 
 ---
 

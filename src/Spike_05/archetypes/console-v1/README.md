@@ -1,6 +1,6 @@
 # console-v1 — Athlon Solution Archetype pack
 
-> **Status:** Phase 4 complete (Spike_05) — pack is the sole runtime source for prompts/schemas; regression green via pack loader.
+> **Status:** **Proved (pack)** — Spike_05 complete (2026-08-04). Sole runtime source for prompts/schemas; tests + live demo green via pack loader.
 
 Formal pack for the `console-v1` archetype. See [Solution Archetype definition](../../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md).
 
@@ -34,7 +34,7 @@ Default fixture: **`echo-v1`** at `src/Spike_05/fixtures/echo-v1/` (referenced f
 
 ## Runtime note
 
-**Phase 4:** host + tests resolve prompts/schemas **only** from this pack via `ArchetypePackLoader`. Spike-root `prompts/` and `schemas/` duplicates were removed.
+Host + tests resolve prompts/schemas **only** from this pack via `ArchetypePackLoader`. Spike-root `prompts/` and `schemas/` duplicates were removed in Phase 4.
 
 ## Demo ChangeRequests
 

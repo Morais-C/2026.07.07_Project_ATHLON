@@ -8,17 +8,16 @@ Start at **[ROADMAP.md](./ROADMAP.md)** (status + fresh session starter).
 | Spike_02 (frozen) | [`src/Spike_02/AGENTS.md`](./src/Spike_02/AGENTS.md) · [README](./src/Spike_02/README.md) |
 | Spike_03 (frozen) | [`src/Spike_03/AGENTS.md`](./src/Spike_03/AGENTS.md) · [README](./src/Spike_03/README.md) |
 | Spike_04 (frozen) | [`src/Spike_04/AGENTS.md`](./src/Spike_04/AGENTS.md) · [README](./src/Spike_04/README.md) · [plan](./src/Spike_04/ImplementationPlan.md) |
-| **Next: Spike_05** | [`src/Spike_05/AGENTS.md`](./src/Spike_05/AGENTS.md) · [README](./src/Spike_05/README.md) · [plan](./src/Spike_05/ImplementationPlan.md) |
-| Spike_06 (planned) | `rest-api-v1` — after Spike_05 · [ROADMAP](./ROADMAP.md) |
+| Spike_05 (frozen) | [`src/Spike_05/AGENTS.md`](./src/Spike_05/AGENTS.md) · [README](./src/Spike_05/README.md) · [plan](./src/Spike_05/ImplementationPlan.md) |
+| **Next: Spike_06** | [`src/Spike_06/README.md`](./src/Spike_06/README.md) · [ROADMAP](./ROADMAP.md) · plan TBD (fork Spike_05) |
 | Promotion (after Spike_06) | [`PromotionPlan.md`](./PromotionPlan.md) |
 | Manuscript | [`Project_ATHLON_VisionScope/INDEX.md`](./Project_ATHLON_VisionScope/INDEX.md) · [Archetype definition](./Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md) |
 
 ## Fresh session starter
 
 ```text
-Spike_05 Phase 5 complete (LoadAsync thesis + pack-manifest path resolution). Phase 6 next: demo & docs.
-Read ROADMAP.md and src/Spike_05/AGENTS.md + ImplementationPlan.md.
-Spike_01–04 are frozen — do not modify them. Work only in src/Spike_05/.
-No rest-api-v1 (Spike_06), no promotion, no portal/API until after Spike_06.
-Start Spike_05 Phase 6 per ImplementationPlan.md.
+Spike_05 complete (console-v1 pack proved). Next: Spike_06 — rest-api-v1 archetype pack.
+Read ROADMAP.md. Spike_01–05 are frozen — do not modify them.
+Fork Spike_05 → src/Spike_06/ and author ImplementationPlan for rest-api-v1 (reuse ArchetypePackLoader).
+No promotion, no portal/API until after Spike_06.
 ```

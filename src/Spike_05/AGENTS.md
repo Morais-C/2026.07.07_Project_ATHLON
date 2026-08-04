@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes.
 5. **Do not modify `src/Spike_01/` … `src/Spike_04/`.** Those stay frozen archives.
 
-**Current state:** Phase 5 ✅ complete — next is **Phase 6** (demo & documentation).
+**Current state:** ✅ **Complete (2026-08-04)** — all phases done. **Frozen archive.** Next: **Spike_06** (`rest-api-v1`).
 
 ## Scope rules
 
@@ -29,15 +29,15 @@ Instructions for Cursor (or any implementer) working on this spike.
 | Engine | Same chain as Spike_04: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier |
 | Handoff | Artifact id only; fail fast; no Enter pauses |
 
-## Suggested opening prompt
+## Suggested opening prompt (Spike_06)
 
 ```text
-Read ROADMAP.md and src/Spike_05/AGENTS.md.
-Spike_01–04 are frozen. Start Spike_05 Phase 6 per src/Spike_05/ImplementationPlan.md.
-Goal: live demo via pack; update ROADMAP/VisionScope; Spike_06 fresh-session starter.
-No rest-api-v1. No promotion. One phase at a time; update docs on phase end.
+Spike_05 complete (console-v1 pack proved). Next: Spike_06 — rest-api-v1.
+Read ROADMAP.md. Spike_01–05 are frozen — do not modify them.
+Fork Spike_05 → src/Spike_06/ and plan rest-api-v1 pack reusing ArchetypePackLoader.
+No promotion, no portal/API until after Spike_06.
 ```
 
 ## Definition of done
 
-All README success criteria checked; pack loader + `console-v1` pack complete; Spike_04-equivalent tests green through pack paths.
+All README success criteria checked; pack loader + `console-v1` pack complete; Spike_04-equivalent tests green through pack paths; live demo documented.

@@ -14,8 +14,8 @@
 | **Spike_02 — Agent chain via artifacts** | ✅ Complete (2026-07-24) — **frozen archive** |
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
 | **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
-| **Spike_05 — Archetype packs (`console-v1`)** | 🔄 In progress (Phase 0–5 ✅) — [plan](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
-| **Spike_06 — `rest-api-v1` archetype pack** | ⬜ After Spike_05 |
+| **Spike_05 — Archetype packs (`console-v1`)** | ✅ Complete (2026-08-04) — **frozen archive** — [checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
+| **Spike_06 — `rest-api-v1` archetype pack** | ⬜ Next — fork Spike_05 |
 | **Promotion to `Athlon.*`** | ⬜ After Spike_06 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
@@ -194,7 +194,7 @@ Success: demo applies ChangeRequest onto fixture; Applier writes `Publish/{workf
 
 ---
 
-## Spike_05 (next) — summary
+## Spike_05 (complete) — summary
 
 | Item | Detail |
 |------|--------|
@@ -202,21 +202,23 @@ Success: demo applies ChangeRequest onto fixture; Applier writes `Publish/{workf
 | **Chain** | Unchanged: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier |
 | **Deliverable** | `ArchetypePackLoader` + all [10 pack components](./Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md#archetype-pack-minimum-contents) |
 | **Baseline** | Fork Spike_04 → [`src/Spike_05/`](./src/Spike_05/); fixture `echo-v1` |
-| **Phase progress** | Phase 0–5 ✅ — [Checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
+| **Phase progress** | All phases ✅ — [Checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
 | **Docs** | [README](./src/Spike_05/README.md) · [ImplementationPlan](./src/Spike_05/ImplementationPlan.md) · [AGENTS](./src/Spike_05/AGENTS.md) |
 
-Success: `dotnet test` green via pack paths; live demo matches Spike_04 outcomes.
+Success: `dotnet test` green via pack paths (79); live demo apply + build OK from `console-v1` pack.
+
+**Note:** `console-v1` is **proved (pack)**. Next commercial archetype is Spike_06 `rest-api-v1`.
 
 ---
 
-## Spike_06 (planned) — summary
+## Spike_06 (next) — summary
 
 | Item | Detail |
 |------|--------|
 | **Thesis** | Second archetype pack **`rest-api-v1`** reuses Spike_05 loader |
 | **Proof** | `dotnet build` + OpenAPI consistency + contract tests (target) |
 | **Vision** | [REST API competitive positioning](./Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md) |
-| **Baseline** | Fork Spike_05 → `src/Spike_06/` (plan TBD at Spike_05 completion) |
+| **Baseline** | Fork Spike_05 → `src/Spike_06/` (plan TBD — author at Spike_06 start) |
 
 Success: governed ChangeRequest on REST API fixture with artifact chain + deterministic proof gates.
 
@@ -237,9 +239,8 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Spike_05 Phase 5 complete (LoadAsync thesis + pack-manifest path resolution). Phase 6 next: demo & docs.
-Read ROADMAP.md and src/Spike_05/AGENTS.md + ImplementationPlan.md.
-Spike_01–04 are frozen — do not modify them. Work only in src/Spike_05/.
-No rest-api-v1 (Spike_06), no promotion, no portal/API until after Spike_06.
-Start Spike_05 Phase 6 per ImplementationPlan.md.
+Spike_05 complete (console-v1 pack proved). Next: Spike_06 — rest-api-v1 archetype pack.
+Read ROADMAP.md. Spike_01–05 are frozen — do not modify them.
+Fork Spike_05 → src/Spike_06/ and author ImplementationPlan for rest-api-v1 (reuse ArchetypePackLoader).
+No promotion, no portal/API until after Spike_06.
 ```

@@ -5,7 +5,7 @@
 A reference architecture and implementation playbook for Agentic Software Engineering — from vision, through architecture, to a sprint-by-sprint build guide.
 
 **Execution status (build order):** see the living master plan → [ROADMAP.md](../ROADMAP.md)  
-*(Spike_01–04 complete · next: [Spike_05](../src/Spike_05/README.md) `console-v1` pack · then Spike_06 `rest-api-v1` · then [Promotion](../PromotionPlan.md) · [Archetype definition](Project_Athlon_Solution_Archetype_Definition.md) · [REST API brief](Project_Athlon_REST_API_Competitive_Positioning.md))*
+*(Spike_01–05 complete · `console-v1` [proved (pack)](Project_Athlon_Solution_Archetype_Definition.md#reference-instances-execution) · next: Spike_06 `rest-api-v1` · then [Promotion](../PromotionPlan.md) · [Archetype definition](Project_Athlon_Solution_Archetype_Definition.md) · [REST API brief](Project_Athlon_REST_API_Competitive_Positioning.md))*
 
 ---
 

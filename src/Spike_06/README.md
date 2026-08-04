@@ -1,8 +1,9 @@
 # Spike_06 — `rest-api-v1` archetype pack (planned)
 
-> **Status:** Not started — begins after [Spike_05](../Spike_05/README.md) completes.  
+> **Status:** Next — Spike_05 complete (`console-v1` proved as pack).  
 > **Master plan:** [ROADMAP.md](../../ROADMAP.md)  
-> **Vision:** [REST API competitive positioning](../../Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md)
+> **Vision:** [REST API competitive positioning](../../Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md)  
+> **Baseline:** Fork [Spike_05](../Spike_05/) → `src/Spike_06/` (engine + `ArchetypePackLoader`)
 
 ## Purpose
 
@@ -24,6 +25,6 @@ Load **`archetypes/rest-api-v1/`** → ChangeRequest on a REST API fixture → A
 - Promotion (follows Spike_06)
 - Portal / API
 
-## Planning note
+## Next step
 
-Full **ImplementationPlan.md** will be written when Spike_05 closes (Phase 6). Until then, use ROADMAP + REST API brief for scope.
+Author **ImplementationPlan.md** (phased) and fork Spike_05 into a full `Spike_06.sln`. Fresh-session starter lives in [ROADMAP.md](../../ROADMAP.md).
