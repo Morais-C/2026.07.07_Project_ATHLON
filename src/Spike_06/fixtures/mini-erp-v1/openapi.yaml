@@ -1,0 +1,24 @@
+openapi: 3.0.3
+info:
+  title: Mini ERP API
+  version: 0.1.0
+  description: Near-empty mini-ERP baseline for Athlon rest-api-v1 (Spike_06).
+servers:
+  - url: /
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Liveness probe
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: ok

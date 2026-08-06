@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "description": "Sample in-bounds ChangeRequests for rest-api-v1 demos (mini-erp-v1).",
+  "demos": [
+    {
+      "id": "add-product-resource",
+      "kind": "feature",
+      "title": "Add product resource",
+      "description": "Add a Product resource to the mini-ERP API: POST /products (name, sku, unitPrice) and GET /products/{id}. Persist in memory. Update openapi.yaml and add contract tests for the new operations.",
+      "suspectedPaths": [
+        "openapi.yaml",
+        "MiniErp/Program.cs",
+        "MiniErp.ContractTests/HealthEndpointTests.cs"
+      ]
+    },
+    {
+      "id": "add-customer-resource",
+      "kind": "feature",
+      "title": "Add customer resource",
+      "description": "Add a Customer resource to the mini-ERP API: POST /customers (name, email) and GET /customers/{id}. Persist in memory. Update openapi.yaml and add contract tests for the new operations.",
+      "suspectedPaths": [
+        "openapi.yaml",
+        "MiniErp/Program.cs",
+        "MiniErp.ContractTests/HealthEndpointTests.cs"
+      ]
+    }
+  ]
+}

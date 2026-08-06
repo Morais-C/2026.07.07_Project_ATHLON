@@ -94,7 +94,7 @@ Composition rules:
 | Archetype id | Status | Proof (current) | Location |
 |--------------|--------|-----------------|----------|
 | `console-v1` | **Proved (pack)** (Spike_05 ✅) | Greenfield publish ([Spike_03](../src/Spike_03/)) + incremental patch + `dotnet build` ([Spike_04](../src/Spike_04/)); formal pack + loader ([Spike_05](../src/Spike_05/)) |
-| `rest-api-v1` | **Planned** (Spike_06) | OpenAPI + build + contract tests (target) | [Competitive brief](Project_Athlon_REST_API_Competitive_Positioning.md) |
+| `rest-api-v1` | **In progress** (Spike_06) | OpenAPI + build + contract tests | [Spike_06](../src/Spike_06/) · [Competitive brief](Project_Athlon_REST_API_Competitive_Positioning.md) |
 
 **Distinction:** Spike_04 proved console **behavior** with spike-root prompts/schemas. Spike_05 proved the **archetype pack** form (`archetypes/console-v1/` + `ArchetypePackLoader`) — the productized 10-component model.
 
@@ -108,7 +108,7 @@ Spike folders remain **frozen archives**; product archetypes live under `Athlon.
 Define pack → Prove on fixture (spike) → Second archetype pack (Spike_06) → Promote to Athlon.* → Preview SKU → GA → Deprecate
 ```
 
-**Current execution:** Spike_05 complete (`console-v1` proved as pack); next Spike_06 = `rest-api-v1`; then promotion. See [ROADMAP.md](../ROADMAP.md).
+**Current execution:** Spike_06 in progress (`rest-api-v1` pack + `mini-erp-v1`); Spike_05 frozen (`console-v1` proved as pack); then promotion. See [ROADMAP.md](../ROADMAP.md).
 
 New work that changes bounds, schemas, or proof gates for an archetype **bumps archetype version** (`rest-api-v2`), not silent prompt edits.
 

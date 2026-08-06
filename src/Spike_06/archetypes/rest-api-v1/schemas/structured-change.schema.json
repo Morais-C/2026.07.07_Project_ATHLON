@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StructuredChange",
+  "type": "object",
+  "required": [
+    "kind",
+    "title",
+    "summary",
+    "acceptanceCriteria",
+    "constraints",
+    "priority"
+  ],
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": ["feature", "bugfix"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "priority": {
+      "type": "string",
+      "minLength": 1
+    },
+    "suspectedPaths": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "additionalProperties": false
+}

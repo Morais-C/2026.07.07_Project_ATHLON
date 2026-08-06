@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "description": "Deterministic proof gates for rest-api-v1. LLM output alone is never sufficient.",
+  "successRequires": ["applySucceeded", "buildSucceeded", "openapiConsistencySucceeded", "contractTestsSucceeded"],
+  "manifestPath": "apply-manifest.json",
+  "gates": [
+    {
+      "id": "apply",
+      "order": 1,
+      "type": "deterministic",
+      "producer": "Applier",
+      "description": "All unified diffs apply cleanly to the copied baseline tree under Publish/{workflowId}/",
+      "successField": "applySucceeded",
+      "failureBehavior": "Keep publish tree; set failureMessage; do not mark workflow success"
+    },
+    {
+      "id": "build",
+      "order": 2,
+      "type": "deterministic",
+      "producer": "Applier",
+      "description": "dotnet build on entryProject in the publish directory",
+      "command": "dotnet build \"{entryProject}\" --nologo",
+      "workingDirectory": "Publish/{workflowId}/",
+      "successField": "buildSucceeded",
+      "failureBehavior": "Record buildOutput in manifest; applySucceeded may still be true"
+    },
+    {
+      "id": "openapi-consistency",
+      "order": 3,
+      "type": "deterministic",
+      "producer": "Applier",
+      "description": "Publish-tree OpenAPI is valid YAML/JSON; declared operations are covered by contract tests",
+      "successField": "openapiConsistencySucceeded",
+      "failureBehavior": "Record openapiConsistencyOutput in manifest; do not mark workflow success"
+    },
+    {
+      "id": "contract-tests",
+      "order": 4,
+      "type": "deterministic",
+      "producer": "Applier",
+      "description": "dotnet test on fixture contract-test project in the publish directory",
+      "command": "dotnet test \"{contractTestProject}\" --nologo --no-build",
+      "workingDirectory": "Publish/{workflowId}/",
+      "successField": "contractTestsSucceeded",
+      "failureBehavior": "Record contractTestOutput in manifest; do not mark workflow success"
+    }
+  ],
+  "deferred": [
+    {
+      "id": "tester-agent",
+      "description": "Optional LLM Tester agent for richer API assertions",
+      "owner": "Tester agent (future)"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PatchPackage",
+  "type": "object",
+  "required": ["fixtureId", "changes", "entryProject", "targetFramework", "summary"],
+  "properties": {
+    "fixtureId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "changes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["path", "operation", "unifiedDiff"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!\\.\\./)(?!.*(/|\\\\)\\.\\.([/\\\\]|$))(?!/)(?![A-Za-z]:)(?!\\\\\\\\)[A-Za-z0-9_.\\-/\\\\]+$"
+          },
+          "operation": {
+            "type": "string",
+            "enum": ["modify", "create", "delete"]
+          },
+          "unifiedDiff": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unified diff body. create: --- /dev/null then +++ b/{path}. delete: --- a/{path} then +++ /dev/null. modify: --- a/ +++ b/ against baseline."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "entryProject": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!\\.\\./)(?!.*(/|\\\\)\\.\\.([/\\\\]|$))(?!/)(?![A-Za-z]:)(?!\\\\\\\\)[A-Za-z0-9_.\\-/\\\\]+\\.csproj$"
+    },
+    "targetFramework": {
+      "type": "string",
+      "const": "net9.0"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

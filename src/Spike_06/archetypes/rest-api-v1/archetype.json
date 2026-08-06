@@ -1,0 +1,44 @@
+{
+  "$schema": "./archetype.schema.json",
+  "archetypeId": "rest-api-v1",
+  "version": "1.0.0",
+  "status": "training",
+  "displayName": "REST API v1",
+  "description": "Bounded ASP.NET Minimal API / OpenAPI change archetype (mini-ERP baseline). Spike_06 pack skeleton — Phase 0.",
+  "paths": {
+    "bounds": "bounds.md",
+    "codeContext": "code-context.md",
+    "changeRequest": "change-request.md",
+    "schemas": "schemas/",
+    "prompts": "prompts/",
+    "patchApply": "patch-apply.md",
+    "proof": "proof/pipeline.json",
+    "demos": "demos/change-requests.json"
+  },
+  "baseline": {
+    "fixtureId": "mini-erp-v1",
+    "fixturePath": "../../fixtures/mini-erp-v1"
+  },
+  "codeContext": {
+    "maxFilesAllowed": 16,
+    "maxCharsAllowed": 64000,
+    "includeExtensions": [".cs", ".csproj", ".yaml", ".yml", ".json"]
+  },
+  "changeRequest": {
+    "kinds": ["feature", "bugfix"]
+  },
+  "artifactChain": [
+    { "type": "ChangeRequest", "producer": "host", "schema": "schemas/change-request.schema.json" },
+    { "type": "StructuredChange", "producer": "Analyst", "schema": "schemas/structured-change.schema.json" },
+    { "type": "CodeContext", "producer": "CodeContextBuilder", "schema": "schemas/code-context.schema.json" },
+    { "type": "ImplementationPlan", "producer": "Planner", "schema": "schemas/implementation-plan.schema.json" },
+    { "type": "PatchPackage", "producer": "Coder", "schema": "schemas/patch-package.schema.json" },
+    { "type": "ApplyResult", "producer": "Applier", "schema": null }
+  ],
+  "agents": {
+    "Analyst": { "prompt": "prompts/analyst-v1.txt", "outputSchema": "schemas/structured-change.schema.json" },
+    "Planner": { "prompt": "prompts/planner-v1.txt", "outputSchema": "schemas/implementation-plan.schema.json" },
+    "Coder": { "prompt": "prompts/coder-v1.txt", "outputSchema": "schemas/patch-package.schema.json" }
+  },
+  "proofPipeline": "proof/pipeline.json"
+}

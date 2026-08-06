@@ -1,7 +1,7 @@
 # Project Athlon — Execution Roadmap
 
 > **Living master plan** for build order (distinct from the VisionScope manuscript).  
-> **Last updated:** 2026-08-04  
+> **Last updated:** 2026-08-05  
 > **Manuscript:** [Project_ATHLON_VisionScope/INDEX.md](./Project_ATHLON_VisionScope/INDEX.md)
 
 ---
@@ -15,7 +15,7 @@
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
 | **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
 | **Spike_05 — Archetype packs (`console-v1`)** | ✅ Complete (2026-08-04) — **frozen archive** — [checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
-| **Spike_06 — `rest-api-v1` archetype pack** | ⬜ Next — fork Spike_05 |
+| **Spike_06 — `rest-api-v1` archetype pack** | 🔄 In progress — Phase 0 ([plan](./src/Spike_06/ImplementationPlan.md)) |
 | **Promotion to `Athlon.*`** | ⬜ After Spike_06 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
@@ -211,16 +211,22 @@ Success: `dotnet test` green via pack paths (79); live demo apply + build OK fro
 
 ---
 
-## Spike_06 (next) — summary
+## Spike_06 (in progress) — summary
 
 | Item | Detail |
 |------|--------|
 | **Thesis** | Second archetype pack **`rest-api-v1`** reuses Spike_05 loader |
-| **Proof** | `dotnet build` + OpenAPI consistency + contract tests (target) |
+| **Proof** | apply + `dotnet build` + OpenAPI consistency + contract tests |
+| **Fixture** | `mini-erp-v1` — near-empty mini-ERP Minimal API / net9; checked-in OpenAPI |
+| **Host** | rest-api-only (`Athlon:ArchetypeId` = `rest-api-v1`) |
 | **Vision** | [REST API competitive positioning](./Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md) |
-| **Baseline** | Fork Spike_05 → `src/Spike_06/` (plan TBD — author at Spike_06 start) |
+| **Baseline** | Fork Spike_05 → [`src/Spike_06/`](./src/Spike_06/) |
+| **Phase progress** | [Checklist](./src/Spike_06/ImplementationPlan.md#9-checklist-tracker) |
+| **Docs** | [README](./src/Spike_06/README.md) · [ImplementationPlan](./src/Spike_06/ImplementationPlan.md) · [AGENTS](./src/Spike_06/AGENTS.md) |
 
 Success: governed ChangeRequest on REST API fixture with artifact chain + deterministic proof gates.
+
+**Locks (2026-08-05):** OpenAPI checked-in SoT (may be patched by ChangeRequest); no auth / in-memory only / no EF; demos = add product / add customer. Full locks: [ImplementationPlan §2](./src/Spike_06/ImplementationPlan.md#2-pre-locked-decisions-2026-08-05).
 
 ---
 
@@ -239,8 +245,8 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Spike_05 complete (console-v1 pack proved). Next: Spike_06 — rest-api-v1 archetype pack.
-Read ROADMAP.md. Spike_01–05 are frozen — do not modify them.
-Fork Spike_05 → src/Spike_06/ and author ImplementationPlan for rest-api-v1 (reuse ArchetypePackLoader).
-No promotion, no portal/API until after Spike_06.
+Read ROADMAP.md and src/Spike_06/AGENTS.md.
+Spike_01–05 are frozen. Continue Spike_06 per src/Spike_06/ImplementationPlan.md.
+Goal: rest-api-v1 pack + mini-erp-v1; reuse ArchetypePackLoader; proof = build + OpenAPI + contract tests.
+No promotion. No portal/API. One phase at a time; update docs on phase end.
 ```

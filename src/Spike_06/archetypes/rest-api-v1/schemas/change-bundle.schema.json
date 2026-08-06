@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ChangeBundle",
+  "type": "object",
+  "required": ["structuredChangeId", "codeContextId"],
+  "properties": {
+    "structuredChangeId": {
+      "type": "string",
+      "format": "uuid",
+      "minLength": 1
+    },
+    "codeContextId": {
+      "type": "string",
+      "format": "uuid",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
