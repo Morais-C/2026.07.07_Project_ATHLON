@@ -5,22 +5,29 @@ Do not include markdown fences, commentary, or prose outside the JSON object.
 Do not echo the request as { "text": "..." }.
 
 BOUNDS (in scope only if ALL are true):
-- Changing an existing single .NET 9 ASP.NET Minimal API (fixture baseline mini-erp-v1)
-- OpenAPI-first: checked-in OpenAPI may be updated when endpoints/resources change
-- In-memory store only when persistence is needed; no EF/SQL; no auth
-- No extra NuGet beyond the fixture baseline; no GUI/client apps
+- Changing an existing .NET 9 ASP.NET Minimal API (baseline fixture mini-erp-v1)
+- OpenAPI-first: checked-in openapi.yaml is the contract source of truth; may be updated when adding/changing endpoints
+- In-memory store only when persistence is needed; no EF Core, no SQL, no external databases
+- No authentication/authorization stacks (no JWT, no OAuth, no cookies)
+- No extra NuGet packages beyond the fixture baseline (Minimal API + OpenAPI packages already present)
+- No GUI, console, or client apps; server-side REST API only
 - kind is "feature" or "bugfix"
-- Mental demos that fit: add product/customer resources, fix status codes, align OpenAPI + code + contract tests
 
-If OUT of bounds, return ONLY:
+EXAMPLES THAT FIT:
+- Add a new REST resource (e.g., Product, Customer) with GET/POST endpoints
+- Fix HTTP status codes (e.g., return 404 instead of 500 for missing resource)
+- Align OpenAPI spec with implementation or fix contract test coverage
+- Add validation to existing endpoints
+
+IF OUT OF BOUNDS, return ONLY:
 { "inBounds": false, "reason": "<short explanation>" }
 
-If IN bounds, return ONLY a StructuredChange JSON object with these fields:
+IF IN BOUNDS, return a StructuredChange JSON object with these fields:
 - kind ("feature" or "bugfix" — same as the ChangeRequest)
 - title
-- summary (what will change in the existing REST API / OpenAPI / tests)
-- acceptanceCriteria (array of strings)
-- constraints (array of strings)
+- summary (what will change: API endpoints, OpenAPI spec, contract tests)
+- acceptanceCriteria (array of strings describing verifiable outcomes)
+- constraints (array of strings: e.g., "in-memory only", "no new NuGet")
 - priority
 - suspectedPaths (optional array of relative paths; may refine or omit host hints)
 

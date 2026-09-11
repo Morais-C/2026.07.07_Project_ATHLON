@@ -224,7 +224,7 @@ fixtures/mini-erp-v1/
 | Phase | Status |
 |-------|--------|
 | 0 — Fork + rest-api skeleton + mini-erp fixture | ✅ Complete (2026-08-05) |
-| 1 — Pack content (prompts, demos) | ⬜ Not started |
+| 1 — Pack content (prompts, demos) | ✅ Complete (2026-09-11) |
 | 2 — Applier OpenAPI + contract-test gates | ⬜ Not started |
 | 3 — Host + tests wired to rest-api-v1 | ⬜ Not started |
 | 4 — Live demo + thesis + docs | ⬜ Not started |
