@@ -4,15 +4,15 @@ using Athlon.Spike.Contracts;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Phase 5 thesis: agent prompt/schema paths are driven by the pack manifest,
+/// Thesis: agent prompt/schema paths are driven by the pack manifest,
 /// not by hardcoded spike-root or agent-constructor constants.
 /// </summary>
 public class PackResolutionThesisTests
 {
     [Fact]
-    public void Agent_prompt_and_schema_paths_match_console_v1_manifest_fields()
+    public void Agent_prompt_and_schema_paths_match_rest_api_v1_manifest_fields()
     {
-        var pack = SpikeTestPaths.ConsoleV1Pack;
+        var pack = SpikeTestPaths.RestApiV1Pack;
         var manifestPath = Path.Combine(pack.PackRoot, "archetype.json");
         using var doc = JsonDocument.Parse(File.ReadAllText(manifestPath));
         var agents = doc.RootElement.GetProperty("agents");
@@ -34,8 +34,8 @@ public class PackResolutionThesisTests
         var tempRoot = CreateTempSpikeRoot();
         try
         {
-            CopyConsoleV1Pack(tempRoot);
-            var packRoot = Path.Combine(tempRoot, "archetypes", "console-v1");
+            CopyRestApiV1Pack(tempRoot);
+            var packRoot = Path.Combine(tempRoot, "archetypes", "rest-api-v1");
             const string altRelative = "prompts/analyst-alt-v1.txt";
             var altAbsolute = Path.GetFullPath(Path.Combine(packRoot, altRelative));
 
@@ -49,7 +49,7 @@ public class PackResolutionThesisTests
                 .Replace("prompts/analyst-v1.txt", altRelative, StringComparison.Ordinal);
             File.WriteAllText(manifestPath, json);
 
-            var pack = ArchetypePackLoader.Load(tempRoot, "console-v1");
+            var pack = ArchetypePackLoader.Load(tempRoot, "rest-api-v1");
 
             Assert.Equal(altAbsolute, pack.Analyst.PromptPath, ignoreCase: true);
             Assert.EndsWith("analyst-alt-v1.txt", pack.Analyst.PromptPath, StringComparison.OrdinalIgnoreCase);
@@ -91,10 +91,10 @@ public class PackResolutionThesisTests
         return tempRoot;
     }
 
-    private static void CopyConsoleV1Pack(string tempRoot)
+    private static void CopyRestApiV1Pack(string tempRoot)
     {
-        CopyDirectory(SpikeTestPaths.ConsoleV1PackRoot, Path.Combine(tempRoot, "archetypes", "console-v1"));
-        CopyDirectory(SpikeTestPaths.EchoV1FixtureRoot, Path.Combine(tempRoot, "fixtures", "echo-v1"));
+        CopyDirectory(SpikeTestPaths.RestApiV1PackRoot, Path.Combine(tempRoot, "archetypes", "rest-api-v1"));
+        CopyDirectory(SpikeTestPaths.MiniErpV1FixtureRoot, Path.Combine(tempRoot, "fixtures", "mini-erp-v1"));
     }
 
     private static void CopyDirectory(string source, string destination)

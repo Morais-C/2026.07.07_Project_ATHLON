@@ -1,6 +1,6 @@
 # Spike_06 — `rest-api-v1` archetype pack
 
-> **Status:** In progress — Phase 0–2 ✅; next **Phase 3** (host + tests wired to rest-api-v1)  
+> **Status:** In progress — Phase 0–3 ✅; next **Phase 4** (live demo + thesis)  
 > **Depends on:** Spike_05 complete (frozen at [`../Spike_05/`](../Spike_05/))  
 > **Decision:** [ROADMAP.md](../../ROADMAP.md) — `rest-api-v1` **before** promotion  
 > **Vision:** [REST API competitive positioning](../../Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md) · [Solution Archetype definition](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md)  
@@ -30,7 +30,7 @@ Load **`archetypes/rest-api-v1/`** → ChangeRequest on near-empty mini-ERP → 
 - [x] Fixture `mini-erp-v1`: Minimal API + checked-in OpenAPI + contract tests
 - [x] Applier proof: apply + `dotnet build` + OpenAPI consistency + `dotnet test` (Phase 2 complete)
 - [x] Demo ChangeRequests: 2 features (add product/customer) + 1 bugfix in pack
-- [ ] Thesis: LoadAsync-only handoff + pack-resolved paths (Phase 3)
+- [x] Thesis: LoadAsync-only handoff + pack-resolved paths (Phase 3)
 - [ ] Live demo: all proof gates OK under `Publish/{workflowId}/` (Phase 4)
 
 ## How to run
@@ -39,12 +39,12 @@ From `src/Spike_06/`:
 
 ```powershell
 dotnet build Spike_06.sln
-dotnet test Spike_06.sln   # full suite adapted in Phase 3; expect failures until then
+dotnet test Spike_06.sln   # full suite (84 tests)
 
-# Fixture baseline only
-dotnet test fixtures/mini-erp-v1/MiniErp.ContractTests/MiniErp.ContractTests.csproj
+# Select active demo via appsettings (Athlon:DemoId) or ATHLON_DEMO_ID env var
+# Catalog: archetypes/rest-api-v1/demos/change-requests.json
 
-# Live demo (OpenRouter) — after Phase 2+ gates
+# Live demo (OpenRouter) — Phase 4
 # Copy appsettings.Local.json.example → appsettings.Local.json and set ApiKey
 dotnet run --project Athlon.Spike.Console --no-launch-profile
 ```

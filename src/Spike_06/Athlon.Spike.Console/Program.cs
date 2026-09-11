@@ -14,10 +14,12 @@ using Athlon.Spike.Workflow;
 try
 {
     ArchetypePack pack;
+    string? demoId;
     try
     {
-        var (archetypeId, spikeRoot) = ArchetypeConfig.Load();
-        pack = ArchetypePackLoader.Load(spikeRoot, archetypeId);
+        var loaded = ArchetypeConfig.Load();
+        demoId = loaded.DemoId;
+        pack = ArchetypePackLoader.Load(loaded.SpikeRoot, loaded.ArchetypeId);
     }
     catch (ArchetypePackException ex)
     {
@@ -25,12 +27,9 @@ try
         return 1;
     }
 
-    // Sample change request (in bounds for rest-api-v1). Demo catalog: pack demos/change-requests.json.
-    var changeRequest = new ChangeRequestPayload(
-        Kind: ChangeRequest.KindFeature,
-        Title: "Add product resource",
-        Description: "Add a Product resource to the mini-ERP API: POST /products (name, sku, unitPrice) and GET /products/{id}. Persist in memory. Update openapi.yaml and add contract tests for the new operations.",
-        SuspectedPaths: ["openapi.yaml", "MiniErp/Program.cs", "MiniErp.ContractTests/HealthEndpointTests.cs"]);
+    var demos = ArchetypeDemoCatalog.Load(pack.Paths.Demos);
+    var activeDemo = ArchetypeDemoCatalog.ResolveActive(demos, demoId);
+    var changeRequest = ArchetypeDemoCatalog.ToChangeRequest(activeDemo);
 
     const string entryProject = "MiniErp/MiniErp.csproj";
     const string artifactsRoot = "artifacts";
@@ -75,7 +74,10 @@ try
     Console.WriteLine($"CodeContext caps  : {pack.CodeContext.MaxFilesAllowed} files, {pack.CodeContext.MaxCharsAllowed} chars");
     Console.WriteLine($"Model             : {model}");
     Console.WriteLine();
-    Console.WriteLine($"Hardcoded ChangeRequest ({changeRequest.Kind}): {changeRequest.Title}");
+    Console.WriteLine($"Demo catalog       : {pack.Paths.Demos}");
+    Console.WriteLine($"Available demos     : {string.Join(", ", demos.Select(d => d.Id))}");
+    Console.WriteLine($"Active demo         : {activeDemo.Id} ({activeDemo.Kind})");
+    Console.WriteLine($"ChangeRequest       : {changeRequest.Title}");
     Console.WriteLine(changeRequest.Description);
     Console.WriteLine();
 
@@ -183,8 +185,8 @@ try
     PrintAgentTelemetry("Coder", coderResult.Telemetry);
     Console.WriteLine();
 
-    // --- Applier (deterministic) ---
-    Console.WriteLine("--- Step 5/5: Applier (copy → apply → build) ---");
+    // --- Applier (deterministic proof gates) ---
+    Console.WriteLine("--- Step 5/5: Applier (copy → apply → build → OpenAPI → contract tests) ---");
     var applyResult = await applier.ApplyAsync(
         instance.Id,
         patchPackage.Id,
@@ -196,6 +198,16 @@ try
     Console.WriteLine($"  manifest        : {applyResult.ManifestPath}");
     Console.WriteLine($"  apply           : {(applyResult.ApplySucceeded ? "OK" : "FAIL")}");
     Console.WriteLine($"  build           : {(applyResult.BuildSucceeded ? "OK" : "FAIL")}");
+    if (applyResult.OpenapiConsistencySucceeded is { } openapiOk)
+    {
+        Console.WriteLine($"  openapi         : {(openapiOk ? "OK" : "FAIL")}");
+    }
+
+    if (applyResult.ContractTestsSucceeded is { } testsOk)
+    {
+        Console.WriteLine($"  contract tests  : {(testsOk ? "OK" : "FAIL")}");
+    }
+
     if (applyResult.FailureMessage is { } fail)
     {
         Console.WriteLine($"  failure         : {fail}");

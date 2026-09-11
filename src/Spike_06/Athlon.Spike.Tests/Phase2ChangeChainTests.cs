@@ -11,41 +11,6 @@ namespace Athlon.Spike.Tests;
 /// </summary>
 public class Phase2ChangeChainTests
 {
-    private const string ValidImplementationPlanJson = """
-        {
-          "title": "Uppercase echo",
-          "summary": "Echo typed line in UPPERCASE",
-          "tasks": [
-            {
-              "id": "T1",
-              "description": "Change Program.cs to uppercase the input before printing",
-              "estimate": "30m"
-            }
-          ],
-          "acceptanceCriteria": [
-            "Prints the input transformed to UPPERCASE"
-          ],
-          "technicalNotes": "Minimal edit to Echo/Program.cs",
-          "intendedPaths": ["Echo/Program.cs"]
-        }
-        """;
-
-    private const string ValidPatchPackageJson = """
-        {
-          "fixtureId": "echo-v1",
-          "changes": [
-            {
-              "path": "Echo/Program.cs",
-              "operation": "modify",
-              "unifiedDiff": "--- a/Echo/Program.cs\n+++ b/Echo/Program.cs\n@@ -1,5 +1,5 @@\n-Console.WriteLine(line);\n+Console.WriteLine(line.ToUpperInvariant());\n"
-            }
-          ],
-          "entryProject": "Echo/Echo.csproj",
-          "targetFramework": "net9.0",
-          "summary": "Uppercase echoed line"
-        }
-        """;
-
     [Fact]
     public async Task ChangeBundle_yields_ImplementationPlan_and_PatchPackage()
     {
@@ -55,8 +20,8 @@ public class Phase2ChangeChainTests
         var builder = new CodeContextBuilder(store);
 
         var llm = new MockLLMProvider(
-            new MockResponse(Content: ValidImplementationPlanJson),
-            new MockResponse(Content: ValidPatchPackageJson));
+            new MockResponse(Content: MiniErpTestFixtures.ValidImplementationPlanJson),
+            new MockResponse(Content: MiniErpTestFixtures.ValidPatchPackageJson()));
 
         var planner = new PlannerAgent(
             llm, store, SpikeTestPaths.PlannerPromptTemplate, SpikeTestPaths.ImplementationPlanSchema);
@@ -70,21 +35,21 @@ public class Phase2ChangeChainTests
             var structured = StructuredChange.Create(
                 new StructuredChangePayload(
                     Kind: ChangeRequest.KindFeature,
-                    Title: "Uppercase echo",
-                    Summary: "Echo UPPERCASE",
-                    AcceptanceCriteria: ["Prints UPPERCASE"],
-                    Constraints: ["Console only"],
+                    Title: "Add health comment",
+                    Summary: "Add comment to Program.cs",
+                    AcceptanceCriteria: ["GET /health still returns status ok"],
+                    Constraints: ["Minimal API only"],
                     Priority: "Medium",
-                    SuspectedPaths: ["Echo/Program.cs"]),
+                    SuspectedPaths: [MiniErpTestFixtures.ProgramPath]),
                 workflowId,
                 producer: AnalystAgent.AgentName);
             await store.SaveAsync(structured);
 
             var codeContext = await builder.BuildAndPublishAsync(
                 workflowId,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-                entryProject: "Echo/Echo.csproj");
+                fixtureId: MiniErpTestFixtures.FixtureId,
+                fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+                entryProject: MiniErpTestFixtures.EntryProject);
 
             var bundle = await runner.SaveChangeBundleAsync(
                 workflowId, structured.Id, codeContext.Id, CancellationToken.None);
@@ -98,10 +63,10 @@ public class Phase2ChangeChainTests
 
             var planPayload = ImplementationPlan.Parse(plan);
             Assert.Equal(codeContext.Id.ToString("D"), planPayload.CodeContextArtifactId);
-            Assert.Equal("echo-v1", planPayload.FixtureId);
+            Assert.Equal(MiniErpTestFixtures.FixtureId, planPayload.FixtureId);
 
             var package = PatchPackage.Parse(patch);
-            Assert.Equal("echo-v1", package.FixtureId);
+            Assert.Equal(MiniErpTestFixtures.FixtureId, package.FixtureId);
             Assert.Single(package.Changes);
             Assert.Equal(PatchPackage.OperationModify, package.Changes[0].Operation);
         }
@@ -123,21 +88,21 @@ public class Phase2ChangeChainTests
             var builder = new CodeContextBuilder(store);
             var codeContext = await builder.BuildAndPublishAsync(
                 workflowId,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-                entryProject: "Echo/Echo.csproj");
+                fixtureId: MiniErpTestFixtures.FixtureId,
+                fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+                entryProject: MiniErpTestFixtures.EntryProject);
 
             var plan = ImplementationPlan.Create(
                 new ImplementationPlanPayload(
-                    Title: "Uppercase echo",
-                    Summary: "Echo UPPERCASE",
-                    Tasks: [new ImplementationTask("T1", "Edit Program.cs", "30m")],
-                    AcceptanceCriteria: ["Prints UPPERCASE"],
+                    Title: "Add health comment",
+                    Summary: "Add comment to Program.cs",
+                    Tasks: [new ImplementationTask("T1", "Edit Program.cs", "15m")],
+                    AcceptanceCriteria: ["GET /health still returns status ok"],
                     TechnicalNotes: "Minimal",
-                    IntendedPaths: ["Echo/Program.cs"],
-                    FixtureId: "echo-v1",
+                    IntendedPaths: [MiniErpTestFixtures.ProgramPath],
+                    FixtureId: MiniErpTestFixtures.FixtureId,
                     CodeContextArtifactId: codeContext.Id.ToString("D"),
-                    EntryProject: "Echo/Echo.csproj",
+                    EntryProject: MiniErpTestFixtures.EntryProject,
                     TargetFramework: "net9.0"),
                 workflowId,
                 producer: PlannerAgent.AgentName);
@@ -148,7 +113,7 @@ public class Phase2ChangeChainTests
             var coder = new CoderAgent(
                 new MockLLMProvider(
                     new MockResponse(Content: "not json"),
-                    new MockResponse(Content: """{ "fixtureId": "echo-v1" }""")),
+                    new MockResponse(Content: """{ "fixtureId": "mini-erp-v1" }""")),
                 store,
                 SpikeTestPaths.CoderPromptTemplate,
                 SpikeTestPaths.PatchPackageSchema);

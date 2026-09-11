@@ -10,15 +10,15 @@ public class PatchPackageSchemaTests
     {
         var json = """
             {
-              "fixtureId": "echo-v1",
+              "fixtureId": "mini-erp-v1",
               "changes": [
                 {
-                  "path": "Echo/Program.cs",
+                  "path": "MiniErp/Program.cs",
                   "operation": "modify",
-                  "unifiedDiff": "--- a/Echo/Program.cs\n+++ b/Echo/Program.cs\n@@ -1 +1 @@\n-a\n+b\n"
+                  "unifiedDiff": "--- a/MiniErp/Program.cs\n+++ b/MiniErp/Program.cs\n@@ -1 +1 @@\n-a\n+b\n"
                 }
               ],
-              "entryProject": "Echo/Echo.csproj",
+              "entryProject": "MiniErp/MiniErp.csproj",
               "targetFramework": "net9.0",
               "summary": "Uppercase"
             }
@@ -33,15 +33,15 @@ public class PatchPackageSchemaTests
     {
         var json = """
             {
-              "fixtureId": "echo-v1",
+              "fixtureId": "mini-erp-v1",
               "changes": [
                 {
-                  "path": "Echo/Program.cs",
+                  "path": "MiniErp/Program.cs",
                   "operation": "replace",
-                  "unifiedDiff": "--- a/Echo/Program.cs\n+++ b/Echo/Program.cs\n@@ -1 +1 @@\n-a\n+b\n"
+                  "unifiedDiff": "--- a/MiniErp/Program.cs\n+++ b/MiniErp/Program.cs\n@@ -1 +1 @@\n-a\n+b\n"
                 }
               ],
-              "entryProject": "Echo/Echo.csproj",
+              "entryProject": "MiniErp/MiniErp.csproj",
               "targetFramework": "net9.0",
               "summary": "Bad op"
             }
@@ -55,7 +55,7 @@ public class PatchPackageSchemaTests
     public void PatchPackage_Create_rejects_parent_directory_paths()
     {
         var payload = new PatchPackagePayload(
-            FixtureId: "echo-v1",
+            FixtureId: "mini-erp-v1",
             Changes:
             [
                 new PatchFileChange("../evil/Program.cs", PatchPackage.OperationModify, "--- a/x\n+++ b/x\n")
@@ -75,15 +75,15 @@ public class PatchPackageSchemaTests
     {
         var workflowId = Guid.NewGuid();
         var payload = new PatchPackagePayload(
-            FixtureId: "echo-v1",
+            FixtureId: "mini-erp-v1",
             Changes:
             [
                 new PatchFileChange(
-                    "Echo/Program.cs",
+                    "MiniErp/Program.cs",
                     PatchPackage.OperationModify,
-                    "--- a/Echo/Program.cs\n+++ b/Echo/Program.cs\n@@ -1 +1 @@\n-a\n+b\n")
+                    "--- a/MiniErp/Program.cs\n+++ b/MiniErp/Program.cs\n@@ -1 +1 @@\n-a\n+b\n")
             ],
-            EntryProject: "Echo/Echo.csproj",
+            EntryProject: "MiniErp/MiniErp.csproj",
             TargetFramework: "net9.0",
             Summary: "Uppercase");
 
@@ -92,7 +92,7 @@ public class PatchPackageSchemaTests
         var parsed = PatchPackage.Parse(restored);
 
         Assert.Equal(ArtifactTypes.PatchPackage, restored.Type);
-        Assert.Equal("echo-v1", parsed.FixtureId);
+        Assert.Equal("mini-erp-v1", parsed.FixtureId);
         Assert.Single(parsed.Changes);
     }
 

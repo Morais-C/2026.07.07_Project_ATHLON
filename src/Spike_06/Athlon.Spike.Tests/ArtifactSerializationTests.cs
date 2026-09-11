@@ -33,10 +33,10 @@ public class ArtifactSerializationTests
             ],
             AcceptanceCriteria: ["Employees receive daily allowance"],
             TechnicalNotes: "Extend payroll module",
-            IntendedPaths: ["Echo/Program.cs"],
-            FixtureId: "echo-v1",
+            IntendedPaths: ["MiniErp/Program.cs"],
+            FixtureId: "mini-erp-v1",
             CodeContextArtifactId: Guid.NewGuid().ToString("D"),
-            EntryProject: "Echo/Echo.csproj",
+            EntryProject: "MiniErp/MiniErp.csproj",
             TargetFramework: "net9.0");
 
         var original = ImplementationPlan.Create(

@@ -15,7 +15,7 @@
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
 | **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
 | **Spike_05 — Archetype packs (`console-v1`)** | ✅ Complete (2026-08-04) — **frozen archive** — [checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
-| **Spike_06 — `rest-api-v1` archetype pack** | 🔄 In progress — Phase 0–2 ✅, next Phase 3 ([plan](./src/Spike_06/ImplementationPlan.md)) |
+| **Spike_06 — `rest-api-v1` archetype pack** | 🔄 In progress — Phase 0–3 ✅, next Phase 4 ([plan](./src/Spike_06/ImplementationPlan.md)) |
 | **Promotion to `Athlon.*`** | ⬜ After Spike_06 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 

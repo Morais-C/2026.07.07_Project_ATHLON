@@ -17,7 +17,7 @@ public class AnalystAgentTests
           ],
           "constraints": ["Single .NET 9 console", "Keep read → process → print"],
           "priority": "Medium",
-          "suspectedPaths": ["Echo/Program.cs"]
+          "suspectedPaths": ["MiniErp/Program.cs"]
         }
         """;
 
