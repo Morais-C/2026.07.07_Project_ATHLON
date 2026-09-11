@@ -201,10 +201,25 @@ fixtures/mini-erp-v1/
 
 | Risk | Mitigation |
 |------|------------|
-| OpenAPI↔test coverage check is underspecified | Pin algorithm in Phase 2 (parse paths+methods; require matching test markers or operationId references) |
-| Contract tests slow / flaky under Applier | Timeout + `--no-build` after successful build; keep surface tiny |
-| Prompt reuse from console misguides agents | Phase 1 rewrite before live demo |
+| OpenAPI↔test coverage check is underspecified | ✅ Algorithm pinned in Phase 2 (see §7.1) |
+| Contract tests slow / flaky under Applier | Timeout applied; tests rebuild from patched source |
+| Prompt reuse from console misguides agents | Phase 1 rewrite complete |
 | Caps too tight for multi-file resource adds | Phase 0 caps start at 16 files / 64k chars; tune if needed |
+
+### 7.1 Operation coverage algorithm (Phase 2)
+
+The `OpenApiValidator.CheckOperationCoverage` algorithm determines if each declared OpenAPI operation is covered by contract tests:
+
+1. **Parse OpenAPI**: Extract all operations (path + method + optional operationId) from `paths` section
+2. **Load test content**: Read all `.cs` files from the contract test directory
+3. **For each operation**, check coverage via heuristics:
+   - `operationId` reference in test code (case-insensitive)
+   - Exact path string in quotes (e.g., `"/health"`)
+   - Normalized path pattern (parameters replaced with regex)
+   - Path prefix without parameters
+4. **Result**: All operations must have at least one coverage signal; missing coverage → gate fails
+
+This is a heuristic suitable for the spike; production may use explicit test-to-operation mapping.
 
 ---
 
@@ -225,7 +240,7 @@ fixtures/mini-erp-v1/
 |-------|--------|
 | 0 — Fork + rest-api skeleton + mini-erp fixture | ✅ Complete (2026-08-05) |
 | 1 — Pack content (prompts, demos) | ✅ Complete (2026-09-11) |
-| 2 — Applier OpenAPI + contract-test gates | ⬜ Not started |
+| 2 — Applier OpenAPI + contract-test gates | ✅ Complete (2026-09-11) |
 | 3 — Host + tests wired to rest-api-v1 | ⬜ Not started |
 | 4 — Live demo + thesis + docs | ⬜ Not started |
 

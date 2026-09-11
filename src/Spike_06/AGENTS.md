@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes.
 5. **Do not modify `src/Spike_01/` … `src/Spike_05/`.** Those stay frozen archives.
 
-**Current state:** Phase 0 ✅, Phase 1 ✅ complete. Next: **Phase 2** — Applier OpenAPI consistency + contract-test gates.
+**Current state:** Phase 0–2 ✅ complete. Next: **Phase 3** — host + tests wired to rest-api-v1.
 
 ## Scope rules
 
@@ -35,9 +35,9 @@ Instructions for Cursor (or any implementer) working on this spike.
 
 ```text
 Read ROADMAP.md and src/Spike_06/AGENTS.md.
-Spike_01–05 are frozen. Continue Spike_06 Phase 2 per src/Spike_06/ImplementationPlan.md.
-Goal: Implement Applier OpenAPI consistency + contract-test gates (L9 proof pipeline).
-Pack content complete (Phase 1). Next: wire proof gates in Applier.
+Spike_01–05 are frozen. Continue Spike_06 Phase 3 per src/Spike_06/ImplementationPlan.md.
+Goal: Wire host + tests to rest-api-v1; adapt console-specific E2E tests to REST fixture.
+Pack content + Applier gates complete (Phase 1–2). Some tests still reference echo-v1.
 No promotion. No portal/API. One phase at a time; update docs on phase end.
 ```
 

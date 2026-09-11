@@ -1,6 +1,6 @@
 # Spike_06 — `rest-api-v1` archetype pack
 
-> **Status:** In progress — Phase 0 ✅, Phase 1 ✅; next **Phase 2** (Applier gates)  
+> **Status:** In progress — Phase 0–2 ✅; next **Phase 3** (host + tests wired to rest-api-v1)  
 > **Depends on:** Spike_05 complete (frozen at [`../Spike_05/`](../Spike_05/))  
 > **Decision:** [ROADMAP.md](../../ROADMAP.md) — `rest-api-v1` **before** promotion  
 > **Vision:** [REST API competitive positioning](../../Project_ATHLON_VisionScope/Project_Athlon_REST_API_Competitive_Positioning.md) · [Solution Archetype definition](../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md)  
@@ -28,9 +28,9 @@ Load **`archetypes/rest-api-v1/`** → ChangeRequest on near-empty mini-ERP → 
 - [x] `archetypes/rest-api-v1/` pack with all 10 components (Phase 1 complete)
 - [x] Host defaults to `archetypeId = rest-api-v1` (rest-api-only)
 - [x] Fixture `mini-erp-v1`: Minimal API + checked-in OpenAPI + contract tests
-- [ ] Applier proof: apply + `dotnet build` + OpenAPI consistency + `dotnet test` (Phase 2)
+- [x] Applier proof: apply + `dotnet build` + OpenAPI consistency + `dotnet test` (Phase 2 complete)
 - [x] Demo ChangeRequests: 2 features (add product/customer) + 1 bugfix in pack
-- [ ] Thesis: LoadAsync-only handoff + pack-resolved paths (Phase 3+)
+- [ ] Thesis: LoadAsync-only handoff + pack-resolved paths (Phase 3)
 - [ ] Live demo: all proof gates OK under `Publish/{workflowId}/` (Phase 4)
 
 ## How to run
