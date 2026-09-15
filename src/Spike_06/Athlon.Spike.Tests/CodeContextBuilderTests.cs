@@ -7,9 +7,9 @@ namespace Athlon.Spike.Tests;
 public class CodeContextBuilderTests
 {
     [Fact]
-    public async Task Publishes_CodeContext_from_echo_v1_fixture()
+    public async Task Publishes_CodeContext_from_mini_erp_v1_fixture()
     {
-        var pack = SpikeTestPaths.ConsoleV1Pack;
+        var pack = MiniErpTestFixtures.Pack;
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
         var workflowId = Guid.NewGuid();
@@ -21,18 +21,19 @@ public class CodeContextBuilderTests
                 workflowId,
                 fixtureId: pack.Baseline.FixtureId,
                 fixtureRoot: pack.Baseline.FixtureRoot,
-                entryProject: "Echo/Echo.csproj");
+                entryProject: MiniErpTestFixtures.EntryProject);
 
             Assert.Equal(ArtifactTypes.CodeContext, artifact.Type);
             Assert.Equal(CodeContextBuilder.ProducerName, artifact.Producer);
 
             var payload = CodeContext.Parse(artifact);
             Assert.Equal(pack.Baseline.FixtureId, payload.FixtureId);
-            Assert.Equal("Echo/Echo.csproj", payload.EntryProject);
+            Assert.Equal(MiniErpTestFixtures.EntryProject, payload.EntryProject);
             Assert.Equal("net9.0", payload.TargetFramework);
-            Assert.Equal(2, payload.Files.Count);
-            Assert.Contains(payload.Files, f => f.Path == "Echo/Echo.csproj");
-            Assert.Contains(payload.Files, f => f.Path == "Echo/Program.cs");
+            Assert.Equal(5, payload.Files.Count);
+            Assert.Contains(payload.Files, f => f.Path == MiniErpTestFixtures.EntryProject);
+            Assert.Contains(payload.Files, f => f.Path == MiniErpTestFixtures.ProgramPath);
+            Assert.Contains(payload.Files, f => f.Path == MiniErpTestFixtures.OpenApiPath);
             Assert.True(payload.TotalChars > 0);
             Assert.Equal(pack.CodeContext.MaxFilesAllowed, payload.MaxFilesAllowed);
             Assert.Equal(pack.CodeContext.MaxCharsAllowed, payload.MaxCharsAllowed);
@@ -54,17 +55,17 @@ public class CodeContextBuilderTests
         var root = CreateTempArtifactRoot();
         var store = new FileArtifactStore(root);
         var workflowId = Guid.NewGuid();
-        // echo-v1 has 2 source files — cap at 1 to force abort
-        var builder = new CodeContextBuilder(store, maxFilesAllowed: 1);
+        // mini-erp-v1 loads 4 files with default extensions — cap at 3 to force abort
+        var builder = new CodeContextBuilder(store, maxFilesAllowed: 3);
 
         try
         {
             var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 builder.BuildAndPublishAsync(
                     workflowId,
-                    fixtureId: "echo-v1",
-                    fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-                    entryProject: "Echo/Echo.csproj"));
+                    fixtureId: MiniErpTestFixtures.FixtureId,
+                    fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+                    entryProject: MiniErpTestFixtures.EntryProject));
 
             Assert.Contains("file cap", ex.Message, StringComparison.OrdinalIgnoreCase);
             AssertNoPublishedArtifacts(root);
@@ -88,9 +89,9 @@ public class CodeContextBuilderTests
             var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 builder.BuildAndPublishAsync(
                     workflowId,
-                    fixtureId: "echo-v1",
-                    fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-                    entryProject: "Echo/Echo.csproj"));
+                    fixtureId: MiniErpTestFixtures.FixtureId,
+                    fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+                    entryProject: MiniErpTestFixtures.EntryProject));
 
             Assert.Contains("char cap", ex.Message, StringComparison.OrdinalIgnoreCase);
             AssertNoPublishedArtifacts(root);

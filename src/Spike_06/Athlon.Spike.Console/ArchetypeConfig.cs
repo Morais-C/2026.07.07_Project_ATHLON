@@ -9,7 +9,7 @@ namespace Athlon.Spike.ConsoleHost;
 /// </summary>
 internal static class ArchetypeConfig
 {
-    public static (string ArchetypeId, string SpikeRoot) Load()
+    public static ArchetypeHostConfig Load()
     {
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -26,6 +26,17 @@ internal static class ArchetypeConfig
             spikeRoot = Directory.GetCurrentDirectory();
         }
 
-        return (archetypeId, Path.GetFullPath(spikeRoot));
+        var demoId = config["Athlon:DemoId"];
+        if (string.IsNullOrWhiteSpace(demoId))
+        {
+            demoId = Environment.GetEnvironmentVariable("ATHLON_DEMO_ID");
+        }
+
+        return new ArchetypeHostConfig(
+            archetypeId,
+            Path.GetFullPath(spikeRoot),
+            string.IsNullOrWhiteSpace(demoId) ? null : demoId.Trim());
     }
 }
+
+internal sealed record ArchetypeHostConfig(string ArchetypeId, string SpikeRoot, string? DemoId);

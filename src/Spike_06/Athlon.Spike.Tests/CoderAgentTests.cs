@@ -8,22 +8,6 @@ namespace Athlon.Spike.Tests;
 
 public class CoderAgentTests
 {
-    private const string ValidPatchPackageJson = """
-        {
-          "fixtureId": "echo-v1",
-          "changes": [
-            {
-              "path": "Echo/Program.cs",
-              "operation": "modify",
-              "unifiedDiff": "--- a/Echo/Program.cs\n+++ b/Echo/Program.cs\n@@ -1,5 +1,5 @@\n-Console.WriteLine(line);\n+Console.WriteLine(line.ToUpperInvariant());\n"
-            }
-          ],
-          "entryProject": "Echo/Echo.csproj",
-          "targetFramework": "net9.0",
-          "summary": "Uppercase echoed line"
-        }
-        """;
-
     [Fact]
     public async Task Publishes_valid_PatchPackage_from_mock_llm_response()
     {
@@ -35,20 +19,20 @@ public class CoderAgentTests
         {
             var plan = await SeedImplementationPlanAsync(store, workflowId);
 
-            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidPatchPackageJson)));
+            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: MiniErpTestFixtures.ValidPatchPackageJson())));
             var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, plan.Id));
 
             Assert.Equal(ArtifactTypes.PatchPackage, result.OutputArtifact.Type);
             Assert.Equal(AgentName, result.OutputArtifact.Producer);
 
             var package = PatchPackage.Parse(result.OutputArtifact);
-            Assert.Equal("echo-v1", package.FixtureId);
-            Assert.Equal("Echo/Echo.csproj", package.EntryProject);
+            Assert.Equal(MiniErpTestFixtures.FixtureId, package.FixtureId);
+            Assert.Equal(MiniErpTestFixtures.EntryProject, package.EntryProject);
             Assert.Equal("net9.0", package.TargetFramework);
-            Assert.Equal("Uppercase echoed line", package.Summary);
+            Assert.Equal("Add comment to Program.cs", package.Summary);
             Assert.Single(package.Changes);
             Assert.Equal("modify", package.Changes[0].Operation);
-            Assert.Equal("Echo/Program.cs", package.Changes[0].Path);
+            Assert.Equal(MiniErpTestFixtures.ProgramPath, package.Changes[0].Path);
             Assert.True(result.Telemetry.TotalTokens > 0);
         }
         finally
@@ -70,7 +54,7 @@ public class CoderAgentTests
 
             var agent = CreateAgent(store, new MockLLMProvider(
                 new MockResponse(Content: "not valid json"),
-                new MockResponse(Content: ValidPatchPackageJson)));
+                new MockResponse(Content: MiniErpTestFixtures.ValidPatchPackageJson())));
 
             var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, plan.Id));
 
@@ -123,7 +107,7 @@ public class CoderAgentTests
 
         const string unsafePackage = """
             {
-              "fixtureId": "echo-v1",
+              "fixtureId": "mini-erp-v1",
               "changes": [
                 {
                   "path": "../evil/Program.cs",
@@ -174,7 +158,7 @@ public class CoderAgentTests
                 workflowId);
             await store.SaveAsync(wrong);
 
-            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidPatchPackageJson)));
+            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: MiniErpTestFixtures.ValidPatchPackageJson())));
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, wrong.Id)));
@@ -193,21 +177,21 @@ public class CoderAgentTests
         var builder = new CodeContextBuilder(store);
         var codeContext = await builder.BuildAndPublishAsync(
             workflowId,
-            fixtureId: "echo-v1",
-            fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-            entryProject: "Echo/Echo.csproj");
+            fixtureId: MiniErpTestFixtures.FixtureId,
+            fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+            entryProject: MiniErpTestFixtures.EntryProject);
 
         var plan = ImplementationPlan.Create(
             new ImplementationPlanPayload(
-                Title: "Uppercase echo",
-                Summary: "Echo typed line in UPPERCASE",
-                Tasks: [new ImplementationTask("T1", "Edit Program.cs", "30m")],
-                AcceptanceCriteria: ["Prints UPPERCASE"],
+                Title: "Add health comment",
+                Summary: "Add comment to Program.cs",
+                Tasks: [new ImplementationTask("T1", "Edit Program.cs", "15m")],
+                AcceptanceCriteria: ["GET /health still returns status ok"],
                 TechnicalNotes: "Minimal diff",
-                IntendedPaths: ["Echo/Program.cs"],
-                FixtureId: "echo-v1",
+                IntendedPaths: [MiniErpTestFixtures.ProgramPath],
+                FixtureId: MiniErpTestFixtures.FixtureId,
                 CodeContextArtifactId: codeContext.Id.ToString("D"),
-                EntryProject: "Echo/Echo.csproj",
+                EntryProject: MiniErpTestFixtures.EntryProject,
                 TargetFramework: "net9.0"),
             workflowId,
             producer: PlannerAgent.AgentName);

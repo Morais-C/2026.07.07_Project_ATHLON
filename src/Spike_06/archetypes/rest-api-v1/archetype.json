@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "status": "training",
   "displayName": "REST API v1",
-  "description": "Bounded ASP.NET Minimal API / OpenAPI change archetype (mini-ERP baseline). Spike_06 pack skeleton — Phase 0.",
+  "description": "Bounded ASP.NET Minimal API / OpenAPI change archetype (mini-ERP baseline). Spike_06 formal pack — proved with apply + build + OpenAPI + contract tests.",
   "paths": {
     "bounds": "bounds.md",
     "codeContext": "code-context.md",

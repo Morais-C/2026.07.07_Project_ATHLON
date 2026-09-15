@@ -35,7 +35,7 @@ public class StructuredChangeSchemaTests
               "acceptanceCriteria": ["No leading/trailing spaces"],
               "constraints": ["Single .NET 9 console"],
               "priority": "High",
-              "suspectedPaths": ["Echo/Program.cs"]
+              "suspectedPaths": ["MiniErp/Program.cs"]
             }
             """;
 

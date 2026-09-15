@@ -3,8 +3,7 @@ using Athlon.Spike.Contracts;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Phase 4: wrong/missing archetypeId fails before the chain starts.
-/// Host maps <see cref="ArchetypePackException"/> to non-zero exit (see Program.cs).
+/// Host fail-fast: wrong/missing archetypeId or demo id fails before the chain starts.
 /// </summary>
 public class HostFailFastTests
 {
@@ -41,9 +40,9 @@ public class HostFailFastTests
     [Fact]
     public void Prompt_and_schema_paths_resolve_under_pack_not_spike_root()
     {
-        var pack = SpikeTestPaths.ConsoleV1Pack;
-        var packPrompts = Path.Combine("archetypes", "console-v1", "prompts");
-        var packSchemas = Path.Combine("archetypes", "console-v1", "schemas");
+        var pack = SpikeTestPaths.RestApiV1Pack;
+        var packPrompts = Path.Combine("archetypes", "rest-api-v1", "prompts");
+        var packSchemas = Path.Combine("archetypes", "rest-api-v1", "schemas");
 
         Assert.Contains(packPrompts, pack.Analyst.PromptPath, StringComparison.OrdinalIgnoreCase);
         Assert.Contains(packPrompts, pack.Planner.PromptPath, StringComparison.OrdinalIgnoreCase);
@@ -54,5 +53,28 @@ public class HostFailFastTests
 
         Assert.False(Directory.Exists(Path.Combine(SpikeTestPaths.Root, "prompts")));
         Assert.False(Directory.Exists(Path.Combine(SpikeTestPaths.Root, "schemas")));
+    }
+
+    [Fact]
+    public void Demo_catalog_loads_from_rest_api_v1_pack()
+    {
+        var pack = SpikeTestPaths.RestApiV1Pack;
+        var demos = ArchetypeDemoCatalog.Load(pack.Paths.Demos);
+
+        Assert.True(demos.Count >= 2);
+        Assert.Contains(demos, d => d.Id == "add-product-resource");
+        Assert.Contains(demos, d => d.Id == "add-customer-resource");
+    }
+
+    [Fact]
+    public void Unknown_demo_id_throws_ArchetypePackException()
+    {
+        var pack = SpikeTestPaths.RestApiV1Pack;
+        var demos = ArchetypeDemoCatalog.Load(pack.Paths.Demos);
+
+        var ex = Assert.Throws<ArchetypePackException>(() =>
+            ArchetypeDemoCatalog.ResolveActive(demos, "does-not-exist"));
+
+        Assert.Contains("Unknown demo id", ex.Message, StringComparison.Ordinal);
     }
 }

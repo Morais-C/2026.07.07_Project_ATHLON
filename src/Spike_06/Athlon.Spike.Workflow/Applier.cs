@@ -6,8 +6,9 @@ using Athlon.Spike.Contracts;
 namespace Athlon.Spike.Workflow;
 
 /// <summary>
-/// Deterministic applier: fixture + PatchPackage (by id) → Publish/{workflowId}/ + dotnet build.
-/// Keep tree + failed manifest on apply/build failure (never mark success). Functional run → Tester later.
+/// Deterministic applier: fixture + PatchPackage (by id) → Publish/{workflowId}/ + proof gates.
+/// Gates (L9): apply → build → OpenAPI consistency → contract tests.
+/// Keep tree + failed manifest on any gate failure. Functional run → Tester later.
 /// </summary>
 public sealed class Applier
 {
@@ -110,6 +111,11 @@ public sealed class Applier
 
         bool buildSucceeded = false;
         var buildOutput = string.Empty;
+        bool? openapiConsistencySucceeded = null;
+        string? openapiConsistencyOutput = null;
+        bool? contractTestsSucceeded = null;
+        string? contractTestOutput = null;
+        string? contractTestProjectPath = null;
 
         if (applyFailure is null)
         {
@@ -125,7 +131,7 @@ public sealed class Applier
             else
             {
                 Console.WriteLine($"Building            : {package.EntryProject}");
-                (buildSucceeded, buildOutput) = await RunDotnetBuildAsync(
+                (buildSucceeded, buildOutput) = await RunDotnetCommandAsync(
                     $"build \"{entryProjectPath}\" --nologo",
                     publishDirectoryFull,
                     _buildTimeout,
@@ -133,8 +139,53 @@ public sealed class Applier
 
                 if (buildSucceeded)
                 {
-                    Console.WriteLine("Build succeeded. (Functional run checks deferred to Tester agent.)");
+                    Console.WriteLine("Build succeeded.");
                 }
+            }
+        }
+
+        if (applyFailure is null && buildSucceeded)
+        {
+            Console.WriteLine("Validating OpenAPI  : checking consistency and coverage");
+            contractTestProjectPath = FindContractTestProject(publishDirectoryFull);
+            (openapiConsistencySucceeded, openapiConsistencyOutput) =
+                OpenApiValidator.ValidateAndCheckCoverage(publishDirectoryFull, contractTestProjectPath);
+
+            if (openapiConsistencySucceeded == true)
+            {
+                Console.WriteLine("OpenAPI consistency : PASS");
+            }
+            else
+            {
+                Console.WriteLine("OpenAPI consistency : FAIL");
+            }
+        }
+
+        if (applyFailure is null && buildSucceeded && openapiConsistencySucceeded == true)
+        {
+            if (contractTestProjectPath is not null && File.Exists(contractTestProjectPath))
+            {
+                Console.WriteLine($"Running tests       : {Path.GetRelativePath(publishDirectoryFull, contractTestProjectPath)}");
+                (contractTestsSucceeded, contractTestOutput) = await RunDotnetCommandAsync(
+                    $"test \"{contractTestProjectPath}\" --nologo",
+                    publishDirectoryFull,
+                    _buildTimeout,
+                    cancellationToken).ConfigureAwait(false);
+
+                if (contractTestsSucceeded == true)
+                {
+                    Console.WriteLine("Contract tests      : PASS");
+                }
+                else
+                {
+                    Console.WriteLine("Contract tests      : FAIL");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Contract tests      : SKIP (no test project found)");
+                contractTestsSucceeded = true;
+                contractTestOutput = "No contract test project found; skipped.";
             }
         }
 
@@ -143,6 +194,14 @@ public sealed class Applier
         if (applySucceeded && !buildSucceeded)
         {
             failure = "dotnet build failed.";
+        }
+        else if (applySucceeded && buildSucceeded && openapiConsistencySucceeded == false)
+        {
+            failure = "OpenAPI consistency check failed.";
+        }
+        else if (applySucceeded && buildSucceeded && openapiConsistencySucceeded == true && contractTestsSucceeded == false)
+        {
+            failure = "Contract tests failed.";
         }
 
         var manifestPath = await WriteManifestAsync(
@@ -153,6 +212,10 @@ public sealed class Applier
             applySucceeded,
             buildSucceeded,
             Truncate(buildOutput),
+            openapiConsistencySucceeded,
+            Truncate(openapiConsistencyOutput ?? ""),
+            contractTestsSucceeded,
+            Truncate(contractTestOutput ?? ""),
             failure,
             cancellationToken).ConfigureAwait(false);
 
@@ -164,8 +227,24 @@ public sealed class Applier
             ApplySucceeded: applySucceeded,
             BuildSucceeded: buildSucceeded,
             BuildOutput: Truncate(buildOutput),
+            OpenapiConsistencySucceeded: openapiConsistencySucceeded,
+            OpenapiConsistencyOutput: Truncate(openapiConsistencyOutput ?? ""),
+            ContractTestsSucceeded: contractTestsSucceeded,
+            ContractTestOutput: Truncate(contractTestOutput ?? ""),
             ManifestPath: manifestPath,
             FailureMessage: failure);
+    }
+
+    private static string? FindContractTestProject(string publishDirectory)
+    {
+        var testProjects = Directory.GetFiles(publishDirectory, "*.ContractTests.csproj", SearchOption.AllDirectories);
+        if (testProjects.Length > 0)
+        {
+            return testProjects[0];
+        }
+
+        testProjects = Directory.GetFiles(publishDirectory, "*Tests.csproj", SearchOption.AllDirectories);
+        return testProjects.Length > 0 ? testProjects[0] : null;
     }
 
     private static void CopyFixture(string fixtureRootFull, string publishDirectoryFull)
@@ -285,7 +364,7 @@ public sealed class Applier
         return Path.TrimEndingDirectorySeparator(full) + Path.DirectorySeparatorChar;
     }
 
-    private static async Task<(bool Succeeded, string Output)> RunDotnetBuildAsync(
+    private static async Task<(bool Succeeded, string Output)> RunDotnetCommandAsync(
         string arguments,
         string workingDirectory,
         TimeSpan timeout,
@@ -388,6 +467,10 @@ public sealed class Applier
         bool applySucceeded,
         bool buildSucceeded,
         string buildOutput,
+        bool? openapiConsistencySucceeded,
+        string openapiConsistencyOutput,
+        bool? contractTestsSucceeded,
+        string contractTestOutput,
         string? failureMessage,
         CancellationToken cancellationToken)
     {
@@ -406,8 +489,12 @@ public sealed class Applier
             targetFramework = package.TargetFramework,
             applySucceeded,
             buildSucceeded,
-            failureMessage,
             buildOutput,
+            openapiConsistencySucceeded,
+            openapiConsistencyOutput,
+            contractTestsSucceeded,
+            contractTestOutput,
+            failureMessage,
             functionalTest = "deferred-to-tester-agent",
             createdUtc = DateTime.UtcNow
         };

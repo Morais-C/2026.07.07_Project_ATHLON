@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes.
 5. **Do not modify `src/Spike_01/` … `src/Spike_05/`.** Those stay frozen archives.
 
-**Current state:** Phase 0 ✅ complete. Next: **Phase 1** — polish REST prompts/bounds; finalize demo catalog.
+**Current state:** ✅ **Complete (2026-09-15)** — all phases done. **Frozen archive.** Next: **Promotion** ([PromotionPlan.md](../../PromotionPlan.md)).
 
 ## Scope rules
 
@@ -31,13 +31,13 @@ Instructions for Cursor (or any implementer) working on this spike.
 | Proof | apply → build → OpenAPI consistency → contract tests |
 | Handoff | Artifact id only; fail fast; no Enter pauses |
 
-## Suggested opening prompt
+## Suggested opening prompt (Promotion)
 
 ```text
-Read ROADMAP.md and src/Spike_06/AGENTS.md.
-Spike_01–05 are frozen. Continue Spike_06 Phase 0/1 per src/Spike_06/ImplementationPlan.md.
-Goal: rest-api-v1 pack + mini-erp-v1; reuse ArchetypePackLoader; proof = build + OpenAPI + contract tests.
-No promotion. No portal/API. One phase at a time; update docs on phase end.
+Spike_06 complete (rest-api-v1 pack proved). Next: promotion to Athlon.*.
+Read ROADMAP.md and PromotionPlan.md. Spike_01–06 are frozen — do not modify them.
+Copy proven engine + pack model into Athlon.*; do not edit spikes for product features.
+No portal/API until after promotion.
 ```
 
 ## Definition of done

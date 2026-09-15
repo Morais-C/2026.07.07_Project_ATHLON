@@ -11,37 +11,6 @@ namespace Athlon.Spike.Tests;
 /// </summary>
 public class AnalystToPlannerChainTests
 {
-    private const string ValidStructuredChangeJson = """
-        {
-          "kind": "feature",
-          "title": "Uppercase echo",
-          "summary": "Echo the typed line in uppercase",
-          "acceptanceCriteria": ["Prints the input transformed to UPPERCASE"],
-          "constraints": ["Single .NET 9 console", "Keep read → process → print"],
-          "priority": "Medium",
-          "suspectedPaths": ["Echo/Program.cs"]
-        }
-        """;
-
-    private const string ValidImplementationPlanJson = """
-        {
-          "title": "Uppercase echo",
-          "summary": "Echo typed line in UPPERCASE",
-          "tasks": [
-            {
-              "id": "T1",
-              "description": "Change Program.cs to uppercase the input before printing",
-              "estimate": "30m"
-            }
-          ],
-          "acceptanceCriteria": [
-            "Prints the input transformed to UPPERCASE"
-          ],
-          "technicalNotes": "Minimal edit to Echo/Program.cs",
-          "intendedPaths": ["Echo/Program.cs"]
-        }
-        """;
-
     [Fact]
     public async Task Chain_runs_Planner_with_ChangeBundle_id_only()
     {
@@ -51,8 +20,8 @@ public class AnalystToPlannerChainTests
         var builder = new CodeContextBuilder(store);
 
         var llm = new MockLLMProvider(
-            new MockResponse(Content: ValidStructuredChangeJson),
-            new MockResponse(Content: ValidImplementationPlanJson));
+            new MockResponse(Content: MiniErpTestFixtures.ValidStructuredChangeJson),
+            new MockResponse(Content: MiniErpTestFixtures.ValidImplementationPlanJson));
 
         var analyst = new AnalystAgent(
             llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
@@ -63,11 +32,7 @@ public class AnalystToPlannerChainTests
         {
             var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
                 "ChangeRequestToPlan",
-                new ChangeRequestPayload(
-                    Kind: ChangeRequest.KindFeature,
-                    Title: "Uppercase echo",
-                    Description: "Print input in UPPERCASE",
-                    SuspectedPaths: ["Echo/Program.cs"]),
+                MiniErpTestFixtures.SampleChangeRequest(),
                 CancellationToken.None);
 
             var analystResult = await analyst.ExecuteAsync(new AgentExecutionContext(instance.Id, inputArtifact.Id));
@@ -75,9 +40,9 @@ public class AnalystToPlannerChainTests
 
             var codeContext = await builder.BuildAndPublishAsync(
                 instance.Id,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-                entryProject: "Echo/Echo.csproj");
+                fixtureId: MiniErpTestFixtures.FixtureId,
+                fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+                entryProject: MiniErpTestFixtures.EntryProject);
 
             var bundle = await runner.SaveChangeBundleAsync(
                 instance.Id,
@@ -89,7 +54,7 @@ public class AnalystToPlannerChainTests
                 new AgentExecutionContext(instance.Id, bundle.Id));
 
             Assert.Equal(ArtifactTypes.ImplementationPlan, plannerResult.OutputArtifact.Type);
-            Assert.Equal("Uppercase echo", ImplementationPlan.Parse(plannerResult.OutputArtifact).Title);
+            Assert.Equal("Add health comment", ImplementationPlan.Parse(plannerResult.OutputArtifact).Title);
 
             Assert.NotNull(await store.LoadAsync(analystResult.OutputArtifact.Id));
             Assert.NotNull(await store.LoadAsync(codeContext.Id));

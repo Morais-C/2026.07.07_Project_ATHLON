@@ -11,18 +11,6 @@ namespace Athlon.Spike.Tests;
 /// </summary>
 public class Phase1ChangeChainTests
 {
-    private const string ValidStructuredChangeJson = """
-        {
-          "kind": "feature",
-          "title": "Uppercase echo",
-          "summary": "Echo the typed line in uppercase",
-          "acceptanceCriteria": ["Prints the input transformed to UPPERCASE"],
-          "constraints": ["Single .NET 9 console", "Keep read → process → print"],
-          "priority": "Medium",
-          "suspectedPaths": ["Echo/Program.cs"]
-        }
-        """;
-
     [Fact]
     public async Task In_bounds_ChangeRequest_yields_StructuredChange_and_CodeContext()
     {
@@ -31,7 +19,7 @@ public class Phase1ChangeChainTests
         var runner = new WorkflowRunner(store, artifactRoot: root);
         var builder = new CodeContextBuilder(store);
 
-        var llm = new MockLLMProvider(new MockResponse(Content: ValidStructuredChangeJson));
+        var llm = new MockLLMProvider(new MockResponse(Content: MiniErpTestFixtures.ValidStructuredChangeJson));
         var analyst = new AnalystAgent(
             llm, store, SpikeTestPaths.AnalystPromptTemplate, SpikeTestPaths.StructuredChangeSchema);
 
@@ -39,11 +27,7 @@ public class Phase1ChangeChainTests
         {
             var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
                 "ChangeRequestToCodeContext",
-                new ChangeRequestPayload(
-                    Kind: ChangeRequest.KindFeature,
-                    Title: "Uppercase echo",
-                    Description: "Print input in UPPERCASE",
-                    SuspectedPaths: ["Echo/Program.cs"]),
+                MiniErpTestFixtures.SampleChangeRequest(),
                 CancellationToken.None);
 
             var structured = (await analyst.ExecuteAsync(
@@ -51,16 +35,16 @@ public class Phase1ChangeChainTests
 
             var codeContext = await builder.BuildAndPublishAsync(
                 instance.Id,
-                fixtureId: "echo-v1",
-                fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-                entryProject: "Echo/Echo.csproj");
+                fixtureId: MiniErpTestFixtures.FixtureId,
+                fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+                entryProject: MiniErpTestFixtures.EntryProject);
 
             Assert.Equal(ArtifactTypes.ChangeRequest, inputArtifact.Type);
             Assert.Equal(ArtifactTypes.StructuredChange, structured.Type);
             Assert.Equal(ArtifactTypes.CodeContext, codeContext.Type);
 
-            Assert.Equal("Uppercase echo", StructuredChange.Parse(structured).Title);
-            Assert.Equal(2, CodeContext.Parse(codeContext).Files.Count);
+            Assert.Equal("Add health comment", StructuredChange.Parse(structured).Title);
+            Assert.Equal(4, CodeContext.Parse(codeContext).Files.Count);
         }
         finally
         {
@@ -78,7 +62,7 @@ public class Phase1ChangeChainTests
         var llm = new MockLLMProvider(new MockResponse(Content: """
             {
               "inBounds": false,
-              "reason": "Requires a web front end and a SQL database — not a single console app."
+              "reason": "Requires SQL persistence and JWT auth — out of scope for rest-api-v1."
             }
             """));
 

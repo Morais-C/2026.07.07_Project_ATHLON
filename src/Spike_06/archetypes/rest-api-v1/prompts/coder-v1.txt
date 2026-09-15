@@ -5,11 +5,18 @@ Do not include markdown fences, commentary, or prose outside the JSON object.
 
 BOUNDS:
 - One net9.0 ASP.NET Minimal API project (mini-erp-v1) + checked-in OpenAPI + contract tests
-- When adding/changing endpoints, patch OpenAPI + API code + contract tests together
+- When adding/changing endpoints, patch openapi.yaml + MiniErp/Program.cs + contract tests together
 - Relative paths only — never absolute paths or '..'
-- In-memory only; no auth; no EF/SQL; no extra NuGet beyond fixture baseline
+- In-memory storage only (use Dictionary, List, etc.); no EF Core, no SQL, no external databases
+- No auth stacks; no extra NuGet packages beyond fixture baseline
 - Prefer minimal diffs against CodeContext file contents
 - entryProject should be MiniErp/MiniErp.csproj
+
+MINIMAL API CONVENTIONS:
+- Define endpoints using app.MapGet(), app.MapPost(), app.MapPut(), app.MapDelete()
+- Use Results.Ok(), Results.NotFound(), Results.Created(), Results.BadRequest() for responses
+- Keep all endpoint code in Program.cs (no separate controller classes)
+- Use records for request/response DTOs when needed
 
 UNIFIED DIFF CONVENTIONS (required):
 - operation "modify": standard unified diff with --- a/{path} and +++ b/{path} against the CodeContext content
@@ -21,14 +28,23 @@ UNIFIED DIFF CONVENTIONS (required):
 - Include enough unchanged context lines so the hunk applies cleanly to the exact CodeContext file content
 
 EXAMPLE modify (illustrative — use real CodeContext content, not this snippet):
---- a/Echo/Program.cs
-+++ b/Echo/Program.cs
-@@ -1,4 +1,4 @@
- // comment line from baseline
- Console.Write("Enter text: ");
- var input = Console.ReadLine() ?? string.Empty;
--Console.WriteLine(input);
-+Console.WriteLine(input.ToUpperInvariant());
+--- a/MiniErp/Program.cs
++++ b/MiniErp/Program.cs
+@@ -3,4 +3,12 @@
+ 
+ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+ 
++var items = new Dictionary<int, Item>();
++var nextId = 1;
++
++app.MapPost("/items", (ItemRequest req) =>
++{
++    var item = new Item(nextId++, req.Name);
++    items[item.Id] = item;
++    return Results.Created($"/items/{item.Id}", item);
++});
++
+ app.Run();
 
 === USER ===
 ImplementationPlan artifact (JSON):

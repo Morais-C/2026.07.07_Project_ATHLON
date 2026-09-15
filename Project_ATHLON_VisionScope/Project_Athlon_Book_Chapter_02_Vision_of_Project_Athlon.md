@@ -76,8 +76,8 @@ Agents hand off **immutable artifacts by id only**. LLM steps propose;
 
 Archetypes compose in layers (e.g. **REST API** hub + contract-bound
 clients). Spike training proved **`console-v1`** behavior (Spike_03/04);
-**Spike_05** formalizes it as the first **archetype pack**; first
-commercial target is **`rest-api-v1`** (Spike_06). New archetypes ship as
+**Spike_05** formalized it as the first **archetype pack**; **Spike_06** proved
+the first commercial pack **`rest-api-v1`**. New archetypes ship as
 **packs**, not prompt tweaks. See [ROADMAP.md](../ROADMAP.md).
 
 See [REST API competitive positioning](Project_Athlon_REST_API_Competitive_Positioning.md) for market comparison of the first commercial archetype.

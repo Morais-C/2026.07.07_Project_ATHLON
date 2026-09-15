@@ -15,12 +15,7 @@ internal static class SpikeTestPaths
 
     public static ArchetypePack RestApiV1Pack => RestApiV1PackLazy.Value;
 
-    /// <summary>Alias kept so Phase 0 compiles against Spike_05 test names until Phase 3 renames call sites.</summary>
-    public static ArchetypePack ConsoleV1Pack => RestApiV1Pack;
-
     public static string RestApiV1PackRoot => RestApiV1Pack.PackRoot;
-
-    public static string ConsoleV1PackRoot => RestApiV1PackRoot;
 
     public static string AnalystPromptTemplate => RestApiV1Pack.Analyst.PromptPath;
 
@@ -51,5 +46,5 @@ internal static class SpikeTestPaths
 
     public static string MiniErpV1FixtureRoot => RestApiV1Pack.Baseline.FixtureRoot;
 
-    public static string EchoV1FixtureRoot => MiniErpV1FixtureRoot;
+    public const string EntryProject = "MiniErp/MiniErp.csproj";
 }

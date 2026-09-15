@@ -8,25 +8,6 @@ namespace Athlon.Spike.Tests;
 
 public class PlannerAgentTests
 {
-    private const string ValidImplementationPlanJson = """
-        {
-          "title": "Uppercase echo",
-          "summary": "Echo typed line in UPPERCASE",
-          "tasks": [
-            {
-              "id": "T1",
-              "description": "Change Program.cs to uppercase the input before printing",
-              "estimate": "30m"
-            }
-          ],
-          "acceptanceCriteria": [
-            "Prints the input transformed to UPPERCASE"
-          ],
-          "technicalNotes": "Minimal edit to Echo/Program.cs",
-          "intendedPaths": ["Echo/Program.cs"]
-        }
-        """;
-
     [Fact]
     public async Task Publishes_valid_artifact_from_mock_llm_response()
     {
@@ -38,17 +19,17 @@ public class PlannerAgentTests
         {
             var bundle = await SeedChangeBundleAsync(store, workflowId);
 
-            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidImplementationPlanJson)));
+            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: MiniErpTestFixtures.ValidImplementationPlanJson)));
             var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, bundle.Id));
 
             Assert.Equal(ArtifactTypes.ImplementationPlan, result.OutputArtifact.Type);
             Assert.Equal(AgentName, result.OutputArtifact.Producer);
 
             var plan = ImplementationPlan.Parse(result.OutputArtifact);
-            Assert.Equal("Uppercase echo", plan.Title);
-            Assert.Equal(["Echo/Program.cs"], plan.IntendedPaths);
-            Assert.Equal("echo-v1", plan.FixtureId);
-            Assert.Equal("Echo/Echo.csproj", plan.EntryProject);
+            Assert.Equal("Add health comment", plan.Title);
+            Assert.Equal([MiniErpTestFixtures.ProgramPath], plan.IntendedPaths);
+            Assert.Equal(MiniErpTestFixtures.FixtureId, plan.FixtureId);
+            Assert.Equal(MiniErpTestFixtures.EntryProject, plan.EntryProject);
             Assert.Equal("net9.0", plan.TargetFramework);
             Assert.True(Guid.TryParse(plan.CodeContextArtifactId, out _));
             Assert.True(result.Telemetry.TotalTokens > 0);
@@ -75,7 +56,7 @@ public class PlannerAgentTests
 
             var agent = CreateAgent(store, new MockLLMProvider(
                 new MockResponse(Content: "not valid json"),
-                new MockResponse(Content: ValidImplementationPlanJson)));
+                new MockResponse(Content: MiniErpTestFixtures.ValidImplementationPlanJson)));
 
             var result = await agent.ExecuteAsync(new AgentExecutionContext(workflowId, bundle.Id));
 
@@ -131,16 +112,16 @@ public class PlannerAgentTests
             var wrong = StructuredChange.Create(
                 new StructuredChangePayload(
                     Kind: ChangeRequest.KindFeature,
-                    Title: "Uppercase echo",
-                    Summary: "Echo UPPERCASE",
-                    AcceptanceCriteria: ["Prints UPPERCASE"],
-                    Constraints: ["Console only"],
+                    Title: "Add health comment",
+                    Summary: "Add comment",
+                    AcceptanceCriteria: ["GET /health still returns status ok"],
+                    Constraints: ["Minimal API only"],
                     Priority: "Medium"),
                 workflowId,
                 producer: AnalystAgent.AgentName);
             await store.SaveAsync(wrong);
 
-            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: ValidImplementationPlanJson)));
+            var agent = CreateAgent(store, new MockLLMProvider(new MockResponse(Content: MiniErpTestFixtures.ValidImplementationPlanJson)));
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => agent.ExecuteAsync(new AgentExecutionContext(workflowId, wrong.Id)));
@@ -160,14 +141,14 @@ public class PlannerAgentTests
         var fenced = """
             ```json
             {
-              "title": "Uppercase echo",
-              "summary": "Echo UPPERCASE",
+              "title": "Add health comment",
+              "summary": "Add comment",
               "tasks": [
-                { "id": "T1", "description": "Edit Program.cs", "estimate": "30m" }
+                { "id": "T1", "description": "Edit Program.cs", "estimate": "15m" }
               ],
-              "acceptanceCriteria": ["Prints UPPERCASE"],
+              "acceptanceCriteria": ["GET /health still returns status ok"],
               "technicalNotes": "Minimal",
-              "intendedPaths": ["Echo/Program.cs"]
+              "intendedPaths": ["MiniErp/Program.cs"]
             }
             ```
             """;
@@ -183,12 +164,12 @@ public class PlannerAgentTests
         var structured = StructuredChange.Create(
             new StructuredChangePayload(
                 Kind: ChangeRequest.KindFeature,
-                Title: "Uppercase echo",
-                Summary: "Echo typed line in UPPERCASE",
-                AcceptanceCriteria: ["Prints the input transformed to UPPERCASE"],
-                Constraints: ["Single .NET 9 console"],
+                Title: "Add health comment",
+                Summary: "Add comment to Program.cs",
+                AcceptanceCriteria: ["GET /health still returns status ok"],
+                Constraints: ["Minimal API only"],
                 Priority: "Medium",
-                SuspectedPaths: ["Echo/Program.cs"]),
+                SuspectedPaths: [MiniErpTestFixtures.ProgramPath]),
             workflowId,
             producer: AnalystAgent.AgentName);
         await store.SaveAsync(structured);
@@ -196,9 +177,9 @@ public class PlannerAgentTests
         var builder = new CodeContextBuilder(store);
         var codeContext = await builder.BuildAndPublishAsync(
             workflowId,
-            fixtureId: "echo-v1",
-            fixtureRoot: SpikeTestPaths.EchoV1FixtureRoot,
-            entryProject: "Echo/Echo.csproj");
+            fixtureId: MiniErpTestFixtures.FixtureId,
+            fixtureRoot: MiniErpTestFixtures.FixtureRoot,
+            entryProject: MiniErpTestFixtures.EntryProject);
 
         var runner = new WorkflowRunner(store);
         return await runner.SaveChangeBundleAsync(workflowId, structured.Id, codeContext.Id, CancellationToken.None);

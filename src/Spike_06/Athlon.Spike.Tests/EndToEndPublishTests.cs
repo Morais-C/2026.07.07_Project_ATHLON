@@ -8,61 +8,15 @@ using Athlon.Spike.Workflow;
 namespace Athlon.Spike.Tests;
 
 /// <summary>
-/// Spike_05 thesis end to end via console-v1 pack: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier,
-/// ending in a Publish folder that compiles. Functional run checks belong to a future Tester agent (L11).
+/// Spike_06 thesis end to end via rest-api-v1 pack: ChangeRequest → Analyst → CodeContext → Planner → Coder → Applier,
+/// ending in a Publish folder that passes all proof gates.
 /// </summary>
 public class EndToEndPublishTests
 {
-    private const string ValidStructuredChangeJson = """
-        {
-          "kind": "feature",
-          "title": "Uppercase echo",
-          "summary": "Echo the typed line in uppercase",
-          "acceptanceCriteria": ["Prints the input transformed to UPPERCASE"],
-          "constraints": ["Single .NET 9 console", "Keep read → process → print"],
-          "priority": "Medium",
-          "suspectedPaths": ["Echo/Program.cs"]
-        }
-        """;
-
-    private const string ValidImplementationPlanJson = """
-        {
-          "title": "Uppercase echo",
-          "summary": "Echo typed line in UPPERCASE",
-          "tasks": [
-            {
-              "id": "T1",
-              "description": "Change Program.cs to uppercase the input before printing",
-              "estimate": "30m"
-            }
-          ],
-          "acceptanceCriteria": [
-            "Prints the input transformed to UPPERCASE"
-          ],
-          "technicalNotes": "Minimal edit to Echo/Program.cs",
-          "intendedPaths": ["Echo/Program.cs"]
-        }
-        """;
-
-    /// <summary>
-    /// Exact unified diff against checked-in fixtures/echo-v1/Echo/Program.cs.
-    /// </summary>
-    private const string UppercaseEchoDiff =
-        """
-        --- a/Echo/Program.cs
-        +++ b/Echo/Program.cs
-        @@ -1,4 +1,4 @@
-         // Spike_04 fixture baseline: read a line, echo it back (read → process → print).
-         Console.Write("Enter text: ");
-         var input = Console.ReadLine() ?? string.Empty;
-        -Console.WriteLine(input);
-        +Console.WriteLine(input.ToUpperInvariant());
-        """;
-
     [Fact]
-    public async Task ChangeRequest_reaches_a_Publish_folder_that_builds()
+    public async Task ChangeRequest_reaches_a_Publish_folder_that_passes_all_proof_gates()
     {
-        var pack = SpikeTestPaths.ConsoleV1Pack;
+        var pack = MiniErpTestFixtures.Pack;
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
         var store = new FileArtifactStore(artifactRoot);
@@ -70,9 +24,9 @@ public class EndToEndPublishTests
         var builder = CodeContextBuilder.FromArchetypePack(store, pack);
 
         var llm = new MockLLMProvider(
-            new MockResponse(Content: ValidStructuredChangeJson),
-            new MockResponse(Content: ValidImplementationPlanJson),
-            new MockResponse(Content: UppercasePatchPackageJson()));
+            new MockResponse(Content: MiniErpTestFixtures.ValidStructuredChangeJson),
+            new MockResponse(Content: MiniErpTestFixtures.ValidImplementationPlanJson),
+            new MockResponse(Content: MiniErpTestFixtures.ValidPatchPackageJson()));
 
         var analyst = new AnalystAgent(
             llm, store, pack.Analyst.PromptPath, pack.Analyst.OutputSchemaPath);
@@ -86,11 +40,7 @@ public class EndToEndPublishTests
         {
             var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
                 "ChangeRequestToPublish",
-                new ChangeRequestPayload(
-                    Kind: ChangeRequest.KindFeature,
-                    Title: "Uppercase echo",
-                    Description: "Print input in UPPERCASE",
-                    SuspectedPaths: ["Echo/Program.cs"]),
+                MiniErpTestFixtures.SampleChangeRequest(),
                 CancellationToken.None);
 
             var structured = (await analyst.ExecuteAsync(
@@ -100,7 +50,7 @@ public class EndToEndPublishTests
                 instance.Id,
                 fixtureId: pack.Baseline.FixtureId,
                 fixtureRoot: pack.Baseline.FixtureRoot,
-                entryProject: "Echo/Echo.csproj");
+                entryProject: MiniErpTestFixtures.EntryProject);
 
             var bundle = await runner.SaveChangeBundleAsync(
                 instance.Id, structured.Id, codeContext.Id, CancellationToken.None);
@@ -116,7 +66,6 @@ public class EndToEndPublishTests
             Assert.Equal(ArtifactTypes.ImplementationPlan, plan.Type);
             Assert.Equal(ArtifactTypes.PatchPackage, patchPackage.Type);
 
-            // Prompt/schema paths must come from the pack, not spike-root duplicates
             Assert.StartsWith(pack.PackRoot, pack.Analyst.PromptPath, StringComparison.OrdinalIgnoreCase);
             Assert.StartsWith(pack.PackRoot, pack.Planner.PromptPath, StringComparison.OrdinalIgnoreCase);
             Assert.StartsWith(pack.PackRoot, pack.Coder.PromptPath, StringComparison.OrdinalIgnoreCase);
@@ -129,19 +78,23 @@ public class EndToEndPublishTests
 
             Assert.True(result.ApplySucceeded, result.FailureMessage);
             Assert.True(result.BuildSucceeded, result.BuildOutput);
+            Assert.True(result.OpenapiConsistencySucceeded, result.OpenapiConsistencyOutput);
+            Assert.True(result.ContractTestsSucceeded, result.ContractTestOutput);
             Assert.True(result.Succeeded, result.FailureMessage);
             Assert.Equal(
                 Path.TrimEndingDirectorySeparator(Path.GetFullPath(Path.Combine(publishRoot, instance.Id.ToString("D")))),
                 Path.TrimEndingDirectorySeparator(Path.GetFullPath(result.PublishDirectory)));
-            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "Echo", "Echo.csproj")));
-            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "Echo", "Program.cs")));
+            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "MiniErp", "MiniErp.csproj")));
+            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "MiniErp", "Program.cs")));
+            Assert.True(File.Exists(Path.Combine(result.PublishDirectory, "openapi.yaml")));
 
             var publishedProgram = await File.ReadAllTextAsync(
-                Path.Combine(result.PublishDirectory, "Echo", "Program.cs"));
-            Assert.Contains("ToUpperInvariant()", publishedProgram, StringComparison.Ordinal);
+                Path.Combine(result.PublishDirectory, "MiniErp", "Program.cs"));
+            Assert.Contains("Spike_06 test", publishedProgram, StringComparison.Ordinal);
 
             var manifest = await File.ReadAllTextAsync(result.ManifestPath);
-            Assert.Contains("deferred-to-tester-agent", manifest, StringComparison.Ordinal);
+            Assert.Contains("\"openapiConsistencySucceeded\": true", manifest, StringComparison.Ordinal);
+            Assert.Contains("\"contractTestsSucceeded\": true", manifest, StringComparison.Ordinal);
             Assert.Contains(patchPackage.Id.ToString("D"), manifest, StringComparison.OrdinalIgnoreCase);
         }
         finally
@@ -154,7 +107,7 @@ public class EndToEndPublishTests
     [Fact]
     public async Task Out_of_bounds_ChangeRequest_aborts_before_any_PatchPackage_or_Publish_folder()
     {
-        var pack = SpikeTestPaths.ConsoleV1Pack;
+        var pack = MiniErpTestFixtures.Pack;
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
         var store = new FileArtifactStore(artifactRoot);
@@ -163,7 +116,7 @@ public class EndToEndPublishTests
         var llm = new MockLLMProvider(new MockResponse(Content: """
             {
               "inBounds": false,
-              "reason": "Requires a web front end and a SQL database — not a single console app."
+              "reason": "Requires SQL persistence and JWT auth — out of scope for rest-api-v1."
             }
             """));
 
@@ -183,7 +136,6 @@ public class EndToEndPublishTests
             await Assert.ThrowsAsync<OutOfBoundsException>(
                 () => analyst.ExecuteAsync(new AgentExecutionContext(instance.Id, inputArtifact.Id)));
 
-            // Chain stops at the Analyst: only the ChangeRequest was ever published
             var artifactFiles = Directory.GetFiles(artifactRoot, "*.json", SearchOption.AllDirectories);
             Assert.Single(artifactFiles);
             var onlyArtifact = await store.LoadAsync(inputArtifact.Id);
@@ -202,15 +154,15 @@ public class EndToEndPublishTests
     [Fact]
     public async Task Over_cap_CodeContext_aborts_without_Publish_folder()
     {
-        var pack = SpikeTestPaths.ConsoleV1Pack;
+        var pack = MiniErpTestFixtures.Pack;
         var artifactRoot = CreateTempDir("artifacts");
         var publishRoot = CreateTempDir("publish");
         var store = new FileArtifactStore(artifactRoot);
         var runner = new WorkflowRunner(store, artifactRoot: artifactRoot);
-        // echo-v1 has 2 source files — cap at 1 to force abort (below pack default)
-        var builder = new CodeContextBuilder(store, maxFilesAllowed: 1);
+        // mini-erp-v1 loads 4 files with default extensions — cap at 3 to force abort
+        var builder = new CodeContextBuilder(store, maxFilesAllowed: 3);
 
-        var llm = new MockLLMProvider(new MockResponse(Content: ValidStructuredChangeJson));
+        var llm = new MockLLMProvider(new MockResponse(Content: MiniErpTestFixtures.ValidStructuredChangeJson));
         var analyst = new AnalystAgent(
             llm, store, pack.Analyst.PromptPath, pack.Analyst.OutputSchemaPath);
 
@@ -218,10 +170,7 @@ public class EndToEndPublishTests
         {
             var (instance, inputArtifact) = await runner.StartAndSaveChangeRequestAsync(
                 "ChangeRequestToPublish",
-                new ChangeRequestPayload(
-                    Kind: ChangeRequest.KindFeature,
-                    Title: "Uppercase echo",
-                    Description: "Print input in UPPERCASE"),
+                MiniErpTestFixtures.SampleChangeRequest(),
                 CancellationToken.None);
 
             await analyst.ExecuteAsync(new AgentExecutionContext(instance.Id, inputArtifact.Id));
@@ -231,7 +180,7 @@ public class EndToEndPublishTests
                     instance.Id,
                     fixtureId: pack.Baseline.FixtureId,
                     fixtureRoot: pack.Baseline.FixtureRoot,
-                    entryProject: "Echo/Echo.csproj"));
+                    entryProject: MiniErpTestFixtures.EntryProject));
 
             Assert.Contains("file cap", ex.Message, StringComparison.OrdinalIgnoreCase);
             Assert.False(Directory.Exists(Path.Combine(publishRoot, instance.Id.ToString("D"))));
@@ -241,26 +190,6 @@ public class EndToEndPublishTests
             Cleanup(artifactRoot);
             Cleanup(publishRoot);
         }
-    }
-
-    private static string UppercasePatchPackageJson()
-    {
-        var payload = new PatchPackagePayload(
-            FixtureId: "echo-v1",
-            Changes:
-            [
-                new PatchFileChange(
-                    "Echo/Program.cs",
-                    PatchPackage.OperationModify,
-                    UppercaseEchoDiff.Replace("\r\n", "\n"))
-            ],
-            EntryProject: "Echo/Echo.csproj",
-            TargetFramework: "net9.0",
-            Summary: "Uppercase echoed line");
-
-        return JsonSerializer.Serialize(
-            payload,
-            new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
     }
 
     private static string CreateTempDir(string label) =>

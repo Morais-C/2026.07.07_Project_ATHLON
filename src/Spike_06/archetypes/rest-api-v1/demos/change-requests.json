@@ -1,27 +1,37 @@
 {
   "version": "1.0.0",
-  "description": "Sample in-bounds ChangeRequests for rest-api-v1 demos (mini-erp-v1).",
+  "description": "Sample in-bounds ChangeRequests for rest-api-v1 demos (mini-erp-v1). Includes feature and bugfix examples.",
   "demos": [
     {
       "id": "add-product-resource",
       "kind": "feature",
       "title": "Add product resource",
-      "description": "Add a Product resource to the mini-ERP API: POST /products (name, sku, unitPrice) and GET /products/{id}. Persist in memory. Update openapi.yaml and add contract tests for the new operations.",
+      "description": "Add a Product resource to the mini-ERP API: POST /products (name, sku, unitPrice) creates a new product and returns 201 Created with the product including its generated id. GET /products/{id} retrieves a product by id and returns 200 OK, or 404 Not Found if the id does not exist. Persist products in an in-memory dictionary. Update openapi.yaml with the new paths and schemas. Add contract tests for both operations.",
       "suspectedPaths": [
         "openapi.yaml",
-        "MiniErp/Program.cs",
-        "MiniErp.ContractTests/HealthEndpointTests.cs"
+        "MiniErp/Program.cs"
       ]
     },
     {
       "id": "add-customer-resource",
       "kind": "feature",
       "title": "Add customer resource",
-      "description": "Add a Customer resource to the mini-ERP API: POST /customers (name, email) and GET /customers/{id}. Persist in memory. Update openapi.yaml and add contract tests for the new operations.",
+      "description": "Add a Customer resource to the mini-ERP API: POST /customers (name, email) creates a new customer and returns 201 Created with the customer including its generated id. GET /customers/{id} retrieves a customer by id and returns 200 OK, or 404 Not Found if the id does not exist. Persist customers in an in-memory dictionary. Update openapi.yaml with the new paths and schemas. Add contract tests for both operations.",
       "suspectedPaths": [
         "openapi.yaml",
-        "MiniErp/Program.cs",
-        "MiniErp.ContractTests/HealthEndpointTests.cs"
+        "MiniErp/Program.cs"
+      ]
+    },
+    {
+      "id": "fix-health-response-content-type",
+      "kind": "bugfix",
+      "title": "Fix health endpoint response content type in OpenAPI",
+      "description": "The openapi.yaml declares GET /health returns application/json, but the schema should explicitly include the 'status' property as required. Update the OpenAPI specification to ensure the response schema correctly documents the { \"status\": \"ok\" } structure with proper required fields and examples.",
+      "stepsToReproduce": "Review openapi.yaml - the health endpoint response schema should have 'status' as required and include an example value.",
+      "expectedBehavior": "OpenAPI spec shows 'status' as required string with example 'ok'.",
+      "actualBehavior": "Schema is minimal and could be more explicit about the response contract.",
+      "suspectedPaths": [
+        "openapi.yaml"
       ]
     }
   ]
