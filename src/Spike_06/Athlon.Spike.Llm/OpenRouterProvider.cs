@@ -30,10 +30,22 @@ public sealed class OpenRouterProvider : ILLMProvider, IDisposable
 
         if (httpClient is null)
         {
-            // LLM calls (especially Planner/Coder) can exceed the default 100s HttpClient timeout
+            // LLM calls (especially Planner/Coder) can exceed the default 100s HttpClient timeout.
+            // OPENROUTER_BASE_URL overrides the default OpenRouter origin (OpenAI-compatible relays).
+            var resolvedBase = Environment.GetEnvironmentVariable("OPENROUTER_BASE_URL");
+            if (string.IsNullOrWhiteSpace(resolvedBase))
+            {
+                resolvedBase = "https://openrouter.ai/";
+            }
+
+            if (!resolvedBase.EndsWith('/'))
+            {
+                resolvedBase += "/";
+            }
+
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri("https://openrouter.ai/"),
+                BaseAddress = new Uri(resolvedBase),
                 Timeout = TimeSpan.FromMinutes(5)
             };
             _ownsHttpClient = true;
