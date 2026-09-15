@@ -2,8 +2,8 @@
 
 > **Context:** Strategic positioning for the first **commercial** **Solution Archetype** — **`rest-api-v1`** (Spike_06).  
 > **Vision:** [Chapter 2 — Solution Archetypes](Project_Athlon_Book_Chapter_02_Vision_of_Project_Athlon.md#solution-archetypes)  
-> **Execution proof:** Spike_04 (console incremental change); Spike_05 (`console-v1` pack); REST API pack is **planned** (Spike_06).  
-> **Last updated:** 2026-07-31
+> **Execution proof:** Spike_04 (console incremental change); Spike_05 (`console-v1` pack); Spike_06 (`rest-api-v1` pack **proved**).  
+> **Last updated:** 2026-09-15
 
 ---
 
@@ -70,7 +70,7 @@ Scenario: *“Add `GET /customers/{id}` and fix 404 when id is malformed”* on 
 
 **Gaps (today / roadmap)**
 
-- REST API archetype **not built yet** (Spike_04 proved console incremental change).
+- REST API archetype **proved as pack** (Spike_06); promotion to `Athlon.*` is next.
 - No GitLab/Jira-native assign flow until portal/API sprint.
 - Tester/functional run deferred; need API-level test agent for credible “done.”
 - Smaller brand vs GitLab/Cognition/Mendix.
@@ -180,7 +180,7 @@ Athlon shares the **natural-language intake** of low-code and the **agent roster
 2. **Why not only Devin/Copilot:** “Great for general coding; we need **REST API bounds** and **immutable artifacts**, not only a PR.”
 3. **Why not only GitLab Duo:** “Keep GitLab for SCM/CI; Athlon is the **governed change layer** for **API archetypes** with OpenAPI proof—portable above the vendor.”
 4. **Why not Mendix:** “Wrong runtime if our APIs live in **.NET + OpenAPI repos**.”
-5. **Proof today:** Spike_04 showed artifact chain + patch + build on console; Spike_05 productizes **`console-v1`** as a pack; **`rest-api-v1`** is the first commercial archetype pack (Spike_06, before promotion).
+5. **Proof today:** Spike_04 showed artifact chain + patch + build on console; Spike_05 productizes **`console-v1`** as a pack; Spike_06 proved **`rest-api-v1`** (OpenAPI + contract tests) before promotion.
 
 ---
 
@@ -189,7 +189,7 @@ Athlon shares the **natural-language intake** of low-code and the **agent roster
 | Step | Links to |
 |------|----------|
 | Spike_05 — `console-v1` pack + loader | [Spike_05 plan](../src/Spike_05/ImplementationPlan.md) |
-| Spike_06 — `rest-api-v1` pack (bounds, OpenAPI schema, contract tests) | [ROADMAP.md](../ROADMAP.md) (plan TBD) |
+| Spike_06 — `rest-api-v1` pack (bounds, OpenAPI schema, contract tests) | [Spike_06 plan](../src/Spike_06/ImplementationPlan.md) — **proved (pack)** |
 | Promote Spike_06 → `Athlon.*` | [PromotionPlan.md](../PromotionPlan.md) |
 | Contract-bound clients (web/mobile) | After REST API hub; consume same OpenAPI artifact |
 

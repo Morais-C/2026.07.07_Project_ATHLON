@@ -1,7 +1,7 @@
 # Project Athlon — Execution Roadmap
 
 > **Living master plan** for build order (distinct from the VisionScope manuscript).  
-> **Last updated:** 2026-08-05  
+> **Last updated:** 2026-09-15  
 > **Manuscript:** [Project_ATHLON_VisionScope/INDEX.md](./Project_ATHLON_VisionScope/INDEX.md)
 
 ---
@@ -15,11 +15,11 @@
 | **Spike_03 — Console publish via artifacts** | ✅ Complete (2026-07-29) — **frozen archive** |
 | **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
 | **Spike_05 — Archetype packs (`console-v1`)** | ✅ Complete (2026-08-04) — **frozen archive** — [checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
-| **Spike_06 — `rest-api-v1` archetype pack** | 🔄 In progress — Phase 0–3 ✅, next Phase 4 ([plan](./src/Spike_06/ImplementationPlan.md)) |
-| **Promotion to `Athlon.*`** | ⬜ After Spike_06 — [PromotionPlan.md](./PromotionPlan.md) |
+| **Spike_06 — `rest-api-v1` archetype pack** | ✅ Complete (2026-09-15) — **frozen archive** — [checklist](./src/Spike_06/ImplementationPlan.md#9-checklist-tracker) |
+| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
-Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md) (blocked until Spike_06).
+Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
 
 ---
 
@@ -211,7 +211,7 @@ Success: `dotnet test` green via pack paths (79); live demo apply + build OK fro
 
 ---
 
-## Spike_06 (in progress) — summary
+## Spike_06 (complete) — summary
 
 | Item | Detail |
 |------|--------|
@@ -224,7 +224,9 @@ Success: `dotnet test` green via pack paths (79); live demo apply + build OK fro
 | **Phase progress** | [Checklist](./src/Spike_06/ImplementationPlan.md#9-checklist-tracker) |
 | **Docs** | [README](./src/Spike_06/README.md) · [ImplementationPlan](./src/Spike_06/ImplementationPlan.md) · [AGENTS](./src/Spike_06/AGENTS.md) |
 
-Success: governed ChangeRequest on REST API fixture with artifact chain + deterministic proof gates.
+Success: live demo applies `add-product-resource` onto `mini-erp-v1`; Applier writes `Publish/{workflowId}/` with apply + build + OpenAPI + contract tests all OK.
+
+**Note:** `rest-api-v1` is **proved (pack)**. Next: promotion of engine + pack model → `Athlon.*`.
 
 **Locks (2026-08-05):** OpenAPI checked-in SoT (may be patched by ChangeRequest); no auth / in-memory only / no EF; demos = add product / add customer. Full locks: [ImplementationPlan §2](./src/Spike_06/ImplementationPlan.md#2-pre-locked-decisions-2026-08-05).
 
@@ -232,10 +234,10 @@ Success: governed ChangeRequest on REST API fixture with artifact chain + determ
 
 ## After Spike_06 — promotion & Sprint 1
 
-Plan: **[PromotionPlan.md](./PromotionPlan.md)** (blocked until Spike_06 — promote engine **and** pack model).
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** (Spike_06 complete — promote engine **and** pack model).
 
 ```text
-Athlon.Spike.* (from Spike_06 when proven)
+Athlon.Spike.* (from Spike_06)
         →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm / ArchetypePacks
 Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```
@@ -245,8 +247,7 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Read ROADMAP.md and src/Spike_06/AGENTS.md.
-Spike_01–05 are frozen. Continue Spike_06 per src/Spike_06/ImplementationPlan.md.
-Goal: rest-api-v1 pack + mini-erp-v1; reuse ArchetypePackLoader; proof = build + OpenAPI + contract tests.
-No promotion. No portal/API. One phase at a time; update docs on phase end.
+Read ROADMAP.md and PromotionPlan.md.
+Spike_01–06 are frozen. Start promotion: lift engine + ArchetypePackLoader + packs → Athlon.*.
+Do not edit spike folders for product features. No portal/API until after promotion.
 ```

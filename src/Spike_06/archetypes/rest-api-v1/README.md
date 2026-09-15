@@ -1,6 +1,6 @@
 # rest-api-v1 — Athlon Solution Archetype pack
 
-> **Status:** Training — Spike_06 Phase 1 complete.  
+> **Status:** **Proved (pack)** — Spike_06 complete (2026-09-15). Sole runtime source for REST prompts/schemas; tests + live demo green via pack loader.  
 > Formal pack for the first commercial Athlon Solution Archetype. See [Solution Archetype definition](../../../Project_ATHLON_VisionScope/Project_Athlon_Solution_Archetype_Definition.md).
 
 ## 10 pack components

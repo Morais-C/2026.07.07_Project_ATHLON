@@ -242,7 +242,7 @@ This is a heuristic suitable for the spike; production may use explicit test-to-
 | 1 — Pack content (prompts, demos) | ✅ Complete (2026-09-11) |
 | 2 — Applier OpenAPI + contract-test gates | ✅ Complete (2026-09-11) |
 | 3 — Host + tests wired to rest-api-v1 | ✅ Complete (2026-09-11) |
-| 4 — Live demo + thesis + docs | ⬜ Not started |
+| 4 — Live demo + thesis + docs | ✅ Complete (2026-09-15) |
 
 ---
 
