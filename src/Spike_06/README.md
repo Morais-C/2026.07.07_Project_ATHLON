@@ -78,4 +78,4 @@ See [archetypes/rest-api-v1/README.md](./archetypes/rest-api-v1/README.md) for c
 
 ## After Spike_06
 
-**Promotion** — lift engine + pack model → `Athlon.*`. Then PoC Sprint 1 (portal/API).
+**Spike_07** — sequential ChangeRequests (hop 2 baseline = prior Publish tree). Then **Promotion** → `Athlon.*`. Then PoC Sprint 1 (portal/API).

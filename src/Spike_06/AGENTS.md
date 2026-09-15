@@ -10,7 +10,7 @@ Instructions for Cursor (or any implementer) working on this spike.
 4. Update **all** spike docs + [ROADMAP.md](../../ROADMAP.md) when a phase completes.
 5. **Do not modify `src/Spike_01/` … `src/Spike_05/`.** Those stay frozen archives.
 
-**Current state:** ✅ **Complete (2026-09-15)** — all phases done. **Frozen archive.** Next: **Promotion** ([PromotionPlan.md](../../PromotionPlan.md)).
+**Current state:** ✅ **Complete (2026-09-15)** — all phases done. **Frozen archive.** Next: **Spike_07** (sequential CR chain), then **Promotion** ([PromotionPlan.md](../../PromotionPlan.md)).
 
 ## Scope rules
 
@@ -31,13 +31,13 @@ Instructions for Cursor (or any implementer) working on this spike.
 | Proof | apply → build → OpenAPI consistency → contract tests |
 | Handoff | Artifact id only; fail fast; no Enter pauses |
 
-## Suggested opening prompt (Promotion)
+## Suggested opening prompt (Spike_07)
 
 ```text
-Spike_06 complete (rest-api-v1 pack proved). Next: promotion to Athlon.*.
-Read ROADMAP.md and PromotionPlan.md. Spike_01–06 are frozen — do not modify them.
-Copy proven engine + pack model into Athlon.*; do not edit spikes for product features.
-No portal/API until after promotion.
+Spike_06 complete (rest-api-v1 single-hop proved). Next: Spike_07 sequential CR chain.
+Read ROADMAP.md and src/Spike_07/AGENTS.md. Spike_01–06 are frozen — do not modify them.
+Start Spike_07 Phase 0 per src/Spike_07/ImplementationPlan.md.
+No promotion. No portal/API. One phase at a time; update docs on phase end.
 ```
 
 ## Definition of done

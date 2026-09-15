@@ -16,14 +16,35 @@
 | **Spike_04 — Change existing console via artifacts** | ✅ Complete (2026-07-31) — **frozen archive** — [checklist](./src/Spike_04/ImplementationPlan.md#9-checklist-tracker) |
 | **Spike_05 — Archetype packs (`console-v1`)** | ✅ Complete (2026-08-04) — **frozen archive** — [checklist](./src/Spike_05/ImplementationPlan.md#9-checklist-tracker) |
 | **Spike_06 — `rest-api-v1` archetype pack** | ✅ Complete (2026-09-15) — **frozen archive** — [checklist](./src/Spike_06/ImplementationPlan.md#9-checklist-tracker) |
-| **Promotion to `Athlon.*`** | ⬜ Next — [PromotionPlan.md](./PromotionPlan.md) |
+| **Spike_07 — Sequential ChangeRequests (`rest-api-v1`)** | ⬜ Planned / docs ready — [checklist](./src/Spike_07/ImplementationPlan.md#9-checklist-tracker) |
+| **Promotion to `Athlon.*`** | ⬜ After Spike_07 — [PromotionPlan.md](./PromotionPlan.md) |
 | **PoC Sprint 1 — API + Basic Portal** | ⬜ After promotion |
 
-Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md).
+Spike checklists live under each spike; promotion progress lives in [PromotionPlan.md](./PromotionPlan.md) (blocked until Spike_07).
 
 ---
 
 ## Decision log
+
+### 2026-09-15 — Sequential ChangeRequests before promotion (Spike_07)
+
+**Decision:** Insert **Spike_07** (sequential ChangeRequests with evolving Publish baseline) **before** promotion and PoC Sprint 1.
+
+**Primary concern:** *Can a second ChangeRequest apply onto the Publish tree from a prior run (not the pristine fixture), with the same proof gates on each hop?*
+
+**Order:**
+
+```text
+1. Spike_01–06 (done, frozen) — single-hop REST proof via rest-api-v1 pack
+2. Spike_07 — CR₁ from fixture → Publish₁; CR₂ from Publish₁ → Publish₂; 4 gates × 2 hops
+3. Promote engine + pack model → Athlon.*
+4. PoC Sprint 1 — Athlon.Api + Basic Portal + CI
+```
+
+**Why before promotion:** Promotion should lift an engine that supports **incremental evolution** of a solution tree (branch metaphor), not only one-shot changes from a static fixture. Spike_06 proved single-hop; Spike_07 proves chained baselines.
+
+**Locks (summary):** fork Spike_06 → Spike_07; hop 2 baseline = `Publish/{workflowId}/` path; demo sequence add product → add customer.  
+Full locks: [Spike_07 ImplementationPlan §2](./src/Spike_07/ImplementationPlan.md#2-pre-locked-decisions-2026-09-15).
 
 ### 2026-07-31 — Archetype packs before promotion (Spike_05 / Spike_06)
 
@@ -226,18 +247,36 @@ Success: `dotnet test` green via pack paths (79); live demo apply + build OK fro
 
 Success: live demo applies `add-product-resource` onto `mini-erp-v1`; Applier writes `Publish/{workflowId}/` with apply + build + OpenAPI + contract tests all OK.
 
-**Note:** `rest-api-v1` is **proved (pack)**. Next: promotion of engine + pack model → `Athlon.*`.
+**Note:** `rest-api-v1` is **proved (pack)** for single-hop. Next: Spike_07 sequential CR chain.
 
 **Locks (2026-08-05):** OpenAPI checked-in SoT (may be patched by ChangeRequest); no auth / in-memory only / no EF; demos = add product / add customer. Full locks: [ImplementationPlan §2](./src/Spike_06/ImplementationPlan.md#2-pre-locked-decisions-2026-08-05).
 
 ---
 
-## After Spike_06 — promotion & Sprint 1
+## Spike_07 (planned) — summary
 
-Plan: **[PromotionPlan.md](./PromotionPlan.md)** (Spike_06 complete — promote engine **and** pack model).
+| Item | Detail |
+|------|--------|
+| **Thesis** | Two-hop ChangeRequest chain: CR₂ baseline = Publish tree from CR₁ |
+| **Proof** | Same four gates per hop: apply + build + OpenAPI + contract tests |
+| **Fixture** | `mini-erp-v1` (hop 1 only); hop 2 uses `Publish/{workflowId}/` |
+| **Demo sequence** | `add-product-resource` → `add-customer-resource` |
+| **Baseline** | Fork Spike_06 → [`src/Spike_07/`](./src/Spike_07/) (Phase 0) |
+| **Phase progress** | [Checklist](./src/Spike_07/ImplementationPlan.md#9-checklist-tracker) |
+| **Docs** | [README](./src/Spike_07/README.md) · [ImplementationPlan](./src/Spike_07/ImplementationPlan.md) · [AGENTS](./src/Spike_07/AGENTS.md) |
+
+Success: automated two-hop test green; live demo adds product then customer on evolving tree.
+
+**Locks (2026-09-15):** publish-path baseline (`Athlon:BaselinePublishPath`); two hops only; reuse Spike_06 pack. Full locks: [ImplementationPlan §2](./src/Spike_07/ImplementationPlan.md#2-pre-locked-decisions-2026-09-15).
+
+---
+
+## After Spike_07 — promotion & Sprint 1
+
+Plan: **[PromotionPlan.md](./PromotionPlan.md)** (blocked until Spike_07 — promote engine **and** pack model).
 
 ```text
-Athlon.Spike.* (from Spike_06)
+Athlon.Spike.* (from Spike_07 when proven)
         →  Athlon.Contracts / Artifacts / Workflow / Agents / Llm / ArchetypePacks
 Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ```
@@ -247,7 +286,8 @@ Then: Athlon.Api + Basic Portal (Appendix D §D.6)
 ## Fresh session starter
 
 ```text
-Read ROADMAP.md and PromotionPlan.md.
-Spike_01–06 are frozen. Start promotion: lift engine + ArchetypePackLoader + packs → Athlon.*.
-Do not edit spike folders for product features. No portal/API until after promotion.
+Read ROADMAP.md and src/Spike_07/AGENTS.md.
+Spike_01–06 are frozen. Continue Spike_07 per src/Spike_07/ImplementationPlan.md (start Phase 0 if no fork yet).
+Goal: sequential CR chain on rest-api-v1; hop 2 baseline = prior Publish path; proof = 4 gates × 2 hops.
+No promotion. No portal/API. One phase at a time; update docs on phase end.
 ```

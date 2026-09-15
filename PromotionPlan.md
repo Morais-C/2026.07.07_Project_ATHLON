@@ -1,8 +1,8 @@
 # PromotionPlan — Spike → `Athlon.*`
 
-> **Status:** **Ready** — Spike_05 (`console-v1` pack) and Spike_06 (`rest-api-v1` pack) are complete.  
+> **Status:** **Blocked** — complete **Spike_07** (sequential ChangeRequests / evolving Publish baseline) first.  
 > **Source of truth for sequencing:** [ROADMAP.md](./ROADMAP.md)  
-> **Promotion input (target):** [`src/Spike_06/`](./src/Spike_06/) (Spike_01–06 remain frozen reference)
+> **Promotion input (target):** [`src/Spike_07/`](./src/Spike_07/) when proven (Spike_01–06 remain frozen reference; do not start `Athlon.*` yet)
 
 ## Goal
 
@@ -22,9 +22,10 @@ Athlon.Contracts / Artifacts / Llm / Agents / Workflow / ArchetypePacks
 | Spike_04 ✅ | Incremental console change via artifacts (engine) |
 | Spike_05 ✅ | Formal **`console-v1`** pack + `ArchetypePackLoader` (product cornerstone) |
 | Spike_06 ✅ | Second pack **`rest-api-v1`** reuses loader (commercial SKU path) |
+| Spike_07 | Sequential CR chain — hop 2 baseline = prior **Publish** tree (evolving solution) |
 | **Promotion** | Lift engine + packs — not spike-root hardcoded prompts |
 
-Promoting after Spike_04 alone would copy **behavior without the pack asset model**. Spike_05/06 establish what gets promoted.
+Promoting after Spike_06 alone would lift **single-hop** proof without chained Publish baselines. Spike_07 establishes sequential evolution before product namespaces.
 
 ## Non-goals (this milestone)
 
@@ -36,7 +37,7 @@ Promoting after Spike_04 alone would copy **behavior without the pack asset mode
 
 | Phase | Intent | Exit sketch |
 |-------|--------|-------------|
-| P0 | Inventory Spike_06 projects, tests, schemas, **packs**, prompts; map → `Athlon.*` | Written mapping table |
+| P0 | Inventory Spike_07 projects, tests, schemas, **packs**, prompts; map → `Athlon.*` | Written mapping table |
 | P1 | Create `Athlon.*` projects / solution; move or copy code; rename namespaces | Solution builds |
 | P2 | Port tests; thesis + publish/apply E2E + **pack loader** still green | `dotnet test` green |
 | P3 | Wire a minimal host or leave spike console as smoke until API exists | Documented run path |
@@ -57,16 +58,17 @@ Promoting after Spike_04 alone would copy **behavior without the pack asset mode
 ## Fresh session starter
 
 ```text
-Spike_06 is complete. Read ROADMAP.md and this PromotionPlan.md.
-Spike_01–06 frozen — copy proven code into Athlon.*; do not edit spikes for product features.
-No portal/API until after promotion.
+Promotion is blocked until Spike_07. If starting Spike_07, read src/Spike_07/AGENTS.md instead.
+When Spike_07 is complete: read ROADMAP.md and this PromotionPlan.md.
+Spike_01–07 frozen — copy proven code into Athlon.*; do not edit spikes for product features.
+No portal/API until after promotion. Do not start Athlon.* until promotion begins.
 ```
 
 ## Checklist tracker
 
 | Phase | Status |
 |-------|--------|
-| P0 — Inventory & mapping | ⬜ Not started |
+| P0 — Inventory & mapping | ⬜ Blocked (Spike_07 first) |
 | P1 — Athlon.* projects + rename | ⬜ Not started |
 | P2 — Tests / thesis / packs green | ⬜ Not started |
 | P3 — Host / smoke path | ⬜ Not started |
